@@ -5,8 +5,6 @@ import Head from "next/head";
 const SurauPage: NextPage = () => {
   return (
     <div>
-
-
       <Head>
         <title>Ratemysurau | Review</title>
       </Head>

@@ -58,15 +58,21 @@ export default function SurauList() {
   const transformUrl = (surauName: string) => {
     return surauName.replace(/\s/g, '-').toLocaleLowerCase()
   }
+
+  const handleRouterPush = (e: React.FormEvent, surauName: string) => {
+    e.preventDefault()
+    void router.push(`/surau/${transformUrl(surauName)}`)
+  }
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl py-16 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Surau</h2>
 
-        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
           {suraus.map((surau) => (
             <a key={surau.id} href={surau.href} className="group">
-              <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-7 xl:aspect-h-8" onClick={() => void router.push(`/surau/${transformUrl(surau.name)}`)}>
+              <div className=" w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-1 xl:aspect-h-1" onClick={(e) => handleRouterPush(e, surau.name)}>
                 <Image
                   src={surau.imageSrc}
                   alt={surau.imageAlt}

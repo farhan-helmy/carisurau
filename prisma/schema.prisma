@@ -20,6 +20,37 @@ model Example {
     updatedAt DateTime @updatedAt
 }
 
+model Surau {
+    id       String   @id @default(cuid())
+    name     String
+    address  String
+    city     String
+    state    String
+    zip_code String
+    ratings  Rating[]
+}
+
+model Rating {
+    id         String   @id @default(cuid())
+    rating     Int
+    review     String?
+    created_at DateTime @default(now())
+    surau      Surau    @relation(fields: [id], references: [id])
+    place_id   Int
+    user       User     @relation(fields: [user_id], references: [id])
+    user_id    String
+    photos     Photo[]
+}
+
+model Photo {
+    photo_id   String   @id @default(cuid())
+    file_path  String
+    caption    String?
+    created_at DateTime @default(now())
+    rating     Rating   @relation(fields: [rating_id], references: [id])
+    rating_id  String
+}
+
 // Necessary for Next auth
 model Account {
     id                String  @id @default(cuid())
@@ -55,6 +86,7 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    ratings       Rating[]
 }
 
 model VerificationToken {

@@ -1,9 +1,12 @@
-export default function SurauOverview() {
+import { useRouter } from "next/router"
 
+export default function SurauOverview() {
+const router = useRouter()
   return (
     <>
       <div className="flex flex-col mb-4">
-        <div className="text-left font-ligth text-3xl">
+        <button className="text-left underline text-indigo-500" onClick={() => void router.push("/")}>Go back</button>
+        <div className="text-left font-light text-3xl">
           Surau KLCC
         </div>
         <img
