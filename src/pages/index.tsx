@@ -24,6 +24,8 @@ import Link from 'next/link'
 import SurauList from '../components/SurauList'
 import Image from 'next/image'
 import Head from 'next/head'
+import AddSurauFormModal from '../components/AddSurauFormModal'
+import { useState } from 'react'
 
 
 const collections = [
@@ -82,7 +84,10 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function Example() {
+export default function Index() {
+
+  const [openAddSurauForm, setOpenAddSurauForm] = useState(false)
+
   return (
     <>
       <Head>
@@ -165,16 +170,16 @@ export default function Example() {
               placeholder="Search for a Surau"
               className="mt-8 rounded-md border border-transparent bg-white py-3 w-full px-2  text-base font-medium text-gray-900 hover:bg-gray-100"
             />
-
+            <p className="font-extralight text-white text-xs mt-2 md:text-lg italic">Can`t find your Surau? <span className="underline" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
           </div>
         </div>
-
+        <AddSurauFormModal open={openAddSurauForm} setOpen={setOpenAddSurauForm} />
         <main>
           {/* Category section */}
           <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
-                Recently reviewed surau
+                Recently reviewed
               </h2>
             </div>
             <SurauList />

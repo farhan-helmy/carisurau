@@ -27,7 +27,8 @@ const config = {
         hostname: "api.dicebear.com",
       },
     ],
-    dangerouslyAllowSVG: true
+    domains: ["ratemysurau.s3.ap-southeast-1.amazonaws.com"],
+    dangerouslyAllowSVG: true,
   },
 };
 export default config;

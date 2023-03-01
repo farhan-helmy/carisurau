@@ -1,6 +1,6 @@
 import { StarIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
-import { FC, useEffect } from "react";
+import type { FC } from "react";
 import { useState } from "react"
 
 
