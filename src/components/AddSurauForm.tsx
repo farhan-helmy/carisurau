@@ -13,6 +13,9 @@ import Image from 'next/image'
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 })
+const CreatableSelect = dynamic(() => import("react-select/creatable"), {
+  ssr: true,
+})
 
 type State = {
   administrative_division: string;
@@ -42,13 +45,30 @@ export type ImagePreviews = {
   url: string
 }
 
-const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
+const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
+
+  const generateCombination = (): string => {
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+    let combination = '';
+
+    for (let i = 0; i < 3; i++) {
+      const randomIndex = Math.floor(Math.random() * alphabet.length);
+      const letter = alphabet[randomIndex];
+      combination += letter;
+    }
+
+    return combination;
+  };
 
   const [state, setState] = useState<State[]>([]);
   const [district, setDistrict] = useState<[]>([]);
+  const [findMallChecked, setFindMallChecked] = useState(false);
+  const [findMallForm, setFindMallForm] = useState(false);
   const [choosenState, setChoosenState] = useState("");
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
   const [loading, setLoading] = useState(false);
+  const [findMallLoading, setFindMallLoading] = useState(false);
+  const [generatedSurauName, setGeneratedSurauName] = useState("");
 
   const { uploadToS3 } = useS3Upload();
 
@@ -61,6 +81,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
     const negeri = e.state as string
     void fetch(`https://jianliew.me/malaysia-api/state/v1/${negeri.toLowerCase()}.json`)
       .then(res => res.json())
+      .then(void setDistrict([]))
       .then(data => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const daerah: any = []
@@ -71,11 +92,28 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
             value: item
           })
         })
-        console.log(daerah)
+        // console.log(daerah)
 
         setDistrict(daerah)
       })
     console.log(district)
+  }
+
+  const handleDaerahChange = (e: any) => {
+    setFindMallLoading(true)
+    setTimeout(() => {
+      setFindMallLoading(false)
+      setFindMallForm(true)
+    }, 1000)
+  }
+
+  const transformSurauName = (name: string) => {
+    const surauName = name.toLowerCase().replace(/ /g, "-");
+    // append random string to surau name
+    const randomString = generateCombination();
+    const surauNameWithRandomString = `${surauName}-${randomString}`;
+
+    setGeneratedSurauName(surauNameWithRandomString);
   }
 
   const handleAddMoreImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,6 +123,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
 
     setImagePreviews([...imagePreviews as ImagePreviews[], URL.createObjectURL(file as Blob) as unknown as ImagePreviews]);
     console.log(imagePreviews)
+  }
+
+  const handleMallChange = (e: any) => {
+    console.log(e)
+    transformSurauName(e.label)
   }
 
   const onProductImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,7 +160,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
 
   return (
     <>
-      <div className="h-full">
+      <div className="overflow-auto">
         <div className="md:grid md:grid-cols-2 md:gap-6">
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
@@ -136,14 +179,16 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                       <label htmlFor="surau-name" className="block text-sm font-medium text-gray-700">
                         Surau Name
                       </label>
-                      <div className="mt-1 flex rounded-md shadow-sm">
+                      <div className="mt-1 rounded-md shadow-sm">
                         <input
                           type="text"
                           name="surau-name"
                           id="surau-name"
                           className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder=""
+                          onChange={(e) => { transformSurauName(e.target.value) }}
                         />
+
                       </div>
                     </div>
                   </div>
@@ -152,7 +197,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                       <label htmlFor="surau-name" className="block text-sm font-medium text-gray-700">
                         State
                       </label>
-                      <div className="mt-1 block rounded-md shadow-sm w-full relative z-10">
+                      <div className="mt-1 block rounded-md shadow-sm w-full relative z-20">
                         <Select
                           options={state}
                           getOptionLabel={(option: any) => option.state}
@@ -164,23 +209,70 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                   </div>
                   {loading ? (
                     <div className="flex justify-center items-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900"></div>
+                      <div className="relative">
+                        <div className=" w-4 h-4 rounded-full absolute
+                            border-4 border-solid border-gray-200"></div>
+                        <div className="w-4 h-4 rounded-full animate-spin absolute
+                            border-4 border-solid border-green-500 border-t-transparent"></div>
+                      </div>
                     </div>
                   ) : null}
 
                   {!loading && district.length !== 0 ? (
-                    <div className="grid grid-cols-3 gap-6">
-                      <div className="col-span-2 sm:col-span-2">
-                        <label htmlFor="surau-name" className="block text-sm font-medium text-gray-700">
-                          District
-                        </label>
-                        <div className="mt-1 block rounded-md shadow-sm w-full relative z-0">
-                          <Select
-                            options={district}
-                          />
+                    <div>
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="col-span-2 sm:col-span-2">
+                          <label htmlFor="surau-name" className="block text-sm font-medium text-gray-700">
+                            District
+                          </label>
+                          <div className="mt-1 block rounded-md shadow-sm w-full relative z-10">
+                            <Select
+                              options={district}
+                              onChange={(e) => handleDaerahChange(e)}
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>) : null}
+                      {findMallLoading ? (
+                        <div className="flex justify-center items-center mt-4">
+                          <div className="relative">
+                            <div className=" w-4 h-4 rounded-full absolute
+                            border-4 border-solid border-gray-200"></div>
+                            <div className="w-4 h-4 rounded-full animate-spin absolute
+                            border-4 border-solid border-green-500 border-t-transparent"></div>
+                          </div>
+                        </div>
+                      ) : null}
+                      {!findMallLoading && findMallForm ? (<div className="max-w-lg space-y-4 mt-4">
+                        <div className="relative flex items-start">
+                          <div className="flex h-6 items-center">
+                            <input
+                              id="check-surau-mall"
+                              name="check-surau-mall"
+                              type="checkbox"
+                              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                              onChange={(e) => { setFindMallChecked(e.target.checked) }}
+                            />
+                          </div>
+                          <div className="ml-3 text-sm leading-6">
+                            <p className="text-gray-500 italic">Check if your surau is inside a mall.</p>
+                          </div>
+                        </div>
+                      </div>) : null}
+
+                    </div>
+                  ) : null}
+                  {findMallChecked ? (
+                    <div>
+                                    {/* <CreatableSelect
+                      isClearable
+                      onChange={(e) => handleMallChange(e)}
+                      options={mall}
+                    /> */}
+                    </div>
+                  ) : null
+                  }
+
                   <div>
                     <label htmlFor="about" className="block text-sm font-medium text-gray-700">
                       Direction / guide
@@ -194,7 +286,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                         defaultValue={''}
                       />
                     </div>
-                    <p className="mt-2 text-sm text-gray-500">
+                    <p className="mt-2 text-sm text-gray-500 italic">
                       Brief direction or guide to the surau. eg. near to the mosque, near to the shop lot, etc.
                     </p>
                   </div>
@@ -214,7 +306,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                     : null}
 
                   <div className="">
-                    <div className="grid-cols-2 p-4 space-y-2 grid gap-2">
+                    <div className="grid-cols-2 space-y-2 grid gap-2">
                       {imagePreviews ? (
                         imagePreviews.map((imagePreview, index) => (
                           <div key={index}>
@@ -237,8 +329,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ open, setOpen }) => {
                       ) : null}
                     </div>
                   </div>
-
-
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6 flex flex-row items-end justify-end gap-2">
                   <button

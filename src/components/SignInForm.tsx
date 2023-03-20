@@ -5,3 +5,5 @@ const SignInForm = () => {
   </div>
  )
 }
+
+export default SignInForm;
