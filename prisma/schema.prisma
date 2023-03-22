@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
     // Further reading:
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
@@ -47,8 +47,34 @@ model Photo {
     file_path  String
     caption    String?
     created_at DateTime @default(now())
-    rating     Rating   @relation(fields: [rating_id], references: [id])
+    rating     Rating   @relation(fields: [rating_id], references: [id], onDelete: Cascade)
     rating_id  String
+}
+
+model State {
+    id   String @id @default(cuid())
+    name String
+    unique_name String @unique
+    malls Mall[]
+    districts District[] 
+}
+
+model District {
+    id   String @id @default(cuid())
+    name String
+    unique_name String @unique
+    state_id String
+    state State @relation(fields: [state_id], references: [id], onDelete: Cascade) 
+    malls Mall[]
+}
+
+model Mall {
+    id  String @id @default(cuid())
+    name String
+    district_id String
+    district District @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    state_id String
+    state State @relation(fields: [state_id], references: [id], onDelete: Cascade)
 }
 
 // Necessary for Next auth

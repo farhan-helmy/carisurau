@@ -63,7 +63,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function SurauReview() {
+const SurauReview = () => {
   const [open, setOpen] = useState(false)
   return (
     <>
@@ -203,3 +203,5 @@ export default function SurauReview() {
     </>
   )
 }
+
+export default SurauReview

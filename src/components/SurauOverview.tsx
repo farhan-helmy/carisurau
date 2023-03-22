@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 
-export default function SurauOverview() {
+const SurauOverview = () => {
 const router = useRouter()
   return (
     <>
@@ -60,5 +60,6 @@ const router = useRouter()
       </div>
     </>
   )
-
 }
+
+export default SurauOverview

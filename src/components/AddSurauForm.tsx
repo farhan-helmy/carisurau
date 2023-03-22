@@ -7,33 +7,16 @@
 import { PhotoIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
 import dynamic from 'next/dynamic'
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useS3Upload } from 'next-s3-upload';
 import Image from 'next/image'
+import { api } from '../utils/api';
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 })
 const CreatableSelect = dynamic(() => import("react-select/creatable"), {
   ssr: true,
 })
-
-type State = {
-  administrative_division: string;
-  state: string
-  capital: string,
-  royal_capital: string,
-  population: number,
-  total_area: number,
-  licence_plate_prefix: string,
-  phone_area_code: string,
-  abbreviation: string,
-  ISO: string,
-  FIPS: string,
-  HDI: number,
-  region: string,
-  head_of_state: string,
-  head_of_goverment: string
-}
 
 export type AddSurauFormProps = {
   open: boolean,
@@ -60,8 +43,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     return combination;
   };
 
-  const [state, setState] = useState<State[]>([]);
-  const [district, setDistrict] = useState<[]>([]);
   const [findMallChecked, setFindMallChecked] = useState(false);
   const [findMallForm, setFindMallForm] = useState(false);
   const [choosenState, setChoosenState] = useState("");
@@ -72,31 +53,36 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const { uploadToS3 } = useS3Upload();
 
+  const state = api.surau.getState.useQuery()
+  const district = api.surau.getDistrictOnState.useQuery({ name: choosenState })
+
   const handleNegeriChange = (e: any) => {
 
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
     }, 1000)
-    const negeri = e.state as string
-    void fetch(`https://jianliew.me/malaysia-api/state/v1/${negeri.toLowerCase()}.json`)
-      .then(res => res.json())
-      .then(void setDistrict([]))
-      .then(data => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const daerah: any = []
-
-        data.administrative_districts.forEach((item: any) => {
-          daerah.push({
-            label: item,
-            value: item
-          })
-        })
-        // console.log(daerah)
-
-        setDistrict(daerah)
-      })
+    const negeri = e.uniqe as string
+    setChoosenState(e.unique_name)
     console.log(district)
+    // void fetch(`https://jianliew.me/malaysia-api/state/v1/${negeri.toLowerCase().replace(" ", "_")}.json`)
+    //   .then(res => res.json())
+    //   .then(void setDistrict([]))
+    //   .then(data => {
+    //     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    //     const daerah: any = []
+
+    //     data.administrative_districts.forEach((item: any) => {
+    //       daerah.push({
+    //         label: item,
+    //         value: item
+    //       })
+    //     })
+    //     // console.log(daerah)
+
+    //     setDistrict(daerah)
+    //   })
+    // console.log(district)
   }
 
   const handleDaerahChange = (e: any) => {
@@ -148,16 +134,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     // setValue('image', urls.map(url => ({ src: url })));
   }
 
-
-  useEffect(() => {
-    void fetch("https://jianliew.me/malaysia-api/state/v1/all.json")
-      .then(res => res.json())
-      .then(data => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        setState(data)
-      })
-  }, [])
-
   return (
     <>
       <div className="overflow-auto">
@@ -199,9 +175,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       </label>
                       <div className="mt-1 block rounded-md shadow-sm w-full relative z-20">
                         <Select
-                          options={state}
-                          getOptionLabel={(option: any) => option.state}
-                          getOptionValue={(option: any) => option.state}
+                          options={state.data}
+                          getOptionLabel={(option: any) => option.name}
+                          getOptionValue={(option: any) => option.unique_name}
                           onChange={(e) => handleNegeriChange(e)}
                         />
                       </div>
@@ -218,7 +194,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   ) : null}
 
-                  {!loading && district.length !== 0 ? (
+                  {!loading && district.data?.length !== 0 ? (
                     <div>
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 sm:col-span-2">
@@ -227,7 +203,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           </label>
                           <div className="mt-1 block rounded-md shadow-sm w-full relative z-10">
                             <Select
-                              options={district}
+                              options={district.data}
+                              getOptionLabel={(option: any) => option.name}
+                              getOptionValue={(option: any) => option.unique_name}
                               onChange={(e) => handleDaerahChange(e)}
                             />
                           </div>
@@ -264,7 +242,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   ) : null}
                   {findMallChecked ? (
                     <div>
-                                    {/* <CreatableSelect
+                      {/* <CreatableSelect
                       isClearable
                       onChange={(e) => handleMallChange(e)}
                       options={mall}
