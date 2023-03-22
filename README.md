@@ -10,6 +10,7 @@
 - clone this repo
 - `cd ratemysurau`
 - `cp .env.example .env`
+- I'm using https://next-s3-upload.codingvalue.com/ to upload images to S3, please follow tutorial to setup your own bucket, or you can reach out to me for bucket credentials
 - `yarn`
 - run `yarn setup-db` <- make sure make is installed
 - run `yarn dev` <- this will start the server and the client
