@@ -21,13 +21,19 @@ model Example {
 }
 
 model Surau {
-    id       String   @id @default(cuid())
-    name     String
-    address  String
-    city     String
-    state    String
-    zip_code String
-    ratings  Rating[]
+    id              String       @id @default(cuid())
+    name            String
+    unique_name     String       @unique
+    brief_direction String?
+    is_approved     Boolean      @default(false)
+    images          SurauPhoto[]
+    ratings         Rating[]
+    state_id        String
+    state           State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district_id     String
+    district        District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    mall_id         String?
+    mall            Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
 }
 
 model Rating {
@@ -51,30 +57,44 @@ model Photo {
     rating_id  String
 }
 
+model SurauPhoto {
+    id         String   @id @default(cuid())
+    file_path  String
+    caption    String?
+    created_at DateTime @default(now())
+    surau      Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
+    surau_id   String
+}
+
 model State {
-    id   String @id @default(cuid())
-    name String
-    unique_name String @unique
-    malls Mall[]
-    districts District[] 
+    id          String     @id @default(cuid())
+    name        String
+    unique_name String     @unique
+    malls       Mall[]
+    districts   District[]
+    surau       Surau[]
 }
 
 model District {
-    id   String @id @default(cuid())
-    name String
-    unique_name String @unique
-    state_id String
-    state State @relation(fields: [state_id], references: [id], onDelete: Cascade) 
-    malls Mall[]
+    id          String  @id @default(cuid())
+    name        String
+    unique_name String  @unique
+    state_id    String
+    state       State   @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    malls       Mall[]
+    surau       Surau[]
 }
 
 model Mall {
-    id  String @id @default(cuid())
-    name String
+    id          String   @id @default(cuid())
+    name        String
+    label       String   @default("")
+    value       String   @default("")
     district_id String
-    district District @relation(fields: [district_id], references: [id], onDelete: Cascade)
-    state_id String
-    state State @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district    District @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    state_id    String
+    state       State    @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    surau       Surau[]
 }
 
 // Necessary for Next auth

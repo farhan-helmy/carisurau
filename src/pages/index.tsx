@@ -24,8 +24,10 @@ import Link from 'next/link'
 import SurauList from '../components/SurauList'
 import Image from 'next/image'
 import Head from 'next/head'
-import AddSurauFormModal from '../components/AddSurauFormModal'
+import Modal from '../components/shared/Modal'
 import { useState } from 'react'
+import AddSurauForm from '../components/AddSurauForm'
+
 
 
 const collections = [
@@ -112,8 +114,7 @@ export default function Index() {
           <header className="relative z-10">
             <nav aria-label="Top">
               {/* Top navigation */}
-
-
+              
               {/* Secondary navigation */}
               <div className="bg-white bg-opacity-10 backdrop-blur-md backdrop-filter">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -173,7 +174,9 @@ export default function Index() {
             <p className="font-extralight text-white text-xs mt-2 md:text-lg italic">Can`t find your Surau? <span className="underline" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
           </div>
         </div>
-        <AddSurauFormModal open={openAddSurauForm} setOpen={setOpenAddSurauForm} />
+        <Modal open={openAddSurauForm} setOpen={setOpenAddSurauForm}>
+          <AddSurauForm setOpen={setOpenAddSurauForm} />
+        </Modal>
         <main>
           {/* Category section */}
           <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">

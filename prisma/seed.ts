@@ -51,7 +51,7 @@ const seedDistrict = async () => {
 }
 
 const seedKlMall = async () => {
-    console.log(mallJson.data.kl)
+    // console.log(mallJson.data.kl)
     const klStateRes = await prisma.state.findUnique({
         where: {
             unique_name: "kuala-lumpur"
@@ -70,26 +70,70 @@ const seedKlMall = async () => {
         }
     })
     for (const mall of mallJson.data.kl.mall) {
-       await prisma.mall.create({
-              data: {
-                    name: mall,
-                    district: {
-                        connect: {
-                            id: klDisRes.id
-                        } 
-                    },
-                    state: {
-                        connect: {
-                            id: klStateRes?.id
-                        }
+        await prisma.mall.create({
+            data: {
+                name: mall,
+                label: mall,
+                value: mall.toLocaleLowerCase().replace(" ", "-"),
+                district: {
+                    connect: {
+                        id: klDisRes.id
+                    }
+                },
+                state: {
+                    connect: {
+                        id: klStateRes?.id
                     }
                 }
-            })
+            }
+        })
     }
 }
 
+const seedPutrajayaMall = async () => {
+    // console.log(mallJson.data.putrajaya)
+    const putrajayaStateRes = await prisma.state.findUnique({
+        where: {
+            unique_name: "putrajaya"
+        }
+    })
+    const putrajayaDisRes = await prisma.district.create({
+        data: {
+            name: "wp putrajaya",
+            unique_name: "wp-putrajaya",
+            state: {
+                connect: {
+                    id: putrajayaStateRes?.id
+                }
+            }
+
+        }
+    })
+    for (const mall of mallJson.data.putrajaya.mall) {
+        await prisma.mall.create({
+
+            data: {
+                name: mall,
+                label: mall,
+                value: mall.toLocaleLowerCase().replace(" ", "-"),
+                district: {
+                    connect: {
+                        id: putrajayaDisRes.id
+                    }
+                },
+                state: {
+                    connect: {
+                        id: putrajayaStateRes?.id
+                    }
+                }
+            }
+        })
+    }
+}
+
+
 const seedJohorMall = async () => {
-    console.log(mallJson.data.johor.disctrict)
+    // console.log(mallJson.data.johor.disctrict)
     const johorStateRes = await prisma.state.findUnique({
         where: {
             unique_name: "johor"
@@ -98,39 +142,41 @@ const seedJohorMall = async () => {
 
     for (const district in mallJson.data.johor.disctrict) {
         // console.log(district.toLocaleLowerCase().replace(" ", "-"))
-       // get mall value inside district
-         const mall = mallJson.data.johor.disctrict[district as keyof typeof mallJson.data.johor.disctrict]
-         await prisma.district.findUnique({
-                where: {
-                    unique_name: district.toLocaleLowerCase().replace(" ", "-")
-                }
-            }).then(async (res) => {
-                if (res) {
-                    for (const mallName of mall.malls) {
-                        await prisma.mall.create({
-                            data: {
-                                name: mallName,
-                                district: {
-                                    connect: {
-                                        id: res.id
-                                    }
-                                },
-                                state: {
-                                    connect: {
-                                        id: johorStateRes?.id
-                                    }
+        // get mall value inside district
+        const mall = mallJson.data.johor.disctrict[district as keyof typeof mallJson.data.johor.disctrict]
+        await prisma.district.findUnique({
+            where: {
+                unique_name: district.toLocaleLowerCase().replace(" ", "-")
+            }
+        }).then(async (res) => {
+            if (res) {
+                for (const mallName of mall.malls) {
+                    await prisma.mall.create({
+                        data: {
+                            name: mallName,
+                            label: mallName,
+                            value: mallName.toLocaleLowerCase().replace(" ", "-"),
+                            district: {
+                                connect: {
+                                    id: res.id
+                                }
+                            },
+                            state: {
+                                connect: {
+                                    id: johorStateRes?.id
                                 }
                             }
-                        })
-                    }
+                        }
+                    })
                 }
             }
-            )
+        }
+        )
     }
 }
 
 const seedKedahMall = async () => {
-    const kedahStateREs = await prisma.state.findUnique({
+    const kedahStateRes = await prisma.state.findUnique({
         where: {
             unique_name: "kedah"
         }
@@ -147,6 +193,8 @@ const seedKedahMall = async () => {
                     await prisma.mall.create({
                         data: {
                             name: mallName,
+                            label: mallName,
+                            value: mallName.toLocaleLowerCase().replace(" ", "-"),
                             district: {
                                 connect: {
                                     id: res.id
@@ -154,7 +202,7 @@ const seedKedahMall = async () => {
                             },
                             state: {
                                 connect: {
-                                    id: kedahStateREs?.id
+                                    id: kedahStateRes?.id
                                 }
                             }
                         }
@@ -170,6 +218,7 @@ async function main() {
     await clearDb()
     await seedState()
     await seedDistrict()
+    await seedPutrajayaMall()
     await seedKlMall()
     await seedJohorMall()
     await seedKedahMall()

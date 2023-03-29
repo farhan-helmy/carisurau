@@ -1,14 +1,17 @@
-import type { FC} from 'react';
-import { Fragment } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import type { AddSurauFormProps } from './AddSurauForm';
-import AddSurauForm from './AddSurauForm'
+import type { FC } from 'react';
+import { Fragment } from 'react';
 
-type AddSurauFormModalProps = AddSurauFormProps
+type ModalProps = {
+    children: React.ReactNode
+    open: boolean
+    setOpen: (open: boolean) => void
+}
 
-const AddSurauFormModal: FC<AddSurauFormModalProps> = ({open, setOpen}) => {
-  return (
-    <Transition.Root show={open} as={Fragment}>
+const Modal: FC<ModalProps> = ({children, open, setOpen}) => {
+return (
+<>
+<Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
@@ -35,7 +38,7 @@ const AddSurauFormModal: FC<AddSurauFormModalProps> = ({open, setOpen}) => {
             >
               <Dialog.Panel className="relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6 ">
                 <div>
-                 <AddSurauForm setOpen={setOpen} open />
+                    {children}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -43,7 +46,9 @@ const AddSurauFormModal: FC<AddSurauFormModalProps> = ({open, setOpen}) => {
         </div>
       </Dialog>
     </Transition.Root>
-  )
+</>
+
+)
 }
 
-export default AddSurauFormModal;
+export default Modal
