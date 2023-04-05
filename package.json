@@ -9,10 +9,12 @@
     "lint": "next lint",
     "start": "next start",
     "db-seed": "NODE_ENV=development prisma db seed",
+    "compare": "NODE_ENV=development tsx prisma/compare.ts",
     "setup-db": "make"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts",
+    "compare-speed": "tsx prisma/compare.ts"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.10",
@@ -35,6 +37,7 @@
     "react-select": "^5.7.0",
     "superjson": "1.9.1",
     "tsx": "^3.12.5",
+    "use-debounce": "^9.0.3",
     "zod": "^3.20.2"
   },
   "devDependencies": {

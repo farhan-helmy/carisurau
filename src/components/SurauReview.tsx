@@ -1,8 +1,13 @@
 import { StarIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import SurauOverview from './SurauOverview'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReviewSurauFormModal from './ReviewSurauFormModal'
+import { api } from "../utils/api";
+import { useRouter } from "next/router";
+import Modal from './shared/Modal'
+import ReviewSurauForm from './ReviewSurauForm'
+import { capitalizeFirstLetter } from '../utils'
 
 const reviews = {
   average: 4,
@@ -65,15 +70,30 @@ function classNames(...classes: string[]) {
 
 const SurauReview = () => {
   const [open, setOpen] = useState(false)
+  const [uniqueName, setUniqueName] = useState<string>("")
+
+  const router = useRouter();
+  const surau = api.surau.getSurau.useQuery({
+    unique_name: uniqueName,
+  })
+
+  useEffect(() => {
+    if (router.query.id) {
+      setUniqueName(router.query.id as string)
+    }
+  }, [router.query.id])
+
   return (
     <>
-      <ReviewSurauFormModal setOpen={setOpen} open={open} surauName="testSurau"/>
-
+      <Modal open={open} setOpen={setOpen}>
+        <ReviewSurauForm setOpen={setOpen} surauName={capitalizeFirstLetter(surau.data?.name as string)} />
+      </Modal>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl py-18 mt-8 px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
 
           <div className="lg:col-span-4">
-            <SurauOverview />
+            {surau.data ? <SurauOverview surau={surau.data} /> : <div>Loading...</div>}
+
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">Reviews</h2>
 
             <div className="mt-3 flex items-center">
@@ -199,7 +219,7 @@ const SurauReview = () => {
           </div>
         </div>
       </div>
-      
+
     </>
   )
 }

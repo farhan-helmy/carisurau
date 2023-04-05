@@ -34,6 +34,7 @@ model Surau {
     district        District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
     mall_id         String?
     mall            Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
+    
 }
 
 model Rating {
