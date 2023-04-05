@@ -2,7 +2,6 @@ import { StarIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import SurauOverview from './SurauOverview'
 import { useEffect, useState } from 'react'
-import ReviewSurauFormModal from './ReviewSurauFormModal'
 import { api } from "../utils/api";
 import { useRouter } from "next/router";
 import Modal from './shared/Modal'
