@@ -76,14 +76,6 @@ const SurauReview = () => {
     unique_name: uniqueName as string,
   })
 
-
-
-  // useEffect(() => {
-  //   if (router.query.id) {
-  //     setUniqueName(router.query.id as string)
-  //   }
-  // }, [router.query.id])
-
   return (
     <>
       <Modal open={open} setOpen={setOpen}>
