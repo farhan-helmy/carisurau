@@ -1,15 +1,17 @@
-import type { FC } from 'react';
-import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
-import type { ReviewSurauFormProps } from './ReviewSurauForm';
-import ReviewSurauForm from './ReviewSurauForm';
+import type { FC } from 'react';
+import { Fragment } from 'react';
 
-type ReviewSurauFormModalProps = ReviewSurauFormProps
+type ModalProps = {
+    children: React.ReactNode
+    open: boolean
+    setOpen: (open: boolean) => void
+}
 
-const ReviewSurauFormModal: FC<ReviewSurauFormModalProps> = ({ open, setOpen, surauName }) => {
-  return (
-    <Transition.Root show={open} as={Fragment}>
+const Modal: FC<ModalProps> = ({children, open, setOpen}) => {
+return (
+<>
+<Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
         <Transition.Child
           as={Fragment}
@@ -23,7 +25,7 @@ const ReviewSurauFormModal: FC<ReviewSurauFormModalProps> = ({ open, setOpen, su
           <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
         </Transition.Child>
 
-        <div className="fixed inset-0 z-10 overflow-y-auto">
+        <div className="fixed inset-0 z-0 overflow-y-auto">
           <div className="flex items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <Transition.Child
               as={Fragment}
@@ -34,9 +36,9 @@ const ReviewSurauFormModal: FC<ReviewSurauFormModalProps> = ({ open, setOpen, su
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
+              <Dialog.Panel className="relative transform rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6 ">
                 <div>
-                  <ReviewSurauForm open={open} setOpen={setOpen} surauName={surauName}/>
+                    {children}
                 </div>
               </Dialog.Panel>
             </Transition.Child>
@@ -44,7 +46,9 @@ const ReviewSurauFormModal: FC<ReviewSurauFormModalProps> = ({ open, setOpen, su
         </div>
       </Dialog>
     </Transition.Root>
-  )
+</>
+
+)
 }
 
-export default ReviewSurauFormModal;
+export default Modal

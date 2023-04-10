@@ -51,7 +51,7 @@ const suraus = [
   // More products...
 ]
 
-export default function SurauList() {
+const SurauList = () => {
 
   const router = useRouter()
 
@@ -90,3 +90,5 @@ export default function SurauList() {
     </div>
   )
 }
+
+export default SurauList

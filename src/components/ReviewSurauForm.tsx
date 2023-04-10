@@ -5,7 +5,6 @@ import { useState } from "react"
 
 
 export type ReviewSurauFormProps = {
-  open: boolean,
   setOpen: (open: boolean) => void
   surauName: string
 }
@@ -13,7 +12,7 @@ export type ReviewSurauFormProps = {
 type ImagePreviews = {
   url: string,
 }
-const ReviewSurauForm: FC<ReviewSurauFormProps> = ({ open, setOpen, surauName }) => {
+const ReviewSurauForm: FC<ReviewSurauFormProps> = ({ setOpen, surauName }) => {
 
   const [rating, setRating] = useState(0);
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();

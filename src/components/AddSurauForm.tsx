@@ -7,42 +7,36 @@
 import { PhotoIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
 import dynamic from 'next/dynamic'
 import type { FC } from 'react';
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useS3Upload } from 'next-s3-upload';
 import Image from 'next/image'
+import { api } from '../utils/api';
+import { resizeImage } from '../utils/image';
+import AlertModal from './shared/AlertModal';
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 })
-const CreatableSelect = dynamic(() => import("react-select/creatable"), {
+const AsyncCreatableSelect = dynamic(() => import("react-select/async-creatable"), {
   ssr: true,
 })
 
-type State = {
-  administrative_division: string;
-  state: string
-  capital: string,
-  royal_capital: string,
-  population: number,
-  total_area: number,
-  licence_plate_prefix: string,
-  phone_area_code: string,
-  abbreviation: string,
-  ISO: string,
-  FIPS: string,
-  HDI: number,
-  region: string,
-  head_of_state: string,
-  head_of_goverment: string
+export type AddSurauFormProps = {
+  setOpen: (open: boolean) => void
 }
 
-export type AddSurauFormProps = {
-  open: boolean,
-  setOpen: (open: boolean) => void
+type FilePath = {
+  file_path: string
 }
 
 export type ImagePreviews = {
   id: string,
   url: string
+}
+
+type MallOptions = {
+  value: string,
+  label: string,
+  id: string
 }
 
 const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
@@ -60,17 +54,28 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     return combination;
   };
 
-  const [state, setState] = useState<State[]>([]);
-  const [district, setDistrict] = useState<[]>([]);
   const [findMallChecked, setFindMallChecked] = useState(false);
   const [findMallForm, setFindMallForm] = useState(false);
   const [choosenState, setChoosenState] = useState("");
+  const [choosenDistrict, setChoosenDistrict] = useState("");
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
   const [loading, setLoading] = useState(false);
   const [findMallLoading, setFindMallLoading] = useState(false);
   const [generatedSurauName, setGeneratedSurauName] = useState("");
+  const [mallData, setMallData] = useState("");
+  const [filePath, setFilePath] = useState<FilePath[]>([]);
+  const [surauName, setSurauName] = useState("");
+  const [briefDirection, setBriefDirection] = useState("");
+  const [surauNameError, setSurauNameError] = useState("");
+  const [briefDirectionError, setBriefDirectionError] = useState("");
+  const [alertModalOpen, setAlertModalOpen] = useState(false)
 
   const { uploadToS3 } = useS3Upload();
+
+  const state = api.surau.getState.useQuery()
+  const district = api.surau.getDistrictOnState.useQuery({ id: choosenState })
+  const mall = api.surau.getMallOnDistrict.useQuery({ district_id: choosenDistrict, state_id: choosenState })
+  const addSurau = api.surau.addSurau.useMutation()
 
   const handleNegeriChange = (e: any) => {
 
@@ -78,25 +83,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setTimeout(() => {
       setLoading(false)
     }, 1000)
-    const negeri = e.state as string
-    void fetch(`https://jianliew.me/malaysia-api/state/v1/${negeri.toLowerCase()}.json`)
-      .then(res => res.json())
-      .then(void setDistrict([]))
-      .then(data => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        const daerah: any = []
 
-        data.administrative_districts.forEach((item: any) => {
-          daerah.push({
-            label: item,
-            value: item
-          })
-        })
-        // console.log(daerah)
-
-        setDistrict(daerah)
-      })
-    console.log(district)
+    setChoosenState(e.id)
+    
   }
 
   const handleDaerahChange = (e: any) => {
@@ -105,13 +94,16 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       setFindMallLoading(false)
       setFindMallForm(true)
     }, 1000)
+
+    setChoosenDistrict(e.id)
   }
 
   const transformSurauName = (name: string) => {
-    const surauName = name.toLowerCase().replace(/ /g, "-");
-    // append random string to surau name
+    setSurauName(name);
+    const transformedSurauName = name.toLowerCase().replace(/ /g, "-");
+
     const randomString = generateCombination();
-    const surauNameWithRandomString = `${surauName}-${randomString}`;
+    const surauNameWithRandomString = `${transformedSurauName}-${randomString}`;
 
     setGeneratedSurauName(surauNameWithRandomString);
   }
@@ -122,44 +114,83 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     const { url } = await uploadToS3(file as File);
 
     setImagePreviews([...imagePreviews as ImagePreviews[], URL.createObjectURL(file as Blob) as unknown as ImagePreviews]);
-    console.log(imagePreviews)
+    setFilePath([...filePath, url as unknown as FilePath]);
   }
 
   const handleMallChange = (e: any) => {
-    console.log(e)
-    transformSurauName(e.label)
+    setMallData(e.id)
   }
 
   const onProductImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const images: ImagePreviews[] = [];
-    const urls: string[] = [];
+    const urls: FilePath[] = [];
 
     if (e.target.files === null) return;
 
     for (const element of e.target.files) {
-      images.push(URL.createObjectURL(element as Blob) as unknown as ImagePreviews);
+      const resizedImage = await resizeImage(element, 100);
+      images.push(URL.createObjectURL(resizedImage) as unknown as ImagePreviews);
+      // download the image 
+      // const downloadUrl = URL.createObjectURL(resizedImage);
+      // alert(downloadUrl);
+      // console.log(element)
       const { url } = await uploadToS3(element);
-      urls.push(url);
+      urls.push({ file_path: url});
     }
-    console.log(urls)
+    // console.log(urls);
+    setFilePath(urls);
     setImagePreviews(images);
     // const { url } = await uploadToS3(file);
     // setValue('image', urls.map(url => ({ src: url })));
   }
 
+  const filterMall = (inputValue: string) => {
+    if (!mall.data) return [];
+    return mall.data?.filter((i) =>
+      i.value.toLowerCase().includes(inputValue.toLowerCase())
+    );
+  };
 
-  useEffect(() => {
-    void fetch("https://jianliew.me/malaysia-api/state/v1/all.json")
-      .then(res => res.json())
-      .then(data => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        setState(data)
+  const promiseOptions = (inputValue: string) =>
+    new Promise<MallOptions[]>((resolve) => {
+      setTimeout(() => {
+        resolve(filterMall(inputValue));
+      }, 1000);
+    });
+
+    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      if (surauName === "") {
+        setSurauNameError("Surau name is required")
+      }
+      if (briefDirection === "") {
+        setBriefDirectionError("Brief direction is required")
+      }
+      addSurau.mutateAsync({
+        name: surauName,
+        brief_direction: briefDirection,
+        unique_name: generatedSurauName,
+        state_id: choosenState,
+        district_id: choosenDistrict,
+        mall_id: mallData,
+        image: filePath
       })
-  }, [])
+      .then(() => {
+        setAlertModalOpen(true)
+        setTimeout(() => {
+          setAlertModalOpen(false)
+          setOpen(false)
+        }, 3000)
+      })
+      .catch(e => {
+        console.log(e)
+      })
+    }
 
   return (
     <>
+    <AlertModal open={alertModalOpen} setOpen={setAlertModalOpen} message='Surau submitted, please wait for admin approval' />
       <div className="overflow-auto">
         <div className="md:grid md:grid-cols-2 md:gap-6">
           <div className="md:col-span-1">
@@ -187,8 +218,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder=""
                           onChange={(e) => { transformSurauName(e.target.value) }}
+                          
                         />
-
+                        {surauNameError ? <p className="text-red-500 text-xs italic">{surauNameError}</p> : null}
                       </div>
                     </div>
                   </div>
@@ -199,10 +231,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       </label>
                       <div className="mt-1 block rounded-md shadow-sm w-full relative z-20">
                         <Select
-                          options={state}
-                          getOptionLabel={(option: any) => option.state}
-                          getOptionValue={(option: any) => option.state}
+                          options={state.data}
+                          getOptionLabel={(option: any) => option.name}
+                          getOptionValue={(option: any) => option.id}
                           onChange={(e) => handleNegeriChange(e)}
+                          required
                         />
                       </div>
                     </div>
@@ -218,7 +251,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   ) : null}
 
-                  {!loading && district.length !== 0 ? (
+                  {!loading && district.data?.length !== 0 ? (
                     <div>
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 sm:col-span-2">
@@ -227,8 +260,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           </label>
                           <div className="mt-1 block rounded-md shadow-sm w-full relative z-10">
                             <Select
-                              options={district}
+                              options={district.data}
+                              getOptionLabel={(option: any) => option.name}
+                              getOptionValue={(option: any) => option.id}
                               onChange={(e) => handleDaerahChange(e)}
+                              required
                             />
                           </div>
                         </div>
@@ -264,11 +300,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   ) : null}
                   {findMallChecked ? (
                     <div>
-                                    {/* <CreatableSelect
-                      isClearable
-                      onChange={(e) => handleMallChange(e)}
-                      options={mall}
-                    /> */}
+                      <AsyncCreatableSelect
+                        isClearable
+                        onChange={(e) => handleMallChange(e)}
+                        loadOptions={promiseOptions}
+                        cacheOptions
+                        defaultOptions
+                      />
                     </div>
                   ) : null
                   }
@@ -284,11 +322,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         rows={3}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         defaultValue={''}
+                        onChange={(e) => { setBriefDirection(e.target.value) }}
                       />
                     </div>
                     <p className="mt-2 text-sm text-gray-500 italic">
                       Brief direction or guide to the surau. eg. near to the mosque, near to the shop lot, etc.
                     </p>
+                    {briefDirectionError ? <p className="text-red-500 text-xs italic">{briefDirectionError}</p> : null}
                   </div>
 
                   {!imagePreviews ? (<div className="flex text-sm text-gray-600">
@@ -332,10 +372,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6 flex flex-row items-end justify-end gap-2">
                   <button
-                    type="submit"
+                    onClick={(e) => handleSubmit(e)}
                     className=" justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                   >
-                    Save
+                    Submit
                   </button>
                   <div className="mb-2 font-light underline" onClick={() => setOpen(false)}>Close</div>
                 </div>
@@ -344,8 +384,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
           </div>
         </div>
       </div>
-
-
     </>
   )
 }
