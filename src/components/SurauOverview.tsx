@@ -3,6 +3,7 @@ import Image from "next/image"
 import { useRouter } from "next/router"
 import type { FC } from "react"
 import { capitalizeFirstLetter } from "../utils"
+import { useEffect, useState } from "react"
 
 type Surau = {
   id: string
@@ -16,6 +17,13 @@ type SurauOverviewProps = {
 
 const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
   const router = useRouter()
+  const [imageHighlighted, setImageHighlighted] = useState<SurauPhoto | null | undefined>(null)
+
+  useEffect(() => {
+    if (surau?.images.length) {
+      setImageHighlighted(surau.images[0])
+    }
+  }, [surau])
 
   return (
     <>
@@ -40,53 +48,25 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
           <>
             <Image
               className="rounded-lg"
-              src={surau?.images[0]?.file_path as string}
+              src={imageHighlighted?.file_path as string}
               alt=""
               width={500}
               height={300}
             />
-            <div className="space-x-2 flex items-center justify-center overflow-auto">
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-              <img
-                className="inline-block h-14 w-14 rounded-md mt-2"
-                src="/klcc.jpeg"
-                alt=""
-              />
-
+            <div className="space-x-2 flex items-center justify-center overflow-auto mt-2">
+              {surau?.images.map((image) => (
+                <Image
+                  key={image.id}
+                  className="rounded-lg"
+                  src={image.file_path}
+                  alt="te"
+                  width={100}
+                  height={50}
+                  onClick={() => setImageHighlighted(image)}
+                  placeholder="blur"
+                  blurDataURL="/assets/logo/rms_logo_new_1.png"
+                />
+              ))}
             </div>
           </>
         )}

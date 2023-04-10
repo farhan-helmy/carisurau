@@ -85,7 +85,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     }, 1000)
 
     setChoosenState(e.id)
-    console.log(district)
+    
   }
 
   const handleDaerahChange = (e: any) => {
@@ -115,11 +115,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
     setImagePreviews([...imagePreviews as ImagePreviews[], URL.createObjectURL(file as Blob) as unknown as ImagePreviews]);
     setFilePath([...filePath, url as unknown as FilePath]);
-    console.log(imagePreviews)
   }
 
   const handleMallChange = (e: any) => {
-    console.log(e)
     setMallData(e.id)
   }
 
@@ -136,11 +134,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       // download the image 
       // const downloadUrl = URL.createObjectURL(resizedImage);
       // alert(downloadUrl);
-      console.log(element)
+      // console.log(element)
       const { url } = await uploadToS3(element);
       urls.push({ file_path: url});
     }
-    console.log(urls);
+    // console.log(urls);
     setFilePath(urls);
     setImagePreviews(images);
     // const { url } = await uploadToS3(file);
