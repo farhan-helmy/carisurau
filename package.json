@@ -8,7 +8,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "db-seed": "NODE_ENV=development prisma db seed",
+    "db-seed": "cross-env NODE_ENV=development prisma db seed",
     "compare": "NODE_ENV=development tsx prisma/compare.ts",
     "setup-db": "make"
   },
@@ -49,6 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "autoprefixer": "^10.4.7",
+    "cross-env": "^7.0.3",
     "eslint": "^8.30.0",
     "eslint-config-next": "13.1.6",
     "postcss": "^8.4.14",
