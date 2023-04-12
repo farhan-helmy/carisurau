@@ -131,12 +131,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     for (const element of e.target.files) {
       const resizedImage = await resizeImage(element, 100);
       images.push(URL.createObjectURL(resizedImage) as unknown as ImagePreviews);
-      // download the image 
+      // download the image
       // const downloadUrl = URL.createObjectURL(resizedImage);
       // alert(downloadUrl);
       // console.log(element)
       const { url } = await uploadToS3(element);
-      urls.push({ file_path: url});
+      const cloudFrontFilePath = url.replace("https://ratemysurau.s3.ap-southeast-1.amazonaws.com/", "https://dcm2976bhgfsz.cloudfront.net/");
+
+      urls.push({ file_path: cloudFrontFilePath});
     }
     // console.log(urls);
     setFilePath(urls);
@@ -218,7 +220,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           placeholder=""
                           onChange={(e) => { transformSurauName(e.target.value) }}
-                          
                         />
                         {surauNameError ? <p className="text-red-500 text-xs italic">{surauNameError}</p> : null}
                       </div>
