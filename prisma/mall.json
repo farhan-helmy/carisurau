@@ -1,108 +1,123 @@
 {
     "data": {
-        "putrajaya": {
-            "mall": [
-                "IOI City Mall",
-                "Alamanda Shopping Center"
-            ]
+        "federalTerritories": {
+            "district": {
+                "kualaLumpur": {
+                    "mall": [
+                        "Great Eastern Mall",
+                        "Bangsar Village I & II",
+                        "Bangsar Shopping Centre",
+                        "NU Sentral",
+                        "Berjaya Times Square",
+                        "Bukit Bintang Plaza (Construction on hold)",
+                        "Fahrenheit 88",
+                        "Imbi Plaza",
+                        "Kenanga Wholesale City",
+                        "Lot 10",
+                        "Malaysia Grand Bazaar",
+                        "Mitsui Shopping Park LaLaport Bukit Bintang City Centre",
+                        "Plaza Low Yat",
+                        "Pavilion Kuala Lumpur",
+                        "Sungei Wang Plaza",
+                        "The Exchange TRX",
+                        "The Starhill or Starhill Gallery",
+                        "118 Mall",
+                        "Aurora Place Mall",
+                        "Pavilion Bukit Jalil",
+                        "1 Shamelin Shopping Centre",
+                        "\u00c6ON Taman Maluri Shopping Centre",
+                        "Sunway Velocity Mall",
+                        "Viva Home",
+                        "Cheras Leisure Mall",
+                        "Cheras Sentral Mall",
+                        "EkoCheras Mall",
+                        "MyTOWN Shopping Centre",
+                        "8 Conlay",
+                        "Avenue K Shopping Mall",
+                        "Intermark Mall",
+                        "M Podium KLCC (opening soon)",
+                        "Shoppes At Four Seasons Place",
+                        "Suria KLCC",
+                        "The Conlay",
+                        "The LINC KL",
+                        "The Weld",
+                        "Damansara City Mall (DC Mall)",
+                        "Glo Damansara",
+                        "Pavilion Damansara Heights",
+                        "CapSquare Centre",
+                        "City One Plaza",
+                        "Pertama Complex",
+                        "Quill City Mall",
+                        "SOGO Kuala Lumpur",
+                        "Sunway Putra Mall",
+                        "District K @ KL Digital City",
+                        "Mutiara Complex",
+                        "Sungai Mas Plaza",
+                        "Pearl Point Shopping Mall & Pearl Shopping Gallery",
+                        "The Scott Garden",
+                        "\u00c6ON Mall Metro Prima",
+                        "Brem Mall",
+                        "Kepong Village Mall",
+                        "KL Metropolis Lifestyle Mall",
+                        "KL Midtown",
+                        "Met Galleria",
+                        "Mid Valley Megamall",
+                        "The Gardens Mall",
+                        "KL Eco City Mall",
+                        "KL Gateway Mall",
+                        "Nexus Bangsar South",
+                        "The Sphere",
+                        "Pudu Plaza",
+                        "Pudu Sentral",
+                        "Plaza Salak Park",
+                        "1 Mont Kiara",
+                        "163 Retail Park",
+                        "D'Immersione Avenue",
+                        "Hartamas Shopping Centre",
+                        "Plaza Mont Kiara",
+                        "Publika Shopping Gallery",
+                        "Solaris Parq The Mall",
+                        "United Point",
+                        "Setapak Central",
+                        "\u00c6ON AU2 (Setiawangsa) Shopping Centre",
+                        "Datum Jelatek Mall",
+                        "Endah Parade",
+                        "Plaza 63",
+                        "KL East Mall",
+                        "M3 Mall",
+                        "Melawati Mall",
+                        "\u00c6ON Mall Wangsa Maju",
+                        "Wangsa Walk Mall"
+                    ]
+                },
+                "Labuan": {
+                    "mall": [
+                        "Financial Park Labuan",
+                        "Labuan Times Square"
+                    ]
+                },
+                "Putrajaya": {
+                    "mall": [
+                        "Alamanda Shopping Centre",
+                        "IOI City Mall Putrajaya",
+                        "Suria Mall Putrajaya"
+                    ]
+                }
+            }
         },
-        "kl": {
-            "mall": [
-                "Great Eastern Mall",
-                "Bangsar Village I & II",
-                "Bangsar Shopping Centre",
-                "NU Sentra",
-                "Bukit Bintang Plaza",
-                "Imbi Plaza",
-                "Kenanga Wholesale City",
-                "Lot 10",
-                "Malaysia Grand Bazaar",
-                "Mitsui Shopping Park LaLaport Bukit Bintang City Centre",
-                "Plaza Low Yat",
-                "Pavilion Kuala Lumpur",
-                "Sungei Wang Plaza",
-                "The Exchange TRX (opening in 2025)",
-                "The Starhill or Starhill Gallery",
-                "Aurora Place Mall",
-                "Pavilion Bukit Jalil",
-                "1 Shamelin Shopping Centre",
-                "ÆON Taman Maluri Shopping Centre",
-                "Sunway Velocity Mall",
-                "Viva Home",
-                "Cheras Leisure Mall",
-                "Cheras Sentral Mall",
-                "EkoCheras Mall",
-                "MyTOWN Shopping Centre",
-                "8 Conlay (opening soon)",
-                "Avenue K Shopping Mall",
-                "Intermark Mall",
-                "M Podium KLCC (opening soon)",
-                "Shoppes At Four Seasons Place",
-                "Suria KLCC",
-                "The Conlay (opening soon)",
-                "The LINC KL",
-                "The Weld",
-                "Damansara City Mall (DC Mall)",
-                "Glo Damansara",
-                "Pavilion Damansara Heights",
-                "CapSquare Centre",
-                "City One Plaza",
-                "Pertama Complex",
-                "Quill City Mall",
-                "SOGO Kuala Lumpur",
-                "Sunway Putra Mall",
-                "District K @ KL Digital City (coming soon)",
-                "Mutiara Complex",
-                "Sungai Mas Plaza",
-                "Pearl Point Shopping Mall & Pearl Shopping Gallery",
-                "The Scott Garden",
-                "ÆON Mall Metro Prima",
-                "Brem Mall",
-                "Kepong Village Mall",
-                "KL Metropolis Lifestyle Mall (coming soon)",
-                "KL Midtown (coming soon)",
-                "Met Galleria",
-                "Mid Valley Megamall",
-                "The Gardens Mall",
-                "KL Eco City Mall",
-                "KL Gateway Mall",
-                "Nexus Bangsar South",
-                "The Sphere",
-                "Pudu Plaza",
-                "Pudu Sentral",
-                "Plaza Salak Park",
-                "1 Mont Kiara",
-                "163 Retail Park",
-                "D'Immersione Avenue (opening in 2023)",
-                "Hartamas Shopping Centre",
-                "Plaza Mont Kiara",
-                "Publika Shopping Gallery",
-                "Solaris Parq The Mall (opening in 2025)",
-                "United Point",
-                "Setapak Central",
-                "ÆON AU2 (Setiawangsa) Shopping Centre",
-                "Datum Jelatek Mall",
-                "Endah Parade",
-                "KL East Mall",
-                "M3 Mall",
-                "Melawati Mall",
-                "ÆON Mall Wangsa Maju",
-                "Wangsa Walk Mall"
-            ]
-        },
-        "johor": {
-            "disctrict": {
+        "Johor": {
+            "district": {
                 "Batu Pahat": {
-                    "malls": [
+                    "mall": [
                         "Batu Pahat Mall",
                         "Square One Mall",
                         "The Summit Batu Pahat"
                     ]
                 },
                 "Iskandar Puteri": {
-                    "malls": [
-                        "ÆON Mall Bukit Indah",
-                        "ÆON Taman Universiti Shopping Centre",
+                    "mall": [
+                        "\u00c6ON Mall Bukit Indah",
+                        "\u00c6ON Taman Universiti Shopping Centre",
                         "Eco Galleria",
                         "Mall of Medini",
                         "Perling Mall",
@@ -114,12 +129,13 @@
                     ]
                 },
                 "Johor Bahru": {
-                    "malls": [
-                        "ÆON Mall Bandar Dato' Onn",
-                        "ÆON Permas Jaya Shopping Centre",
-                        "ÆON Mall Tebrau City",
+                    "mall": [
+                        "\u00c6ON Mall Bandar Dato' Onn",
+                        "\u00c6ON Permas Jaya Shopping Centre",
+                        "\u00c6ON Mall Tebrau City",
                         "Angsana Johor Bahru Mall",
                         "Beletime Danga Bay",
+                        "Danga City Mall (Temporarily closed for renovations)",
                         "Galleria@Kotaraya",
                         "Holiday Plaza",
                         "Johor Bahru City Square",
@@ -137,53 +153,53 @@
                     ]
                 },
                 "Kluang": {
-                    "malls": [
+                    "mall": [
                         "Kluang Mall",
                         "Kluang Parade"
                     ]
                 },
                 "Kota Tinggi": {
-                    "malls": [
+                    "mall": [
                         "Heritage Mall",
                         "Plaza Kota Tinggi"
                     ]
                 },
                 "Kulai": {
-                    "malls": [
-                        "ÆON Mall Kulaijaya",
+                    "mall": [
+                        "\u00c6ON Mall Kulaijaya",
                         "IOI Mall Kulai",
                         "Johor Premium Outlets",
-                        "Kulai Centre Poin"
+                        "Kulai Centre Point"
                     ]
                 },
                 "Muar": {
-                    "malls": [
-                        "Wwetex Parade",
+                    "mall": [
+                        "Wetex Parade",
                         "Muar Trade Centre"
                     ]
                 },
-                "Penggerang": {
-                    "malls": [
-                        "SKS Citty Mall"
+                "Pengerang": {
+                    "mall": [
+                        "SKS City Mall"
                     ]
                 },
                 "Pontian": {
-                    "malls": [
+                    "mall": [
                         "Plaza Pontian"
                     ]
                 },
                 "Segamat": {
-                    "malls": [
+                    "mall": [
                         "Segamat Central(formerly One Segamat Mall)",
                         "U Sentral Shopping Centre"
                     ]
                 }
             }
         },
-        "kedah": {
+        "Kedah": {
             "district": {
                 "Alor Setar": {
-                    "malls": [
+                    "mall": [
                         "Alor Setar Mall",
                         "Aman Central",
                         "City Plaza",
@@ -192,29 +208,522 @@
                     ]
                 },
                 "Kubang Pasu": {
-                    "malls": [
+                    "mall": [
                         "Jitra Mall"
                     ]
                 },
                 "Kulim": {
-                    "malls": [
+                    "mall": [
                         "Kulim Landmark Central"
                     ]
                 },
                 "Langkawi": {
-                    "malls": [
+                    "mall": [
                         "Cenang Mall",
                         "Langkawi Fair Shopping Mall",
                         "Langkawi Parade"
                     ]
                 },
                 "Sungai Petani": {
-                    "malls": [
+                    "mall": [
                         "Amanjaya Mall",
                         "Central Square",
                         "Petani Parade",
                         "SP Plaza",
                         "Village Mall"
+                    ]
+                }
+            }
+        },
+        "Kelantan": {
+            "district": {
+                "Kota Bharu": {
+                    "mall": [
+                        "\u00c6ON Mall Kota Bharu",
+                        "KB Mall KB MALL",
+                        "G-Orange Mall Tunjong",
+                        "Kota Seri Mutiara Shopping Centre",
+                        "Kota Bharu Trade Centre (KBTC) Kota Bharu"
+                    ]
+                }
+            }
+        },
+        "Malacca": {
+            "district": {
+                "Alor Gajah": {
+                    "mall": [
+                        "Freeport A'Famosa Outlet"
+                    ]
+                },
+                "Malacca City": {
+                    "mall": [
+                        "\u00c6ON Mall Melaka (Ayer Keroh)",
+                        "\u00c6ON Mall Bandaraya Melaka",
+                        "Dataran Pahlawan Melaka Megamall",
+                        "Elements Mall Malacca",
+                        "Hang Tuah Plaza",
+                        "Hatten Square",
+                        "Imperio mall",
+                        "K7 Community Mall",
+                        "Mahkota Parade",
+                        "Melaka Mall (formerly Kotamas)",
+                        "Soon Seng Plaza",
+                        "Terminal Pahlawan (Melaka wholesale city)",
+                        "The Shore Shopping Gallery"
+                    ]
+                }
+            }
+        },
+        "Negeri Sembilan": {
+            "district": {
+                "Jempol": {
+                    "mall": [
+                        "Kiara Square, Bahau"
+                    ]
+                },
+                "Nilai": {
+                    "mall": [
+                        "\u00c6ON Mall Nilai",
+                        "MesaMall Nilai"
+                    ]
+                },
+                "Port Dickson": {
+                    "mall": [
+                        "Regina Mall"
+                    ]
+                },
+                "Seremban": {
+                    "mall": [
+                        "\u00c6ON Seremban 2 Shopping Centre",
+                        "Angsana Seremban Mall, Ampangan",
+                        "Centrepoint Seremban Shopping Mall",
+                        "Era Square",
+                        "KM Plaza",
+                        "Palm Mall",
+                        "Seremban Gateway",
+                        "Seremban Prima"
+                    ]
+                }
+            }
+        },
+        "Pahang": {
+            "district": {
+                "Cameron Highlands": {
+                    "mall": [
+                        "Cameron Centrum, Brinchang",
+                        "Cameron Fair Shopping Centre, Tanah Rata",
+                        "Cameron Square, Brinchang"
+                    ]
+                },
+                "Genting Highlands": {
+                    "mall": [
+                        "Awana SkyCentral",
+                        "First World Plaza",
+                        "Genting Highlands Premium Outlet",
+                        "Pavilion Genting Highlands",
+                        "SkyAvenue"
+                    ]
+                },
+                "Kuantan": {
+                    "mall": [
+                        "Berjaya Megamall",
+                        "East Coast Mall",
+                        "Gio Mall",
+                        "Kuantan Parade",
+                        "Kuantan City Mall",
+                        "Teruntum Complex"
+                    ]
+                },
+                "Temerloh": {
+                    "mall": [
+                        "Temerloh Mall",
+                        "TMG Temerloh"
+                    ]
+                },
+                "Mentakab": {
+                    "mall": [
+                        "Mentakab Star Mall"
+                    ]
+                }
+            }
+        },
+        "Penang": {
+            "district": {
+                "Penang Island": {
+                    "mall": [
+                        "1st Avenue Mall",
+                        "All Seasons Place",
+                        "Bukit Jambul Complex",
+                        "D'Piazza Mall",
+                        "GAMA Supermarket & Departmental Store",
+                        "GBS@Mayang",
+                        "Gurney Paragon",
+                        "Gurney Plaza",
+                        "ICT @ Komtar Digital Mall",
+                        "Island Plaza",
+                        "Komtar",
+                        "M Mall O2O",
+                        "One Precinct",
+                        "Penang Plaza",
+                        "Penang Times Square",
+                        "Prangin Mall",
+                        "Queensbay Mall",
+                        "Southbay Plaza",
+                        "Sunway Valleycity Mall",
+                        "Straits Quay",
+                        "Udini Square"
+                    ]
+                },
+                "Seberang Perai": {
+                    "mall": [
+                        "AEON Mall Bukit Mertajam",
+                        "Bukit Mertajam Wholesale City",
+                        "Design Village",
+                        "Megamal Pinang",
+                        "Pearl City Mall",
+                        "Sunway Carnival Mall"
+                    ]
+                }
+            }
+        },
+        "Perak": {
+            "district": {
+                "Ipoh": {
+                    "mall": [
+                        "\u00c6ON Mall Ipoh Station 18",
+                        "\u00c6ON Mall Kinta City",
+                        "\u00c6ON Mall Klebang",
+                        "\u00c6ON Midtown Falim",
+                        "Angsana Ipoh Mall"
+                    ]
+                },
+                "Kampar": {
+                    "mall": [
+                        "Kampar Terminal Mall",
+                        "Tin Village Mall"
+                    ]
+                },
+                "Kerian": {
+                    "mall": [
+                        "Kerian Sentral Mall, Parit Buntar"
+                    ]
+                },
+                "Manjung": {
+                    "mall": [
+                        "\u00c6ON Mall Seri Manjung"
+                    ]
+                },
+                "Perak Tengah": {
+                    "mall": [
+                        "D'Mall, Seri Iskandar"
+                    ]
+                },
+                "Taiping": {
+                    "mall": [
+                        "\u00c6ON Mall Taiping",
+                        "Taiping Mall",
+                        "Taiping Sentral Mall"
+                    ]
+                }
+            }
+        },
+        "Sabah": {
+            "district": {
+                "Interior Division": {
+                    "mall": [
+                        "Keningau Mall"
+                    ]
+                },
+                "Sandakan Division": {
+                    "mall": [
+                        "Harbour Mall Sandakan"
+                    ]
+                },
+                "Tawau Division": {
+                    "mall": [
+                        "Eastern Plaza"
+                    ]
+                },
+                "Kota Kinabalu": {
+                    "mall": [
+                        "1Borneo Hypermall",
+                        "88 Mall",
+                        "Centre Point Sabah",
+                        "City Mall",
+                        "EG Mall Inanam",
+                        "Grand Merdeka",
+                        "Imago KK Times Square",
+                        "Inanam Mall",
+                        "ITCC Penampang",
+                        "Jesselton Residences (Jesselton Duty Free Mall)",
+                        "Karamunsing Complex",
+                        "KK Plaza",
+                        "Mega Long Mall",
+                        "Oceanus Waterfront Mall",
+                        "Plaza Shell",
+                        "Riverson The Walk",
+                        "Suria Sabah",
+                        "Sutera Avenue",
+                        "Wisma Merdeka"
+                    ]
+                }
+            }
+        },
+        "Sarawak": {
+            "district": {
+                "Bintulu": {
+                    "mall": [
+                        "Bintulu Terminal Bus Station",
+                        "Boulevard Shopping Mall Bintulu",
+                        "City Point Mall",
+                        "Li Hua Plaza",
+                        "Medan Mall",
+                        "Naim Street Mall",
+                        "Parkcity Commerce Square Mall",
+                        "Parkcity Mall",
+                        "The Spring Bintulu",
+                        "Times Square Mega Mall"
+                    ]
+                },
+                "Kota Samarahan": {
+                    "mall": [
+                        "Aiman Mall (@iman Mall)",
+                        "Summer Mall",
+                        "La Promenade Mall"
+                    ]
+                },
+                "Kuching": {
+                    "mall": [
+                        "\u00c6ON Mall Kuching Central",
+                        "Aeroville Mall",
+                        "Boulevard Shopping Mall",
+                        "CityOne Megamall",
+                        "Crown Square",
+                        "Eco Mall",
+                        "Electra House",
+                        "Farley Mall",
+                        "Genesis Parade",
+                        "Green Heights Mall",
+                        "Hock Lee Centre (Under renovation)",
+                        "Hopoh Shopping Centre",
+                        "Kuching Sentral",
+                        "Majma Mall",
+                        "Matang Mall",
+                        "MetroMall",
+                        "Moyan Square",
+                        "OneJaya Lifestyle Mall",
+                        "One TJ ICT Shopping Complex",
+                        "Papillon Street Mall",
+                        "Plaza Merdeka Shopping Center",
+                        "Riverside Shopping Complex",
+                        "Sarawak Plaza",
+                        "ST3 Shopping Mall",
+                        "Tabuan Plaza",
+                        "The Hills",
+                        "The Spring Shopping Mall",
+                        "Tun Jugah Mall",
+                        "Vivacity Megamall",
+                        "Wisma Saberkas",
+                        "Wisma Satok",
+                        "Wisma Sentosa",
+                        "Wisma Wan"
+                    ]
+                },
+                "Limbang": {
+                    "mall": [
+                        "Limbang Plaza"
+                    ]
+                },
+                "Miri": {
+                    "mall": [
+                        "Bintang Megamall",
+                        "Boulevard Shopping Mall Miri",
+                        "Imperial Mall",
+                        "Miri Plaza",
+                        "MYY Mall",
+                        "Pelita Tunku",
+                        "Permaisuri Imperial City Mall",
+                        "Permy Mall",
+                        "Soon Hup Tower"
+                    ]
+                },
+                "Mukah": {
+                    "mall": [
+                        "Medan Mall"
+                    ]
+                },
+                "Serian": {
+                    "mall": [
+                        "Eastern Mall"
+                    ]
+                },
+                "Sibu": {
+                    "mall": [
+                        "Delta Mall",
+                        "Hann's Residence",
+                        "Medan Mall",
+                        "Sarawak House Shopping Complex",
+                        "Star Mega Mall",
+                        "The Swan Square",
+                        "Wisma Sanyan"
+                    ]
+                },
+                "Sri Aman": {
+                    "mall": [
+                        "Plaza Simanggang"
+                    ]
+                }
+            }
+        },
+        "Selangor": {
+            "district": {
+                "Ampang Jaya": {
+                    "mall": [
+                        "Ampang Point",
+                        "Axis Atrium",
+                        "Galaxy Ampang",
+                        "Pandan Capital Mall",
+                        "Spectrum Shopping Mall"
+                    ]
+                },
+                "Bandar Baru Bangi": {
+                    "mall": [
+                        "Bangi Gateway",
+                        "De Centrum Mall",
+                        "Evo Bangi"
+                    ]
+                },
+                "Cheras": {
+                    "mall": [
+                        "\u00c6ON Cheras Selatan Shopping Centre",
+                        "BMC Mall (formerly AEON Makhota Cheras)"
+                    ]
+                },
+                "Cyberjaya": {
+                    "mall": [
+                        "D'Pulze Shopping Centre",
+                        "Gem In Mall",
+                        "Shaftsbury Square Cyberjaya"
+                    ]
+                },
+                "Kajang": {
+                    "mall": [
+                        "Metro Point Kajang",
+                        "Plaza Metro Kajang"
+                    ]
+                },
+                "Klang": {
+                    "mall": [
+                        "\u00c6ON Mall Bukit Raja",
+                        "\u00c6ON Mall Bukit Tinggi",
+                        "Centro Mall",
+                        "Galleri Klang Sentral",
+                        "GM Klang Wholesale City",
+                        "Harbour Place",
+                        "Klang Parade",
+                        "KSL Esplanade Mall",
+                        "Sunway Pier Port Klang (Opening Soon)"
+                    ]
+                },
+                "Petaling Jaya": {
+                    "mall": [
+                        "1 Utama",
+                        "3 Damansara",
+                        "Amcorp Mall",
+                        "Atria Shopping Gallery",
+                        "CITTA Mall",
+                        "Empire City Mall",
+                        "Evolve Concept Mall",
+                        "IPC Shopping Centre",
+                        "Jaya One",
+                        "Jaya Shopping Centre",
+                        "Paradigm Mall Petaling Jaya",
+                        "Sunway Giza",
+                        "The Curve",
+                        "The Starling",
+                        "Tropicana Gardens Mall"
+                    ]
+                },
+                "Selayang": {
+                    "mall": [
+                        "\u00c6ON Rawang Anggun Shopping Centre",
+                        "Selayang Mall",
+                        "Selayang Capitol Complex",
+                        "168 Park Selayang Mall (Opening Soon by Year 2024)"
+                    ]
+                },
+                "Semenyih": {
+                    "mall": [
+                        "Ecohill Walk Mall"
+                    ]
+                },
+                "Sepang": {
+                    "mall": [
+                        "Gateway@klia2",
+                        "Mitsui Outlet Park KLIA Sepang"
+                    ]
+                },
+                "Seri Kembangan": {
+                    "mall": [
+                        "\u00c6ON Taman Equine Shopping Centre",
+                        "South City Plaza",
+                        "The Mines"
+                    ]
+                },
+                "Shah Alam": {
+                    "mall": [
+                        "\u00c6ON Mall Shah Alam",
+                        "Anggerik Mall",
+                        "Central i-City",
+                        "IRDKL Mall",
+                        "Kompleks PKNS Shah Alam",
+                        "Ole-Ole Shopping Centre",
+                        "Plaza Shah Alam",
+                        "Plaza Alam Sentral",
+                        "SACC Mall Shah Alam",
+                        "Setia City Mall",
+                        "Space U8 Mall",
+                        "Star Avenue Lifestyle Mall"
+                    ]
+                },
+                "Subang Jaya": {
+                    "mall": [
+                        "Da Men Mall",
+                        "Empire Shopping Gallery",
+                        "IOI Mall Puchong Jaya",
+                        "M Square Puchong",
+                        "Main Place Mall",
+                        "Pallazo 19 Mall (formerly known as The 19 USJ City Mall)",
+                        "One City Mall",
+                        "Setia Walk, Puchong",
+                        "SS15 Courtyard",
+                        "Subang Parade",
+                        "Sunway Pyramid",
+                        "Sunway South Quay Mall (Opening Soon)",
+                        "The Summit USJ"
+                    ]
+                },
+                "Telok Panglima Garang": {
+                    "mall": [
+                        "Quayside Mall",
+                        "Sanctuary Mall"
+                    ]
+                }
+            }
+        },
+        "Terengganu": {
+            "district": {
+                "Kemaman": {
+                    "mall": [
+                        "Kemaman Centre Point",
+                        "Mesra Mall, Kemasik"
+                    ]
+                },
+                "Kuala Terengganu": {
+                    "mall": [
+                        "KTCC Mall",
+                        "Paya Bunga Square/Sentral",
+                        "Mayang Mall"
                     ]
                 }
             }
