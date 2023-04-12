@@ -69,7 +69,7 @@ const seedKlMall = async () => {
 
         }
     })
-    for (const mall of mallJson.data.kl.mall) {
+    for (const mall of mallJson.data.federalTerritories.district.kualaLumpur.mall) {
         await prisma.mall.create({
             data: {
                 name: mall,
@@ -109,7 +109,7 @@ const seedPutrajayaMall = async () => {
 
         }
     })
-    for (const mall of mallJson.data.putrajaya.mall) {
+    for (const mall of mallJson.data.federalTerritories.district.Putrajaya.mall) {
         await prisma.mall.create({
 
             data: {
@@ -140,17 +140,17 @@ const seedJohorMall = async () => {
         }
     })
 
-    for (const district in mallJson.data.johor.disctrict) {
+    for (const district in mallJson.data.Johor.district) {
         // console.log(district.toLocaleLowerCase().replace(" ", "-"))
         // get mall value inside district
-        const mall = mallJson.data.johor.disctrict[district as keyof typeof mallJson.data.johor.disctrict]
+        const mall = mallJson.data.Johor.district[district as keyof typeof mallJson.data.Johor.district]
         await prisma.district.findUnique({
             where: {
                 unique_name: district.toLocaleLowerCase().replace(" ", "-")
             }
         }).then(async (res) => {
             if (res) {
-                for (const mallName of mall.malls) {
+                for (const mallName of mall.mall) {
                     await prisma.mall.create({
                         data: {
                             name: mallName,
@@ -181,15 +181,15 @@ const seedKedahMall = async () => {
             unique_name: "kedah"
         }
     })
-    for (const district in mallJson.data.kedah.district) {
-        const mall = mallJson.data.kedah.district[district as keyof typeof mallJson.data.kedah.district]
+    for (const district in mallJson.data.Kedah.district) {
+        const mall = mallJson.data.Kedah.district[district as keyof typeof mallJson.data.Kedah.district]
         await prisma.district.findUnique({
             where: {
                 unique_name: district.toLocaleLowerCase().replace(" ", "-")
             }
         }).then(async (res) => {
             if (res) {
-                for (const mallName of mall.malls) {
+                for (const mallName of mall.mall) {
                     await prisma.mall.create({
                         data: {
                             name: mallName,
