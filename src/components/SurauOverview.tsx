@@ -39,6 +39,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               alt="logoratemysurau"
               width={500}
               height={300}
+              priority
             />
             <div className="italic text-gray-500">
               No image
@@ -52,6 +53,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               alt=""
               width={500}
               height={300}
+              priority
             />
             <div className="space-x-2 flex items-center justify-center overflow-auto mt-2">
               {surau?.images.map((image) => (
@@ -60,11 +62,12 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   className="rounded-lg"
                   src={image.file_path}
                   alt="te"
-                  width={100}
-                  height={50}
+                  width={75}
+                  height={75}
                   onClick={() => setImageHighlighted(image)}
                   placeholder="blur"
                   blurDataURL="/assets/logo/rms_logo_new_1.png"
+                  priority
                 />
               ))}
             </div>

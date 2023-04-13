@@ -42,20 +42,9 @@ model Rating {
     rating     Int
     review     String?
     created_at DateTime @default(now())
-    surau      Surau    @relation(fields: [id], references: [id])
-    place_id   Int
-    user       User     @relation(fields: [user_id], references: [id])
-    user_id    String
-    photos     Photo[]
-}
-
-model Photo {
-    photo_id   String   @id @default(cuid())
-    file_path  String
-    caption    String?
-    created_at DateTime @default(now())
-    rating     Rating   @relation(fields: [rating_id], references: [id], onDelete: Cascade)
-    rating_id  String
+    surau      Surau    @relation(fields: [surau_id], references: [id])
+    surau_id   String
+    images     SurauPhoto[]
 }
 
 model SurauPhoto {
@@ -65,6 +54,8 @@ model SurauPhoto {
     created_at DateTime @default(now())
     surau      Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
     surau_id   String
+    rating     Rating?  @relation(fields: [rating_id], references: [id], onDelete: Cascade)
+    rating_id  String?
 }
 
 model State {
@@ -133,7 +124,6 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
-    ratings       Rating[]
 }
 
 model VerificationToken {
