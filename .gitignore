@@ -46,3 +46,7 @@ yarn-error.log*
 
 
 .idea/
+
+
+.open-next
+.sst

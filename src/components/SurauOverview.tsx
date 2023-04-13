@@ -54,6 +54,8 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               width={500}
               height={300}
               priority
+              placeholder="blur"
+              blurDataURL="/assets/logo/rms_logo_new_1.png"
             />
             <div className="space-x-2 flex items-center justify-center overflow-auto mt-2">
               {surau?.images.map((image) => (
