@@ -82,7 +82,6 @@ export const surauRouter = createTRPCRouter({
                     district: true,
                     mall: true,
                     images: true,
-                    ratings: true
                 }
             })
         }
