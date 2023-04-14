@@ -27,7 +27,10 @@ const config = {
         hostname: "api.dicebear.com",
       },
     ],
-    domains: ["ratemysurau.s3.ap-southeast-1.amazonaws.com"],
+    domains: [
+      "dcm2976bhgfsz.cloudfront.net",
+      "ratemysurau.s3.ap-southeast-1.amazonaws.com"
+    ],
     dangerouslyAllowSVG: true,
   },
 };
