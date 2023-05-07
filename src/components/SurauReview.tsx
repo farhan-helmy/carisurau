@@ -79,7 +79,7 @@ const SurauReview = () => {
   return (
     <>
       <Modal open={open} setOpen={setOpen}>
-        <ReviewSurauForm setOpen={setOpen} surauName={surau.data?.name as string} />
+        <ReviewSurauForm setOpen={setOpen} surauName={surau.data?.name as string} surauId={surau.data?.id as string} />
       </Modal>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl py-18 mt-8 px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
@@ -194,7 +194,7 @@ const SurauReview = () => {
                       dangerouslySetInnerHTML={{ __html: review.content }}
                     />
                     <div className="space-x-2">
-                      <img
+                      {/* <img
                         className="inline-block h-14 w-14 rounded-md mt-4"
                         src="/klcc.jpeg"
                         alt=""
@@ -203,7 +203,7 @@ const SurauReview = () => {
                         className="inline-block h-14 w-14 rounded-md mt-4"
                         src="/klcc.jpeg"
                         alt=""
-                      />
+                      /> */}
                     </div>
                   </div>
                 ))}

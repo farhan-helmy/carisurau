@@ -24,7 +24,7 @@ export type AddSurauFormProps = {
   setOpen: (open: boolean) => void
 }
 
-type FilePath = {
+export type FilePath = {
   file_path: string
 }
 
@@ -121,7 +121,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setMallData(e.id)
   }
 
-  const onProductImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSurauImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
@@ -341,7 +341,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         <PhotoIcon className="h-12 w-12" />
                         <span className="absolute top-10 scale-0 transition-all rounded bg-gray-800 p-2 text-md text-white group-hover:scale-100">✨ click to add photo!</span>
                       </div>
-                      <input type="file" name="product-image-upload" id="product-image-upload" className="sr-only" onChange={(e) => void onProductImageChange(e)} multiple accept="image/*" />
+                      <input type="file" name="product-image-upload" id="product-image-upload" className="sr-only" onChange={(e) => void onSurauImageChange(e)} multiple accept="image/*" />
                     </label>
                   </div>)
                     : null}
