@@ -76,12 +76,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const { uploadToS3 } = useS3Upload();
 
   const state = api.surau.getState.useQuery()
-  const district = state.data?.map((state) => state.districts).flat();
+  const district = state.data?.map((state) => state.districts).flat()
   const mall = api.surau.getMallOnDistrict.useQuery({ district_id: choosenDistrict, state_id: choosenState })
   const addSurau = api.surau.addSurau.useMutation()
 
   const handleNegeriChange = (e: any) => {
     setChoosenState(e.id)
+    setCurrentDistrict([]);
   }
 
   useEffect(() => {
