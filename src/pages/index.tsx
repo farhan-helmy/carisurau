@@ -121,7 +121,7 @@ export default function Index() {
               Rate, Review, and Connect with Your Local Surau: Your Ultimate Resource for Islamic Worship!
             </p>
             <SearchBar />
-            <p className="font-extralight text-white text-xs mt-2 md:text-lg italic z-0">Can`t find your Surau? <span className="underline" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
+            <p className="font-extralight text-white text-xs mt-2 md:text-lg italic z-0">Can`t find your Surau? <span className="hover:underline cursor-pointer" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
           </div>
         </div>
         <Modal open={openAddSurauForm} setOpen={setOpenAddSurauForm}>
