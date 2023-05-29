@@ -6,13 +6,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { PhotoIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
 import dynamic from 'next/dynamic'
-import type { FC } from 'react';
+import { FC, useEffect } from 'react';
 import React, { useState } from 'react'
 import { useS3Upload } from 'next-s3-upload';
 import Image from 'next/image'
 import { api } from '../utils/api';
 import { resizeImage } from '../utils/image';
 import AlertModal from './shared/AlertModal';
+import { District } from '@prisma/client';
+
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 })
@@ -69,24 +71,22 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [surauNameError, setSurauNameError] = useState("");
   const [briefDirectionError, setBriefDirectionError] = useState("");
   const [alertModalOpen, setAlertModalOpen] = useState(false)
+  const [currentDistrict, setCurrentDistrict] = useState<District[] | undefined>([]);
 
   const { uploadToS3 } = useS3Upload();
 
   const state = api.surau.getState.useQuery()
-  const district = api.surau.getDistrictOnState.useQuery({ id: choosenState })
+  const district = state.data?.map((state) => state.districts).flat();
   const mall = api.surau.getMallOnDistrict.useQuery({ district_id: choosenDistrict, state_id: choosenState })
   const addSurau = api.surau.addSurau.useMutation()
 
   const handleNegeriChange = (e: any) => {
-
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-    }, 1000)
-
     setChoosenState(e.id)
-    
   }
+
+  useEffect(() => {
+    setCurrentDistrict(district?.filter((district) => district.state_id === choosenState));
+  }, [choosenState])
 
   const handleDaerahChange = (e: any) => {
     setFindMallLoading(true)
@@ -252,7 +252,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   ) : null}
 
-                  {!loading && district.data?.length !== 0 ? (
+                  {!loading && currentDistrict?.length !== 0 ? (
                     <div>
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 sm:col-span-2">
@@ -261,7 +261,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           </label>
                           <div className="mt-1 block rounded-md shadow-sm w-full relative z-10">
                             <Select
-                              options={district.data}
+                              options={currentDistrict}
                               getOptionLabel={(option: any) => option.name}
                               getOptionValue={(option: any) => option.id}
                               onChange={(e) => handleDaerahChange(e)}
@@ -299,6 +299,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
                     </div>
                   ) : null}
+
                   {findMallChecked ? (
                     <div>
                       <AsyncCreatableSelect
