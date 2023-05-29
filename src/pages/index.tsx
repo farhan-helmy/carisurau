@@ -135,7 +135,16 @@ export default function Index() {
                 Recently reviewed
               </h2>
             </div>
-            <SurauList />
+            <SurauList type='recent' />
+          </section>
+
+          <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
+            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+              <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
+                Newly added
+              </h2>
+            </div>
+            <SurauList type='new' />
           </section>
 
 

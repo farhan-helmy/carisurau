@@ -148,4 +148,19 @@ export const surauRouter = createTRPCRouter({
             })
         }
         ),
+    getPendingApproval: publicProcedure.query(async ({ ctx }) => {
+        return await ctx.prisma.surau.findMany({
+            where: {
+                is_approved: false
+            },
+            include: {
+                state: true,
+                district: true,
+                mall: true
+            },
+            orderBy: {
+                created_at: "desc"
+            }
+        })
+    })
 })
