@@ -21,28 +21,38 @@ model Example {
 }
 
 model Surau {
-    id              String       @id @default(cuid())
-    name            String
-    unique_name     String       @unique
-    brief_direction String?
-    is_approved     Boolean      @default(false)
-    images          SurauPhoto[]
-    ratings         Rating[]
-    state_id        String
-    state           State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    district_id     String
-    district        District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
-    mall_id         String?
-    mall            Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
-    
+    id                  String       @id @default(cuid())
+    name                String
+    unique_name         String       @unique
+    brief_direction     String?
+    is_approved         Boolean      @default(false)
+    images              SurauPhoto[]
+    ratings             Rating[]
+    state_id            String
+    state               State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district_id         String
+    district            District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    mall_id             String?
+    mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
+    created_at          DateTime     @default(now())
+    updated_at          DateTime     @default(now()) @updatedAt
+    is_qiblat_certified Boolean      @default(false)
+    qiblat              Qiblat[]
+}
+
+model Qiblat {
+    id          String  @id @default(cuid())
+    surau       Surau   @relation(fields: [surau_id], references: [id])
+    coordinates Float[]
+    surau_id    String
 }
 
 model Rating {
-    id         String   @id @default(cuid())
+    id         String       @id @default(cuid())
     rating     Int
     review     String?
-    created_at DateTime @default(now())
-    surau      Surau    @relation(fields: [surau_id], references: [id])
+    created_at DateTime     @default(now())
+    surau      Surau        @relation(fields: [surau_id], references: [id])
     surau_id   String
     images     SurauPhoto[]
 }
