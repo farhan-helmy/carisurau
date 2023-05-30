@@ -76,6 +76,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [qiblatDegree, setQiblatDegree] = useState(0);
+  const [qiblatInfoError, setQiblatInfoError] = useState("")
 
   const { uploadToS3 } = useS3Upload();
 
@@ -172,13 +173,31 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     });
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+      const qiblat = {
+        latitude: latitude,
+        longitude: longitude,
+        degree: qiblatDegree
+      }
+
       e.preventDefault();
+
       if (surauName === "") {
-        setSurauNameError("Surau name is required")
+        setSurauNameError("Surau name is required");
+        return
       }
+      
+      if((qiblat.degree === 0 || qiblat.latitude === 0 || qiblat.longitude === 0) && isQiblatCertified) {
+        setQiblatInfoError("Qiblat information is required");
+        return
+      }
+
       if (briefDirection === "") {
-        setBriefDirectionError("Brief direction is required")
+        setBriefDirectionError("Brief direction is required");
+        return
       }
+
+
+
       addSurau.mutateAsync({
         name: surauName,
         brief_direction: briefDirection,
@@ -379,7 +398,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       </div>
                       <div className="ml-3 text-sm leading-6">
                         <p className="italic text-gray-500">
-                          If this Surau Qiblat certified?
+                          This Surau is Qiblat certified.
                         </p>
                       </div>
                     </div>
@@ -439,6 +458,12 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         </div>
                       </div>
                     </div>
+                  ) : null}
+
+                  {qiblatInfoError ? (
+                    <p className="text-xs italic text-red-500">
+                      {qiblatInfoError}
+                    </p>
                   ) : null}
 
                   <div>
