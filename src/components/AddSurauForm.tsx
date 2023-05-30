@@ -405,7 +405,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   </div>
 
                   {isQiblatCertified ? (
-                    <div className="grid grid-cols-3 gap-6">
+                    <div className="grid grid-cols-3 gap-2 md:gap-6">
                       <div>
                         <label className="block text-sm font-medium text-gray-700">
                           Latitude

@@ -37,8 +37,6 @@ model Surau {
     district            District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
     mall_id             String?
     mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
-    created_at          DateTime     @default(now())
-    updated_at          DateTime     @default(now()) @updatedAt
     is_qiblat_certified Boolean      @default(false)
     qiblat              Qiblat[]
 }
