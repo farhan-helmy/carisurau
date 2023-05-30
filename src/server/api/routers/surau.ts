@@ -9,7 +9,13 @@ export const surauRouter = createTRPCRouter({
                 z.object({
                     file_path: z.string()
                 })
-            ),
+            ), 
+            is_qiblat_certified: z.boolean().default(false),
+            qiblat: z.object({
+                latitude: z.number(),
+                longitude: z.number(),
+                degree: z.number(),
+            })
         }))
         .mutation(async ({ ctx, input }) => {
             if (input.mall_id){
@@ -18,6 +24,7 @@ export const surauRouter = createTRPCRouter({
                         name: input.name,
                         brief_direction: input.brief_direction,
                         unique_name: input.unique_name,
+                        is_qiblat_certified: input.is_qiblat_certified,
                         images: {
                             createMany: {
                                 data: input.image.map((image) => ({
@@ -39,7 +46,14 @@ export const surauRouter = createTRPCRouter({
                             connect: {
                                 id: input.mall_id
                             }
-                        }
+                        },
+                        qiblat: {
+                            create: {
+                                latitude: input.qiblat.latitude,
+                                longitude: input.qiblat.longitude,
+                                degree: input.qiblat.degree
+                            }
+                        },
                     }
                 })
             }
@@ -48,6 +62,7 @@ export const surauRouter = createTRPCRouter({
                     name: input.name,
                     brief_direction: input.brief_direction,
                     unique_name: input.unique_name,
+                    is_qiblat_certified: input.is_qiblat_certified,
                     images: {
                         createMany: {
                             data: input.image.map((image) => ({
@@ -65,10 +80,15 @@ export const surauRouter = createTRPCRouter({
                             id: input.district_id
                         }
                     },
+                    qiblat: {
+                        create: {
+                            latitude: input.qiblat.latitude,
+                            longitude: input.qiblat.longitude,
+                            degree: input.qiblat.degree
+                        }
+                    }
                 }
             })
-
-        
         }),
     getSurau: publicProcedure
         .input(z.object({ unique_name: z.string() }))
@@ -82,6 +102,7 @@ export const surauRouter = createTRPCRouter({
                     district: true,
                     mall: true,
                     images: true,
+                    qiblat: true
                 }
             })
         }
@@ -143,7 +164,9 @@ export const surauRouter = createTRPCRouter({
                 include: {
                     state: true,
                     district: true,
-                    mall: true
+                    mall: true,
+                    images: true,
+                    qiblat: true
                 }
             })
         }
@@ -156,7 +179,9 @@ export const surauRouter = createTRPCRouter({
             include: {
                 state: true,
                 district: true,
-                mall: true
+                mall: true,
+                images: true,
+                qiblat: true
             },
             orderBy: {
                 created_at: "desc"

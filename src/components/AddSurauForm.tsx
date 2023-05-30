@@ -75,6 +75,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [isQiblatCertified, setIsQiblatCertified] = useState(false);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
+  const [qiblatDegree, setQiblatDegree] = useState(0);
 
   const { uploadToS3 } = useS3Upload();
 
@@ -185,7 +186,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
         state_id: choosenState,
         district_id: choosenDistrict,
         mall_id: mallData,
-        image: filePath
+        image: filePath,
+        is_qiblat_certified: isQiblatCertified,
+        qiblat: {
+          latitude: latitude,
+          longitude: longitude,
+          degree: qiblatDegree
+        }
       })
       .then(() => {
         setAlertModalOpen(true)
@@ -386,13 +393,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         </label>
                         <div className="mt-1 rounded-md shadow-sm">
                           <input
-                            type="text"
+                            type="number"
                             name="latitude"
                             id="latitude"
                             className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             placeholder="0.000"
                             onChange={(e) => {
-                              transformSurauName(e.target.value);
+                              setLatitude(parseFloat(e.target.value));
                             }}
                           />
                         </div>
@@ -403,13 +410,30 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         </label>
                         <div className="mt-1 rounded-md shadow-sm">
                           <input
-                            type="text"
+                            type="number"
                             name="longitude"
                             id="longitude"
                             className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                             placeholder="0.000"
                             onChange={(e) => {
-                              transformSurauName(e.target.value);
+                              setLongitude(parseFloat(e.target.value));
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                          Qiblat Degree
+                        </label>
+                        <div className="mt-1 rounded-md shadow-sm">
+                          <input
+                            type="text"
+                            name="qiblat-degree"
+                            id="longitude"
+                            className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                            placeholder="0.000"
+                            onChange={(e) => {
+                              setQiblatDegree(parseFloat(e.target.value));
                             }}
                           />
                         </div>
