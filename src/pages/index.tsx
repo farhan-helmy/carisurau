@@ -50,6 +50,7 @@ export default function Index() {
               className="h-full w-full object-cover object-center"
               width={1920}
               height={1080}
+              priority
             />
           </div>
           <div aria-hidden="true" className="absolute inset-0 bg-gray-900 opacity-50" />
@@ -132,7 +133,7 @@ export default function Index() {
           <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
-                Recently reviewed
+                Recently added
               </h2>
             </div>
             <SurauList />

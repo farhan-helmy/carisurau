@@ -10,7 +10,8 @@
     "start": "next start",
     "db-seed": "cross-env NODE_ENV=development prisma db seed",
     "compare": "NODE_ENV=development tsx prisma/compare.ts",
-    "setup-db": "make"
+    "setup-db": "make",
+    "drizzle-seed": ""
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts",
@@ -41,6 +42,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.1",
     "@playwright/test": "^1.31.2",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",

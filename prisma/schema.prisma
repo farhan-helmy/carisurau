@@ -26,6 +26,9 @@ model Surau {
     unique_name     String       @unique
     brief_direction String?
     is_approved     Boolean      @default(false)
+    is_approved_at  DateTime?
+    created_at      DateTime     @default(now())
+    updated_at      DateTime     @updatedAt
     images          SurauPhoto[]
     ratings         Rating[]
     state_id        String
@@ -34,15 +37,14 @@ model Surau {
     district        District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
     mall_id         String?
     mall            Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
-    
 }
 
 model Rating {
-    id         String   @id @default(cuid())
+    id         String       @id @default(cuid())
     rating     Int
     review     String?
-    created_at DateTime @default(now())
-    surau      Surau    @relation(fields: [surau_id], references: [id])
+    created_at DateTime     @default(now())
+    surau      Surau        @relation(fields: [surau_id], references: [id])
     surau_id   String
     images     SurauPhoto[]
 }
