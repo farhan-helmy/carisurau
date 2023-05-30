@@ -26,6 +26,9 @@ model Surau {
     unique_name         String       @unique
     brief_direction     String?
     is_approved         Boolean      @default(false)
+    is_approved_at      DateTime?
+    created_at          DateTime     @default(now())
+    updated_at          DateTime     @updatedAt
     images              SurauPhoto[]
     ratings             Rating[]
     state_id            String

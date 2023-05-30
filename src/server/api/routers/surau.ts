@@ -107,12 +107,64 @@ export const surauRouter = createTRPCRouter({
             })
         }
         ),
-    getState: publicProcedure.query(async ({ ctx }) => {
-        return await ctx.prisma.state.findMany({
-            include: {
-                districts: true
-            }
-        })
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (input.mall_id) {
+        return await ctx.prisma.surau.create({
+          data: {
+            name: input.name,
+            brief_direction: input.brief_direction,
+            unique_name: input.unique_name,
+            images: {
+              createMany: {
+                data: input.image.map((image) => ({
+                  file_path: image.file_path,
+                })),
+              },
+            },
+            state: {
+              connect: {
+                id: input.state_id,
+              },
+            },
+            district: {
+              connect: {
+                id: input.district_id,
+              },
+            },
+            mall: {
+              connect: {
+                id: input.mall_id,
+              },
+            },
+          },
+        });
+      }
+      return await ctx.prisma.surau.create({
+        data: {
+          name: input.name,
+          brief_direction: input.brief_direction,
+          unique_name: input.unique_name,
+          images: {
+            createMany: {
+              data: input.image.map((image) => ({
+                file_path: image.file_path,
+              })),
+            },
+          },
+          state: {
+            connect: {
+              id: input.state_id,
+            },
+          },
+          district: {
+            connect: {
+              id: input.district_id,
+            },
+          },
+        },
+      });
     }),
     getDistrictOnState: publicProcedure
         .input(z.object({ id: z.string() }))
