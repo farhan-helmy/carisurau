@@ -41,10 +41,12 @@ model Surau {
 }
 
 model Qiblat {
-    id          String  @id @default(cuid())
-    surau       Surau   @relation(fields: [surau_id], references: [id])
-    coordinates Float[]
-    surau_id    String
+    id        String @id @default(cuid())
+    surau     Surau  @relation(fields: [surau_id], references: [id])
+    surau_id  String
+    latitude  Float
+    longitude Float
+    degree    Float
 }
 
 model Rating {
