@@ -21,22 +21,33 @@ model Example {
 }
 
 model Surau {
-    id              String       @id @default(cuid())
-    name            String
-    unique_name     String       @unique
-    brief_direction String?
-    is_approved     Boolean      @default(false)
-    is_approved_at  DateTime?
-    created_at      DateTime     @default(now())
-    updated_at      DateTime     @updatedAt
-    images          SurauPhoto[]
-    ratings         Rating[]
-    state_id        String
-    state           State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    district_id     String
-    district        District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
-    mall_id         String?
-    mall            Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
+    id                  String       @id @default(cuid())
+    name                String
+    unique_name         String       @unique
+    brief_direction     String?
+    is_approved         Boolean      @default(false)
+    is_approved_at      DateTime?
+    created_at          DateTime     @default(now())
+    updated_at          DateTime     @updatedAt
+    images              SurauPhoto[]
+    ratings             Rating[]
+    state_id            String
+    state               State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district_id         String
+    district            District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    mall_id             String?
+    mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
+    is_qiblat_certified Boolean      @default(false)
+    qiblat              Qiblat[]
+}
+
+model Qiblat {
+    id        String @id @default(cuid())
+    surau     Surau  @relation(fields: [surau_id], references: [id], onDelete: Cascade)
+    surau_id  String
+    latitude  Float
+    longitude Float
+    degree    Float
 }
 
 model Rating {

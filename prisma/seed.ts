@@ -59,7 +59,7 @@ const seedKlMall = async () => {
     })
     const klDisRes = await prisma.district.create({
         data: {
-            name: "kl",
+            name: "Kuala Lumpur",
             unique_name: "kl",
             state: {
                 connect: {

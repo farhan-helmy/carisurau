@@ -44,9 +44,9 @@ yarn-error.log*
 /playwright-report/
 /playwright/.cache/
 
-
 .idea/
-
 
 .open-next
 .sst
+.yarn
+.vscode

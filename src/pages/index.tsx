@@ -122,7 +122,7 @@ export default function Index() {
               Rate, Review, and Connect with Your Local Surau: Your Ultimate Resource for Islamic Worship!
             </p>
             <SearchBar />
-            <p className="font-extralight text-white text-xs mt-2 md:text-lg italic z-0">Can`t find your Surau? <span className="underline" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
+            <p className="font-extralight text-white text-xs mt-2 md:text-lg italic z-0">Can`t find your Surau? <span className="hover:underline cursor-pointer" onClick={() => setOpenAddSurauForm(true)}>Add here</span></p>
           </div>
         </div>
         <Modal open={openAddSurauForm} setOpen={setOpenAddSurauForm}>
@@ -136,7 +136,16 @@ export default function Index() {
                 Recently added
               </h2>
             </div>
-            <SurauList />
+            <SurauList type='recent' />
+          </section>
+
+          <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
+            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
+              <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
+                Newly added
+              </h2>
+            </div>
+            <SurauList type='new' />
           </section>
 
 

@@ -53,7 +53,7 @@ const suraus = [
   // More products...
 ];
 
-const SurauList = () => {
+const SurauList = ({type} : {type: 'new' | 'recent'}) => {
   const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
   const router = useRouter();
 
@@ -65,6 +65,36 @@ const SurauList = () => {
     e.preventDefault();
     void router.push(`/surau/${surauName}`);
   };
+
+  if (type === 'new') {
+    const pendingApprovalList = api.surau.getPendingApproval.useQuery();
+
+    return (
+      <div className="bg-white">
+      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <h2 className="sr-only">Surau</h2>
+
+        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
+          {pendingApprovalList.data?.map((surau) => (
+            <a key={surau.id} href={surau.name} className="group">
+              <div className=" w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-1 xl:aspect-h-1" onClick={(e) => handleRouterPush(e, surau.name)}>
+                <Image
+                  src={"/ioi.jpeg"}
+                  alt={surau.name}
+                  className="h-full w-full object-fill object-center group-hover:opacity-75"
+                  width={500}
+                  height={200}
+                />
+              </div>
+              <h3 className="mt-4 text-sm text-gray-700">{surau.district.name}</h3>
+              <p className="mt-1 text-lg font-medium text-gray-900">{surau.name}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+    )
+  }
 
   return (
     <div className="bg-white">
