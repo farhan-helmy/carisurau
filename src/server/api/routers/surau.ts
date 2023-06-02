@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import { SurauTableColumn } from "./types";
 
 export const surauRouter = createTRPCRouter({
     addSurau: publicProcedure
@@ -107,6 +108,35 @@ export const surauRouter = createTRPCRouter({
             })
         }
         ),
+    getAllSurau: publicProcedure.query(async ({ ctx }) => {
+        const surau =  await ctx.prisma.surau.findMany({
+            include: {
+                state: true,
+                district: true,
+                mall: true,
+                images: true,
+                qiblat: true
+            }
+        })
+
+        const data: SurauTableColumn[] = []
+        
+        surau.forEach((surau) => {
+            data.push({
+                id: surau.id,
+                name: surau.name,
+                unique_name: surau.unique_name,
+                is_approved: surau.is_approved,
+                is_approved_at: surau.is_approved_at,
+                created_at: surau.created_at,
+                state: surau.state.name,
+                district: surau.district.name
+            })
+        })
+
+
+        return data
+    }),
     getState: publicProcedure.query(async ({ ctx }) => {
         return await ctx.prisma.state.findMany({
             include: {
@@ -187,5 +217,19 @@ export const surauRouter = createTRPCRouter({
                 created_at: "desc"
             }
         })
-    })
+    }),
+    getLatestAddedSurau: publicProcedure.query(async ({ ctx }) => {
+        return await ctx.prisma.surau.findMany({
+          orderBy: {
+            is_approved_at: "desc",
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+          },
+          take: 5,
+        });
+      }),
 })

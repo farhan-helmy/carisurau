@@ -6,14 +6,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { PhotoIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
 import dynamic from 'next/dynamic'
-import { FC, useEffect } from 'react';
+import type { FC} from 'react';
+import { useEffect } from 'react';
 import React, { useState } from 'react'
 import { useS3Upload } from 'next-s3-upload';
 import Image from 'next/image'
 import { api } from '../utils/api';
 import { resizeImage } from '../utils/image';
 import AlertModal from './shared/AlertModal';
-import { District } from '@prisma/client';
+import type { District } from '@prisma/client';
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -309,7 +310,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   ) : null}
 
-                  {!loading && currentDistrict?.length !== 0 ? (
+                  {currentDistrict && currentDistrict.length > 0 ? (
                     <div>
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-2 sm:col-span-2">

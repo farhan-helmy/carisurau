@@ -8,58 +8,7 @@ import { useRouter } from "next/router";
 import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
 import { generateRandomName } from "../utils/random";
-import {faker} from "@faker-js/faker"
 
-// const reviews = {
-//   average: 4,
-//   totalCount: 1624,
-//   counts: [
-//     { rating: 5, count: 1019 },
-//     { rating: 4, count: 162 },
-//     { rating: 3, count: 97 },
-//     { rating: 2, count: 199 },
-//     { rating: 1, count: 147 },
-//   ],
-//   featured: [
-//     {
-//       id: 1,
-//       rating: 5,
-//       content: `
-//         <p>I think this surau is the best surau I've ever visited</p>
-//       `,
-//       author: "Farhan Helmy",
-//       avatarSrc: "https://api.dicebear.com/5.x/thumbs/svg?seed=Lucky",
-//     },
-//     {
-//       id: 2,
-//       rating: 5,
-//       content: `
-//         <p>I think this surau is the best surau I've ever visited</p>
-//       `,
-//       author: "Farhan Helmy",
-//       avatarSrc: "https://api.dicebear.com/5.x/thumbs/svg?seed=Lucky",
-//     },
-//     {
-//       id: 3,
-//       rating: 5,
-//       content: `
-//         <p>I think this surau is the best surau I've ever visited</p>
-//       `,
-//       author: "Farhan Helmy",
-//       avatarSrc: "https://api.dicebear.com/5.x/thumbs/svg?seed=Lucky",
-//     },
-//     {
-//       id: 4,
-//       rating: 5,
-//       content: `
-//         <p>I think this surau is the best surau I've ever visited</p>
-//       `,
-//       author: "Farhan Helmy",
-//       avatarSrc: "https://api.dicebear.com/5.x/thumbs/svg?seed=Lucky",
-//     },
-//     // More reviews...
-//   ],
-// };
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -246,16 +195,14 @@ const SurauReview = () => {
                      dangerouslySetInnerHTML={{ __html: review.review as string}}
                     />
                     <div className="space-x-2">
-                      {/* <img
-                        className="inline-block h-14 w-14 rounded-md mt-4"
-                        src="/klcc.jpeg"
-                        alt=""
-                      />
-                      <img
-                        className="inline-block h-14 w-14 rounded-md mt-4"
-                        src="/klcc.jpeg"
-                        alt=""
-                      /> */}
+                      {/* {review.images.map((image) => (
+                        <img
+                          key={image.id}
+                          src={image.url}
+                          alt={image.alt}
+                          className="w-32 h-32 rounded-lg object-cover ring-2 ring-white sm:w-48 sm:h-48"
+                        />
+                      ))} */}
                     </div>
                   </div>
                 ))}
