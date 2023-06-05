@@ -61,11 +61,11 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               {surau?.images.map((image) => (
                 <Image
                   key={image.id}
-                  className="rounded-lg"
+                  className="rounded-lg h-auto w-auto"
                   src={image.file_path}
-                  alt="te"
-                  width={75}
-                  height={75}
+                  alt={image.id}
+                  width={100}
+                  height={100}
                   onClick={() => setImageHighlighted(image)}
                   placeholder="blur"
                   blurDataURL="/assets/logo/rms_logo_new_1.png"

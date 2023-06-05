@@ -34,7 +34,6 @@ const SearchBar = () => {
 
     return (
         <>
- <MagnifyingGlassCircleIcon className="absolute top-0 right-0 h-6 w-6 text-gray-400" />
         <div className="w-full absolute mt-36 p-4">
             
             <div>
