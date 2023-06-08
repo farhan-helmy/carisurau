@@ -2,12 +2,16 @@ import type { NextPage } from "next";
 import SurauReview from "../../components/SurauReview";
 import Head from "next/head";
 import Script from "next/script";
+import { useRouter } from "next/router";
 
 const SurauPage: NextPage = () => {
+
+  const router = useRouter();
+  const uniqueName = router.query["id"];
+
   return (
     <div>
       <Head>
-        <title>Ratemysurau | Review</title>
         <script
           src="https://beamanalytics.b-cdn.net/beam.min.js"
           data-token="985d914f-a13a-4d21-9289-bf51f9d27097"

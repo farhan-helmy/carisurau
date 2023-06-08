@@ -34,12 +34,57 @@ export default function Index() {
   return (
     <>
       <Head>
-        <title>Carisurau</title>
-        <script src="https://beamanalytics.b-cdn.net/beam.min.js" data-token="985d914f-a13a-4d21-9289-bf51f9d27097" async></script>
+        {/* Google meta tags */}
+        <meta
+          name="description"
+          content="Carisurau - The Ultimate Surau Finder. Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
+        />
+        <meta
+          name="keywords"
+          content="carisurau, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
+        />
+        <meta name="author" content="farhanhelmy" />
+        {/* Twitter meta tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@farhanhelmycode" />
+        <meta
+          name="twitter:title"
+          content="Carisurau - Surau Finder | Find Surau Near You"
+        />
+        <meta
+          name="twitter:description"
+          content="Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
+        />
+        <meta
+          name="twitter:image"
+          content="/sejadah.jpg"
+        />
+        {/* Facebook meta tags */}
+        <meta property="og:url" content="https://www.example.com" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="Carisurau - Surau Finder | Find Surau Near You"
+        />
+        <meta
+          property="og:description"
+          content="Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
+        />
+        <meta
+          property="og:image"
+          content="/sejadah.jpg"
+        />
+        <meta property="og:image:alt" content="Carisurau Logo" />
+        <meta property="og:site_name" content="Carisurau"></meta>
+        <title>Carisurau | Find Surau Near You</title>
+        <script
+          src="https://beamanalytics.b-cdn.net/beam.min.js"
+          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
+          async
+        ></script>
       </Head>
 
       <div className="bg-white">
-        
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"

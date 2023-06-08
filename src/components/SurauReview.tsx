@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
 import { generateRandomName } from "../utils/random";
+import Head from "next/head";
 
 
 function classNames(...classes: string[]) {
@@ -43,6 +44,52 @@ const SurauReview = () => {
 
   return (
     <>
+    <Head>
+
+        {/* Google meta tags */}
+        <meta
+          name="description"
+          content={`Carisurau | ${surau.data?.name as string}`}
+        />
+        <meta
+          name="keywords"
+          content="carisurau, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
+        />
+        <meta name="author" content="farhanhelmy" />
+        {/* Twitter meta tags */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@farhanhelmycode" />
+        <meta
+          name="twitter:title"
+          content={`Carisurau | ${surau.data?.name as string}`}
+        />
+        <meta
+          name="twitter:description"
+          content={`Carisurau | ${surau.data?.name as string}`}
+        />
+        <meta
+          name="twitter:image"
+          content={surau.data?.images[0]?.file_path as string}
+        ></meta>
+        {/* Facebook meta tags */}
+        <meta property="og:url" content="https://carisurau.com" />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`Carisurau | ${surau.data?.name as string}`}
+        />
+        <meta
+          property="og:description"
+          content={surau.data?.name as string}
+        />
+        <meta
+          property="og:image"
+          content={surau.data?.images[0]?.file_path as string}
+        />
+        <meta property="og:image:alt" content="Carisurau Logo" />
+        <meta property="og:site_name" content="Carisurau"></meta>
+        <title>Carisurau | {surau.data?.name}</title>
+    </Head>
       <Modal open={open} setOpen={setOpen}>
         <ReviewSurauForm
           setOpen={setOpen}
