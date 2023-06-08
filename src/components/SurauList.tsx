@@ -3,63 +3,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
 
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-const suraus = [
-  {
-    id: 1,
-    location: "WP Kuala Lumpur",
-    href: "#",
-    name: "Surau KLCC",
-    imageSrc: "/klcc.jpeg",
-    imageAlt: "..",
-  },
-  {
-    id: 2,
-    location: "Putrajaya",
-    href: "#",
-    name: "Surau IOI City Mall",
-    imageSrc: "/ioi.jpeg",
-    imageAlt: "..",
-  },
-  {
-    id: 3,
-    location: "Cyberjaya",
-    href: "#",
-    name: "Surau Shell Cyberjaya",
-    imageSrc: "/shell.jpeg",
-    imageAlt: "..",
-  },
-  {
-    id: 4,
-    location: "Seremban",
-    href: "#",
-    name: "Surau Petronas R&R Seremban",
-    imageSrc: "/petronas.jpeg",
-    imageAlt: "..",
-  },
-  // More products...
-];
-
 const SurauList = ({type} : {type: 'new' | 'recent'}) => {
   const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
   const router = useRouter();
-
-  const transformUrl = (surauName: string) => {
-    return surauName.replace(/\s/g, "-").toLocaleLowerCase();
-  };
 
   const handleRouterPush = (e: React.FormEvent, surauName: string) => {
     e.preventDefault();

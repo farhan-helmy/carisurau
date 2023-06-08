@@ -26,6 +26,7 @@ import Modal from "../components/shared/Modal";
 import { useState } from "react";
 import AddSurauForm from "../components/AddSurauForm";
 import SearchBar from "../components/SearchBar";
+import Script from "next/script";
 
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
@@ -35,7 +36,21 @@ export default function Index() {
       <Head>
         <title>Carisurau</title>
       </Head>
+
       <div className="bg-white">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-ZDMV4PB3GF');
+              `}
+        </Script>
         {/* Hero section */}
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}

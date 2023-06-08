@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { api } from "../utils/api";
 import { useRouter } from "next/router";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/20/solid";
 import { capitalizeFirstLetter } from "../utils";
 
 const SearchBar = () => {
     const [surauInput, setSurauInput] = useState<string>("");
-    const [searched, setSearched] = useState(false);
     const [surauInputDebounced] = useDebounce<string>(surauInput, 500);
     const [isLoading, setIsLoading] = useState(false);
     const searchSurau = api.surau.searchSurau;

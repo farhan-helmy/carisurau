@@ -143,20 +143,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     for (const element of e.target.files) {
       const resizedImage = await resizeImage(element, 100);
       images.push(URL.createObjectURL(resizedImage) as unknown as ImagePreviews);
-      // download the image
-      // const downloadUrl = URL.createObjectURL(resizedImage);
-      // alert(downloadUrl);
-      // console.log(element)
       const { url } = await uploadToS3(element);
       const cloudFrontFilePath = url.replace("https://ratemysurau.s3.ap-southeast-1.amazonaws.com/", "https://dcm2976bhgfsz.cloudfront.net/");
 
       urls.push({ file_path: cloudFrontFilePath});
     }
-    // console.log(urls);
+   
     setFilePath(urls);
     setImagePreviews(images);
-    // const { url } = await uploadToS3(file);
-    // setValue('image', urls.map(url => ({ src: url })));
   }
 
   const filterMall = (inputValue: string) => {

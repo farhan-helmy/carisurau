@@ -6,7 +6,6 @@ import { resizeImage } from "../utils/image";
 import type { FilePath } from "./AddSurauForm";
 import { useS3Upload } from "next-s3-upload";
 import { api } from "../utils/api";
-import { type } from "os";
 
 export type ReviewSurauFormProps = {
   setOpen: (open: boolean) => void;

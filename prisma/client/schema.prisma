@@ -1,0 +1,150 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider      = "prisma-client-js"
+    output        = "client"
+    binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+    provider = "postgresql"
+    // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
+    // Further reading:
+    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
+    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
+    url      = env("DATABASE_URL")
+}
+
+model Example {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Surau {
+    id                  String       @id @default(cuid())
+    name                String
+    unique_name         String       @unique
+    brief_direction     String?
+    is_approved         Boolean      @default(false)
+    is_approved_at      DateTime?
+    created_at          DateTime     @default(now())
+    updated_at          DateTime     @updatedAt
+    images              SurauPhoto[]
+    ratings             Rating[]
+    state_id            String
+    state               State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district_id         String
+    district            District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    mall_id             String?
+    mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
+    is_qiblat_certified Boolean      @default(false)
+    qiblat              Qiblat[]
+}
+
+model Qiblat {
+    id        String @id @default(cuid())
+    surau     Surau  @relation(fields: [surau_id], references: [id], onDelete: Cascade)
+    surau_id  String
+    latitude  Float
+    longitude Float
+    degree    Float
+}
+
+model Rating {
+    id         String       @id @default(cuid())
+    rating     Int
+    review     String?
+    created_at DateTime     @default(now())
+    surau      Surau        @relation(fields: [surau_id], references: [id])
+    surau_id   String
+    images     SurauPhoto[]
+}
+
+model SurauPhoto {
+    id         String   @id @default(cuid())
+    file_path  String
+    caption    String?
+    created_at DateTime @default(now())
+    surau      Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
+    surau_id   String
+    rating     Rating?  @relation(fields: [rating_id], references: [id], onDelete: Cascade)
+    rating_id  String?
+}
+
+model State {
+    id          String     @id @default(cuid())
+    name        String
+    unique_name String     @unique
+    malls       Mall[]
+    districts   District[]
+    surau       Surau[]
+}
+
+model District {
+    id          String  @id @default(cuid())
+    name        String
+    unique_name String  @unique
+    state_id    String
+    state       State   @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    malls       Mall[]
+    surau       Surau[]
+}
+
+model Mall {
+    id          String   @id @default(cuid())
+    name        String
+    label       String   @default("")
+    value       String   @default("")
+    district_id String
+    district    District @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    state_id    String
+    state       State    @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    surau       Surau[]
+}
+
+// Necessary for Next auth
+model Account {
+    id                String  @id @default(cuid())
+    userId            String
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? // @db.Text
+    access_token      String? // @db.Text
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? // @db.Text
+    session_state     String?
+    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model Session {
+    id           String   @id @default(cuid())
+    sessionToken String   @unique
+    userId       String
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+    id            String    @id @default(cuid())
+    name          String?
+    email         String?   @unique
+    emailVerified DateTime?
+    image         String?
+    accounts      Account[]
+    sessions      Session[]
+}
+
+model VerificationToken {
+    identifier String
+    token      String   @unique
+    expires    DateTime
+
+    @@unique([identifier, token])
+}
