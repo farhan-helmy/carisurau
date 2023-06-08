@@ -10,7 +10,6 @@ import ReviewSurauForm from "./ReviewSurauForm";
 import { generateRandomName } from "../utils/random";
 import Head from "next/head";
 
-
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
@@ -29,14 +28,15 @@ const SurauReview = () => {
     surau_id: surau.data?.id as string,
   });
 
-  const [randomName, setRandomName] = useState('');
+  const [randomName, setRandomName] = useState("");
 
   useEffect(() => {
     generateRandomName()
       .then((name) => setRandomName(name))
-      .catch((error) => console.error('Failed to generate random name:', error));
+      .catch((error) =>
+        console.error("Failed to generate random name:", error)
+      );
   }, []);
-
 
   if (!rating?.data) {
     return <div>Loading...</div>; // or handle the case in a different way
@@ -44,8 +44,7 @@ const SurauReview = () => {
 
   return (
     <>
-    <Head>
-
+      <Head>
         {/* Google meta tags */}
         <meta
           name="description"
@@ -78,10 +77,8 @@ const SurauReview = () => {
           property="og:title"
           content={`Carisurau | ${surau.data?.name as string}`}
         />
-        <meta
-          property="og:description"
-          content={surau.data?.name as string}
-        />
+        <meta property="og:description" content={surau.data?.name as string} />
+        <meta property="fb:app_id" content="571114311611632" />
         <meta
           property="og:image"
           content={surau.data?.images[0]?.file_path as string}
@@ -89,7 +86,7 @@ const SurauReview = () => {
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
         <title>Carisurau | {surau.data?.name}</title>
-    </Head>
+      </Head>
       <Modal open={open} setOpen={setOpen}>
         <ReviewSurauForm
           setOpen={setOpen}
@@ -126,7 +123,9 @@ const SurauReview = () => {
                     />
                   ))}
                 </div>
-                <p className="sr-only">{rating.data.averageRatingRounded} out of 5 stars</p>
+                <p className="sr-only">
+                  {rating.data.averageRatingRounded} out of 5 stars
+                </p>
               </div>
               <p className="ml-2 text-sm text-gray-900">
                 Based on {rating.data?.ratings.length} reviews
@@ -173,7 +172,10 @@ const SurauReview = () => {
                       </div>
                     </dt>
                     <dd className="ml-3 w-10 text-right text-sm tabular-nums text-gray-900">
-                      {Math.round((count.count / rating.data.totalRating) * 100)}%
+                      {Math.round(
+                        (count.count / rating.data.totalRating) * 100
+                      )}
+                      %
                     </dd>
                   </div>
                 ))}
@@ -239,7 +241,9 @@ const SurauReview = () => {
 
                     <div
                       className="mt-4 space-y-6 text-base italic text-gray-600"
-                     dangerouslySetInnerHTML={{ __html: review.review as string}}
+                      dangerouslySetInnerHTML={{
+                        __html: review.review as string,
+                      }}
                     />
                     <div className="space-x-2">
                       {/* {review.images.map((image) => (

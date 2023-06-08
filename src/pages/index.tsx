@@ -76,6 +76,7 @@ export default function Index() {
         />
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
+        <meta property="fb:app_id" content="571114311611632" />
         <title>Carisurau | Find Surau Near You</title>
         <script
           src="https://beamanalytics.b-cdn.net/beam.min.js"
