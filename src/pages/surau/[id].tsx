@@ -8,8 +8,14 @@ const SurauPage: NextPage = () => {
     <div>
       <Head>
         <title>Ratemysurau | Review</title>
+        <script
+          src="https://beamanalytics.b-cdn.net/beam.min.js"
+          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
+          async
+        ></script>
       </Head>
       <div>
+        
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"
