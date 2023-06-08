@@ -198,6 +198,7 @@ export const surauRouter = createTRPCRouter({
           unique_name: {
             contains: input.name,
           },
+          is_approved: true,
         },
         include: {
           state: true,

@@ -180,6 +180,7 @@ export default function Index() {
             <p className="mt-4 text-xl text-white">
               Discover Your Perfect Prayer Haven with Ease!
             </p>
+            {/* Search bar component */}
             <SearchBar />
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
