@@ -30,6 +30,10 @@ const SurauReview = () => {
 
   const [randomName, setRandomName] = useState("");
 
+  const refetchRating = () => {
+    rating.refetch();
+  }
+
   useEffect(() => {
     generateRandomName()
       .then((name) => setRandomName(name))
@@ -92,6 +96,7 @@ const SurauReview = () => {
           setOpen={setOpen}
           surauName={surau.data?.name as string}
           surauId={surau.data?.id as string}
+          refetch={refetchRating}
         />
       </Modal>
       <div className="bg-white">
