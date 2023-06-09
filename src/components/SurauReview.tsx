@@ -172,10 +172,14 @@ const SurauReview = () => {
                       </div>
                     </dt>
                     <dd className="ml-3 w-10 text-right text-sm tabular-nums text-gray-900">
-                      {Math.round(
-                        (count.count / rating.data.totalRating) * 100
-                      )}
-                      %
+                      {count.count > 0 ? (
+                        <>
+                          {Math.round(
+                            (count.count / rating.data.totalRating) * 100
+                          )}
+                          %
+                        </>
+                      ) : null}
                     </dd>
                   </div>
                 ))}

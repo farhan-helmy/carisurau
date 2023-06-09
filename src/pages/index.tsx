@@ -23,13 +23,25 @@ import SurauList from "../components/SurauList";
 import Image from "next/image";
 import Head from "next/head";
 import Modal from "../components/shared/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddSurauForm from "../components/AddSurauForm";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
 
+const imagePaths = [
+  "/assets/background/carisurau.jpeg",
+  "/assets/background/carisurau1.jpeg",
+  "/assets/background/carisurau2.jpeg"
+];
+
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
+  const [imagePath, setImagePath] = useState("");
+
+  useEffect(() => {
+    const randomImagePath = imagePaths[Math.floor(Math.random() * imagePaths.length)];
+    setImagePath(randomImagePath as string);
+  }, []);
 
   return (
     <>
@@ -57,10 +69,10 @@ export default function Index() {
         />
         <meta
           name="twitter:image"
-          content="/sejadah.jpg"
+          content={imagePath}
         />
         {/* Facebook meta tags */}
-        <meta property="og:url" content="https://www.example.com" />
+        <meta property="og:url" content="https://www.carisurau.com" />
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
@@ -72,7 +84,7 @@ export default function Index() {
         />
         <meta
           property="og:image"
-          content="/sejadah.jpg"
+          content={imagePath}
         />
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
@@ -104,8 +116,8 @@ export default function Index() {
           {/* Decorative image and overlay */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
             <Image
-              src="/sejadah.jpg"
-              alt=""
+              src={imagePath}
+              alt="random background image"
               className="h-full w-full object-cover object-center"
               width={1920}
               height={1080}
