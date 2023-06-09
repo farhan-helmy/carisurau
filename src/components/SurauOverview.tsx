@@ -35,7 +35,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
         {surau?.images.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
             <Image
-              src="/assets/logo/rms_logo_new_1.png"
+              src="/assets/background/carisuraudefault.png"
               alt="logoratemysurau"
               width={500}
               height={300}
@@ -55,7 +55,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               height={300}
               priority
               placeholder="blur"
-              blurDataURL="/assets/logo/rms_logo_new_1.png"
+              blurDataURL="/assets/background/carisuraudefault.png"
             />
             <div className="space-x-2 flex items-center justify-center overflow-auto mt-2">
               {surau?.images.map((image) => (
@@ -68,7 +68,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   height={100}
                   onClick={() => setImageHighlighted(image)}
                   placeholder="blur"
-                  blurDataURL="/assets/logo/rms_logo_new_1.png"
+                  blurDataURL="/assets/background/carisuraudefault.png"
                   priority
                 />
               ))}

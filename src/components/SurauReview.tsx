@@ -185,8 +185,16 @@ const SurauReview = () => {
                 ))}
               </dl>
             </div>
-
             <div className="mt-10">
+              <h3 className="text-lg font-medium text-gray-900">
+                Direction
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                {surau.data?.brief_direction as string}
+              </p>
+            </div>
+
+            <div className="mt-4">
               <h3 className="text-lg font-medium text-gray-900">
                 Share your thoughts
               </h3>

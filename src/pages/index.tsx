@@ -69,7 +69,7 @@ export default function Index() {
         />
         <meta
           name="twitter:image"
-          content={imagePath}
+          content="/assets/background/carisurau.jpeg"
         />
         {/* Facebook meta tags */}
         <meta property="og:url" content="https://www.carisurau.com" />
@@ -84,7 +84,7 @@ export default function Index() {
         />
         <meta
           property="og:image"
-          content={imagePath}
+          content="/assets/background/carisurau.jpeg"
         />
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
@@ -198,7 +198,7 @@ export default function Index() {
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
               <span
-                className="cursor-pointer hover:underline"
+                className="cursor-pointer hover:underline underline font-bold"
                 onClick={() => setOpenAddSurauForm(true)}
               >
                 Add here
