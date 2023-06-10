@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 import { useRouter } from "next/router";
 import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
-import { generateRandomName } from "../utils/random";
+import { faker } from '@faker-js/faker';
 import Head from "next/head";
 
 function classNames(...classes: string[]) {
@@ -28,19 +28,9 @@ const SurauReview = () => {
     surau_id: surau.data?.id as string,
   });
 
-  const [randomName, setRandomName] = useState("");
-
   const refetchRating = () => {
-    rating.refetch();
+    void rating.refetch();
   }
-
-  useEffect(() => {
-    generateRandomName()
-      .then((name) => setRandomName(name))
-      .catch((error) =>
-        console.error("Failed to generate random name:", error)
-      );
-  }, []);
 
   if (!rating?.data) {
     return <div>Loading...</div>; // or handle the case in a different way
@@ -226,7 +216,7 @@ const SurauReview = () => {
                   <div key={review.id} className="py-8">
                     <div className="flex items-center">
                       <Image
-                        src="https://api.dicebear.com/5.x/thumbs/svg?seed=Lucky"
+                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${faker.person.firstName()}&background=%23fff&radius=50&width=50&height=50}`}
                         alt="nil"
                         className="h-12 w-12 rounded-full"
                         width={12}
@@ -234,7 +224,7 @@ const SurauReview = () => {
                       />
                       <div className="ml-4">
                         <h4 className="text-sm font-bold text-gray-900">
-                          {randomName}
+                          {faker.person.firstName()}
                         </h4>
                         <div className="mt-1 flex items-center">
                           {[0, 1, 2, 3, 4].map((rating) => (
