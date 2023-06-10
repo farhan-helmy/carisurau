@@ -7,7 +7,7 @@ import { api } from "../utils/api";
 import { useRouter } from "next/router";
 import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 import Head from "next/head";
 
 function classNames(...classes: string[]) {
@@ -30,7 +30,7 @@ const SurauReview = () => {
 
   const refetchRating = () => {
     void rating.refetch();
-  }
+  };
 
   if (!rating?.data) {
     return <div>Loading...</div>; // or handle the case in a different way
@@ -97,8 +97,30 @@ const SurauReview = () => {
             ) : (
               <div>Loading...</div>
             )}
+            <div className="mt-2">
+              <h3 className="text-lg font-medium text-gray-900">Direction</h3>
+              <p className="mt-1 text-sm text-gray-600">
+                {surau.data?.brief_direction as string}
+              </p>
+            </div>
+            <div className="mt-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                Share your thoughts
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                If you’ve been / went to this surau, write a review and post
+                some pictures.
+              </p>
 
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+              <button
+                onClick={() => setOpen(true)}
+                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+              >
+                Write a review
+              </button>
+            </div>
+
+            <h2 className="mt-4 text-2xl font-bold tracking-tight text-gray-900">
               Reviews
             </h2>
 
@@ -179,31 +201,6 @@ const SurauReview = () => {
                   </div>
                 ))}
               </dl>
-            </div>
-            <div className="mt-10">
-              <h3 className="text-lg font-medium text-gray-900">
-                Direction
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                {surau.data?.brief_direction as string}
-              </p>
-            </div>
-
-            <div className="mt-4">
-              <h3 className="text-lg font-medium text-gray-900">
-                Share your thoughts
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                If you’ve been / went to this surau, write a review and post
-                some pictures.
-              </p>
-
-              <button
-                onClick={() => setOpen(true)}
-                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
-              >
-                Write a review
-              </button>
             </div>
           </div>
 

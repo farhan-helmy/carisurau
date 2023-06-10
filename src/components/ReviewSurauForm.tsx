@@ -28,6 +28,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
   const [filePath, setFilePath] = useState<FilePath[]>([]);
   const [checkImageUpload, setCheckImageUpload] = useState(false);
+  const [ratingError, setRatingError] = useState(false);
   const [review, setReview] = useState("");
   const { uploadToS3 } = useS3Upload();
   const addRating = api.rate.addRating.useMutation();
@@ -78,10 +79,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
       images.push(
         URL.createObjectURL(resizedImage) as unknown as ImagePreviews
       );
-      // download the image
-      // const downloadUrl = URL.createObjectURL(resizedImage);
-      // alert(downloadUrl);
-      // console.log(element)
+
       const { url } = await uploadToS3(element);
       const cloudFrontFilePath = url.replace(
         "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
@@ -90,17 +88,18 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
 
       urls.push({ file_path: cloudFrontFilePath });
     }
-    // console.log(urls);
     setFilePath(urls);
     setImagePreviews(images);
-    // const { url } = await uploadToS3(file);
-    // setValue('image', urls.map(url => ({ src: url })));
   };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(rating);
-    console.log(filePath);
+
+    if (rating === 0) {
+      setRatingError(true);
+      return;
+    }
+
     addRating
       .mutateAsync({
         rating: rating,
@@ -135,6 +134,11 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
             <div className="flex items-center justify-center pt-4">
               {renderStars()}
             </div>
+            {ratingError ? (
+              <p className="text-xs text-red-500 text-center">
+                Please select a rating
+              </p>
+            ): null}
             <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
               <div>
                 <label
