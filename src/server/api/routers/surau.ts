@@ -233,7 +233,7 @@ export const surauRouter = createTRPCRouter({
         is_approved: true,
       },
       orderBy: {
-        is_approved_at: "desc",
+        created_at: "desc",
       },
       include: {
         state: true,
