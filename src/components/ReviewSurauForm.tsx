@@ -11,15 +11,18 @@ export type ReviewSurauFormProps = {
   setOpen: (open: boolean) => void;
   surauName: string;
   surauId: string;
+  refetch: () => void;
 };
 
 type ImagePreviews = {
   url: string;
 };
+
 const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
   setOpen,
   surauName,
   surauId,
+  refetch,
 }) => {
   const [rating, setRating] = useState(0);
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
@@ -107,6 +110,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
       })
       .then(() => {
         setOpen(false);
+        refetch();
       })
       .catch((err) => {
         console.log(err);
