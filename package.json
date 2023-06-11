@@ -9,6 +9,8 @@
     "lint": "next lint",
     "start": "next start",
     "db-seed": "cross-env NODE_ENV=development prisma db seed",
+    "update-district": "NODE_ENV=development tsx scripts/updateDistrict.ts",
+    "update-district:staging": "NODE_ENV=development dotenv -e .env.local -- tsx scripts/updateDistrict.ts",
     "compare": "NODE_ENV=development tsx prisma/compare.ts",
     "setup-db": "make",
     "drizzle-seed": ""
@@ -56,15 +58,16 @@
     "aws-cdk-lib": "2.79.1",
     "constructs": "10.1.156",
     "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.2.1",
     "eslint": "^8.30.0",
     "eslint-config-next": "13.1.6",
     "postcss": "^8.4.14",
     "prettier": "^2.8.1",
     "prettier-plugin-tailwindcss": "^0.2.1",
     "prisma": "^4.15.0",
+    "sst": "^2.11.18",
     "tailwindcss": "^3.2.0",
-    "typescript": "^4.9.4",
-    "sst": "^2.11.18"
+    "typescript": "^4.9.4"
   },
   "ct3aMetadata": {
     "initVersion": "7.5.1"
