@@ -125,7 +125,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     const { url } = await uploadToS3(file as File);
 
     setImagePreviews([...imagePreviews as ImagePreviews[], URL.createObjectURL(file as Blob) as unknown as ImagePreviews]);
-    setFilePath([...filePath, url as unknown as FilePath]);
+    const cloudFrontFilePath = url.replace("https://ratemysurau.s3.ap-southeast-1.amazonaws.com/", "https://dcm2976bhgfsz.cloudfront.net/");
+    setFilePath([...filePath, { file_path: cloudFrontFilePath} as unknown as FilePath]);
+
+   
   }
 
   const handleMallChange = (e: any) => {
