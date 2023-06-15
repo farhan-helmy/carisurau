@@ -2,10 +2,13 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
+import { useRef } from "react";
 
 const SurauList = ({ type }: { type: "new" | "recent" }) => {
   const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
+
   const router = useRouter();
+  console.log(latestAddedSurau.data);
 
   const handleRouterPush = (e: React.FormEvent, surauName: string) => {
     e.preventDefault();
@@ -54,8 +57,8 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
   }
 
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-2xl py-16 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div className="bg-white ">
+      <div className="mx-auto shadow-lg max-w-2xl py-2 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Surau</h2>
 
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
@@ -67,7 +70,7 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
             latestAddedSurau.data?.map((surau) => (
               <a key={surau.id} href="#" className="group">
                 <div
-                  className=" w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-1 xl:aspect-h-1"
+                  className="max-h-72 overflow-hidden object-fill rounded-xl bg-gray-200"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
                   {surau.images[0]?.file_path ? (
@@ -75,7 +78,7 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
                       src={surau.images[0]?.file_path}
                       alt={surau.images[0].id}
                       className="h-full w-full object-fill object-center group-hover:opacity-75"
-                      width={500}
+                      width={200}
                       height={200}
                     />
                   ) : (
@@ -84,7 +87,7 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
                         src="/assets/background/carisuraudefault.png"
                         alt="default"
                         className="h-full w-full object-fill object-center group-hover:opacity-75"
-                        width={500}
+                        width={200}
                         height={200}
                       />
                     </>

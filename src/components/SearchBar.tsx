@@ -32,7 +32,7 @@ const SearchBar = () => {
 
     return (
         <>
-        <div className="w-full absolute mt-36 p-4">
+        <div className="w-full absolute mt-24 p-4">
             
             <div>
                 <input

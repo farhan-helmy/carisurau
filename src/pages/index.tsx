@@ -186,7 +186,7 @@ export default function Index() {
             </nav>
           </header>
 
-          <div className="relative mx-auto flex max-w-3xl flex-col items-center py-32 px-6 text-center sm:py-64 lg:px-0">
+          <div className="relative mx-auto flex max-w-3xl flex-col items-center py-20 px-6 text-center sm:py-64 lg:px-0">
             <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
               Carisurau.com
             </h1>
@@ -213,7 +213,7 @@ export default function Index() {
           {/* Category section */}
           <section
             aria-labelledby="category-heading"
-            className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8"
+            className="pt-4 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8"
           >
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <h2
