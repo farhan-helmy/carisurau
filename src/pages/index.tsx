@@ -17,8 +17,6 @@
   }
   ```
 */
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import SurauList from "../components/SurauList";
 import Image from "next/image";
 import Head from "next/head";
@@ -27,11 +25,12 @@ import { useEffect, useState } from "react";
 import AddSurauForm from "../components/AddSurauForm";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
+import Header from "../components/shared/Header";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
   "/assets/background/carisurau1.jpeg",
-  "/assets/background/carisurau2.jpeg"
+  "/assets/background/carisurau2.jpeg",
 ];
 
 export default function Index() {
@@ -39,7 +38,8 @@ export default function Index() {
   const [imagePath, setImagePath] = useState("");
 
   useEffect(() => {
-    const randomImagePath = imagePaths[Math.floor(Math.random() * imagePaths.length)];
+    const randomImagePath =
+      imagePaths[Math.floor(Math.random() * imagePaths.length)];
     setImagePath(randomImagePath as string);
   }, []);
 
@@ -82,10 +82,7 @@ export default function Index() {
           property="og:description"
           content="Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
         />
-        <meta
-          property="og:image"
-          content="/assets/background/carisurau.jpeg"
-        />
+        <meta property="og:image" content="/assets/background/carisurau.jpeg" />
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
@@ -111,6 +108,7 @@ export default function Index() {
               gtag('config', 'G-ZDMV4PB3GF');
               `}
         </Script>
+
         {/* Hero section */}
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}
@@ -130,61 +128,7 @@ export default function Index() {
           />
 
           {/* Navigation */}
-          <header className="relative z-10">
-            <nav aria-label="Top">
-              {/* Top navigation */}
-
-              {/* Secondary navigation */}
-              <div className="bg-white bg-opacity-10 backdrop-blur-md backdrop-filter">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <div>
-                    <div className="flex h-16 items-center justify-between">
-                      {/* Logo (lg+) */}
-                      <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                        <div className="font-light text-white">carisurau</div>
-                      </div>
-
-                      {/* Mobile menu and search (lg-) */}
-                      {/* Logo (lg-) */}
-                      <div className="font-bold text-white">carisurau</div>
-
-                      <div className="flex flex-1 items-center justify-end">
-                        <Link
-                          href="#"
-                          className="hidden text-sm font-medium text-white lg:block"
-                        >
-                          Sign in
-                        </Link>
-
-                        <div className="flex items-center lg:ml-8">
-                          {/* Help */}
-                          <Link
-                            href="#"
-                            className="text-sm font-medium text-white lg:hidden "
-                          >
-                            Sign in
-                          </Link>
-                          <a href="#" className="p-2 text-white lg:hidden">
-                            <span className="sr-only">Help</span>
-                            <QuestionMarkCircleIcon
-                              className="h-6 w-6"
-                              aria-hidden="true"
-                            />
-                          </a>
-                          <a
-                            href="#"
-                            className="hidden text-sm font-medium text-white lg:block"
-                          >
-                            Help
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </nav>
-          </header>
+          <Header />
 
           <div className="relative mx-auto flex max-w-3xl flex-col items-center py-20 px-6 text-center sm:py-64 lg:px-0">
             <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
@@ -198,7 +142,7 @@ export default function Index() {
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
               <span
-                className="cursor-pointer hover:underline underline font-bold"
+                className="cursor-pointer font-bold underline hover:underline"
                 onClick={() => setOpenAddSurauForm(true)}
               >
                 Add here
