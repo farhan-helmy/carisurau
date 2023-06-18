@@ -7,26 +7,16 @@ import { capitalizeFirstLetter } from "../utils";
 const SearchBar = () => {
   const [surauInput, setSurauInput] = useState<string>("");
   const [surauInputDebounced] = useDebounce<string>(surauInput, 500);
-  //   const [isLoading, setIsLoading] = useState(false);
   const searchSurau = api.surau.searchSurau;
   const router = useRouter();
 
-  const { data, error, isLoading } = searchSurau.useQuery({
+  const { data, isLoading } = searchSurau.useQuery({
     name: surauInputDebounced.toLowerCase().replace(/ /g, "-"),
   });
 
   const redirectToSurauPage = (surauUniqueName: string) => {
     void router.push(`/surau/${surauUniqueName}`);
   };
-
-  //   useEffect(() => {
-  //     if (surauInput) {
-  //       setIsLoading(true);
-  //       setTimeout(() => {
-  //         setIsLoading(false);
-  //       }, 0);
-  //     }
-  //   }, [surauInput]);
 
   return (
     <>
