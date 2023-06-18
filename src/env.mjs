@@ -55,7 +55,8 @@ const processEnv = {
   MAIL_HOST:process.env.MAIL_HOST,
   MAIL_PORT:process.env.MAIL_PORT,
   MAIL_USERNAME:process.env.MAIL_USERNAME,
-  MAIL_PASSWORD:process.env.MAIL_PASSWORD
+  MAIL_PASSWORD:process.env.MAIL_PASSWORD,
+  APPLICATION_URL: process.env.APPLICATION_URL
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
