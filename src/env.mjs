@@ -22,6 +22,11 @@ const server = z.object({
   // Add `.min(1) on ID and SECRET if you want to make sure they're not empty
   DISCORD_CLIENT_ID: z.string(),
   DISCORD_CLIENT_SECRET: z.string(),
+  APPLICATION_URL:z.string(),
+  MAIL_HOST:z.string(),
+  MAIL_PORT:z.string(),
+  MAIL_USERNAME:z.string(),
+  MAIL_PASSWORD:z.string(),
 });
 
 /**
@@ -47,6 +52,11 @@ const processEnv = {
   DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
   DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
   NEXT_PUBLIC_CLOUDFRONT_URL: process.env.NEXT_PUBLIC_CLOUDFRONT_URL,
+  MAIL_HOST:process.env.MAIL_HOST,
+  MAIL_PORT:process.env.MAIL_PORT,
+  MAIL_USERNAME:process.env.MAIL_USERNAME,
+  MAIL_PASSWORD:process.env.MAIL_PASSWORD,
+  APPLICATION_URL: process.env.APPLICATION_URL
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 

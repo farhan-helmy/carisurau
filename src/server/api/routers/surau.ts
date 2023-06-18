@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import type { SurauTableColumn } from "./types";
+import { sendApprovalMail } from "../../services/generate-surau-verification";
+import { Surau } from "../../../../prisma/client";
 
 export const surauRouter = createTRPCRouter({
   addSurau: publicProcedure
@@ -27,82 +29,64 @@ export const surauRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
+      let surau:Surau;
+
+      const data = {
+        name: input.name,
+        brief_direction: input.brief_direction,
+        unique_name: input.unique_name,
+        is_qiblat_certified: input.is_qiblat_certified,
+        images: {
+          createMany: {
+            data: input.image.map((image) => ({
+              file_path: image.file_path,
+            })),
+          },
+        },
+        state: {
+          connect: {
+            id: input.state_id,
+          },
+        },
+        district: {
+          connect: {
+            id: input.district_id,
+          },
+        },
+        qiblat: {
+          create: {
+            latitude: input.qiblat.latitude,
+            longitude: input.qiblat.longitude,
+            degree: input.qiblat.degree,
+          },
+        },
+      };
+
       if (input.mall_id) {
-        return await ctx.prisma.surau.create({
+        surau = await ctx.prisma.surau.create({
           data: {
-            name: input.name,
-            brief_direction: input.brief_direction,
-            unique_name: input.unique_name,
-            is_qiblat_certified: input.is_qiblat_certified,
-            images: {
-              createMany: {
-                data: input.image.map((image) => ({
-                  file_path: image.file_path,
-                })),
-              },
-            },
-            state: {
-              connect: {
-                id: input.state_id,
-              },
-            },
-            district: {
-              connect: {
-                id: input.district_id,
-              },
-            },
+            ...data,
             mall: {
               connect: {
                 id: input.mall_id,
               },
             },
-            qiblat: {
-              create: {
-                latitude: input.qiblat.latitude,
-                longitude: input.qiblat.longitude,
-                degree: input.qiblat.degree,
-              },
-            },
           },
         });
+      } else {
+        surau = await ctx.prisma.surau.create({
+          data: data,
+        });
       }
-      return await ctx.prisma.surau.create({
-        data: {
-          name: input.name,
-          brief_direction: input.brief_direction,
-          unique_name: input.unique_name,
-          is_qiblat_certified: input.is_qiblat_certified,
-          images: {
-            createMany: {
-              data: input.image.map((image) => ({
-                file_path: image.file_path,
-              })),
-            },
-          },
-          state: {
-            connect: {
-              id: input.state_id,
-            },
-          },
-          district: {
-            connect: {
-              id: input.district_id,
-            },
-          },
-          qiblat: {
-            create: {
-              latitude: input.qiblat.latitude,
-              longitude: input.qiblat.longitude,
-              degree: input.qiblat.degree,
-            },
-          },
-        },
-      });
+
+      await sendApprovalMail(surau.id);
+      
+      return surau;
     }),
   getSurau: publicProcedure
     .input(z.object({ unique_name: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.surau.findUnique({
+      return ctx.prisma.surau.findUnique({
         where: {
           unique_name: input.unique_name,
         },
@@ -144,7 +128,7 @@ export const surauRouter = createTRPCRouter({
     return data;
   }),
   getState: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.state.findMany({
+    return ctx.prisma.state.findMany({
       include: {
         districts: true,
       },
@@ -153,7 +137,7 @@ export const surauRouter = createTRPCRouter({
   getDistrictOnState: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.district.findMany({
+      return ctx.prisma.district.findMany({
         where: {
           state: {
             id: input.id,
@@ -174,7 +158,7 @@ export const surauRouter = createTRPCRouter({
         stateUniqueName?.unique_name === "putrajaya" ||
         stateUniqueName?.unique_name === "labuan"
       ) {
-        return await ctx.prisma.mall.findMany({
+        return  ctx.prisma.mall.findMany({
           where: {
             state: {
               id: input.state_id,
@@ -182,7 +166,7 @@ export const surauRouter = createTRPCRouter({
           },
         });
       }
-      return await ctx.prisma.mall.findMany({
+      return  ctx.prisma.mall.findMany({
         where: {
           district: {
             id: input.district_id,
@@ -193,7 +177,7 @@ export const surauRouter = createTRPCRouter({
   searchSurau: publicProcedure
     .input(z.object({ name: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.surau.findMany({
+      return  ctx.prisma.surau.findMany({
         where: {
           unique_name: {
             contains: input.name,
@@ -210,7 +194,7 @@ export const surauRouter = createTRPCRouter({
       });
     }),
   getPendingApproval: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.surau.findMany({
+    return  ctx.prisma.surau.findMany({
       where: {
         is_approved: false,
       },
@@ -228,7 +212,7 @@ export const surauRouter = createTRPCRouter({
     });
   }),
   getLatestAddedSurau: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.surau.findMany({
+    return  ctx.prisma.surau.findMany({
       where: {
         is_approved: true,
       },
