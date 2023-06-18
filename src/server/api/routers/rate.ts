@@ -1,6 +1,6 @@
 import { z } from "zod";
-
 import { createTRPCRouter, publicProcedure } from "../trpc";
+import type { Rating } from "@prisma/client"
 
 export const rateRouter = createTRPCRouter({
   addRating: publicProcedure
@@ -57,7 +57,7 @@ export const rateRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const ratings = await ctx.prisma.rating.findMany({
+      const ratings: Rating[] = await ctx.prisma.rating.findMany({
         where: {
           surau_id: input.surau_id,
         },

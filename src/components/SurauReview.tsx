@@ -9,13 +9,27 @@ import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
 import { faker } from "@faker-js/faker";
 import Head from "next/head";
+import Header from "./shared/Header";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
+const imagePaths = [
+  "/assets/background/carisurau.jpeg",
+  "/assets/background/carisurau1.jpeg",
+  "/assets/background/carisurau2.jpeg",
+];
+
 const SurauReview = () => {
   const [open, setOpen] = useState(false);
+  const [imagePath, setImagePath] = useState("");
+
+  useEffect(() => {
+    const randomImagePath =
+      imagePaths[Math.floor(Math.random() * imagePaths.length)];
+    setImagePath(randomImagePath as string);
+  }, []);
 
   const router = useRouter();
   const uniqueName = router.query["id"];
@@ -81,6 +95,7 @@ const SurauReview = () => {
         <meta property="og:site_name" content="Carisurau"></meta>
         <title>Carisurau | {surau.data?.name}</title>
       </Head>
+
       <Modal open={open} setOpen={setOpen}>
         <ReviewSurauForm
           setOpen={setOpen}
@@ -89,8 +104,30 @@ const SurauReview = () => {
           refetch={refetchRating}
         />
       </Modal>
-      <div className="bg-white">
-        <div className="py-18 mx-auto mt-8 max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+      <section className="bg-white">
+        {/* Hero section */}
+        <div className="relative bg-gray-900">
+          {/* Decorative image and overlay */}
+          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
+            <Image
+              src={imagePath}
+              alt="random background image"
+              className="h-full w-full object-cover object-center"
+              width={1920}
+              height={1080}
+              priority
+            />
+          </div>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 bg-gray-900 opacity-50"
+          />
+
+          {/* Navigation */}
+          <Header />
+        </div>
+
+        <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
           <div className="lg:col-span-4">
             {surau.data ? (
               <SurauOverview surau={surau.data} />
@@ -265,7 +302,7 @@ const SurauReview = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 };
