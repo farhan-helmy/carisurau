@@ -36,12 +36,14 @@ const SearchBar = () => {
           </div>
         ) : !surauInputDebounced ? null : (
           <>
-            {data?.map((surau) => {
+            {data?.map((surau, idx) => {
               return (
                 <div
                   key={surau.id}
                   onClick={() => redirectToSurauPage(surau.unique_name)}
-                  className="flex w-full items-start justify-start rounded-md border border-transparent bg-white py-3 px-2 text-base font-medium text-gray-900 hover:bg-gray-100"
+                  className={`flex w-full items-start justify-start border border-transparent bg-white py-3 px-2 text-base font-medium text-gray-900 hover:bg-gray-100 ${
+                    idx == 0 ? "rounded-t-md" : ""
+                  } ${data.length - 1 == idx ? "rounded-b-md" : ""}`}
                 >
                   <div className="flex flex-col items-start">
                     <div className="text-lg font-bold text-gray-600">
