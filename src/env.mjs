@@ -27,6 +27,8 @@ const server = z.object({
   MAIL_PORT:z.string(),
   MAIL_USERNAME:z.string(),
   MAIL_PASSWORD:z.string(),
+  GOOGLE_CLIENT_ID: z.string(),
+  GOOGLE_CLIENT_SECRET: z.string(),
 });
 
 /**
@@ -56,7 +58,9 @@ const processEnv = {
   MAIL_PORT:process.env.MAIL_PORT,
   MAIL_USERNAME:process.env.MAIL_USERNAME,
   MAIL_PASSWORD:process.env.MAIL_PASSWORD,
-  APPLICATION_URL: process.env.APPLICATION_URL
+  APPLICATION_URL: process.env.APPLICATION_URL,
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
