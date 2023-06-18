@@ -86,7 +86,7 @@ export const surauRouter = createTRPCRouter({
   getSurau: publicProcedure
     .input(z.object({ unique_name: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.surau.findUnique({
+      return ctx.prisma.surau.findUnique({
         where: {
           unique_name: input.unique_name,
         },
@@ -128,7 +128,7 @@ export const surauRouter = createTRPCRouter({
     return data;
   }),
   getState: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.state.findMany({
+    return ctx.prisma.state.findMany({
       include: {
         districts: true,
       },
@@ -137,7 +137,7 @@ export const surauRouter = createTRPCRouter({
   getDistrictOnState: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.district.findMany({
+      return ctx.prisma.district.findMany({
         where: {
           state: {
             id: input.id,
@@ -158,7 +158,7 @@ export const surauRouter = createTRPCRouter({
         stateUniqueName?.unique_name === "putrajaya" ||
         stateUniqueName?.unique_name === "labuan"
       ) {
-        return await ctx.prisma.mall.findMany({
+        return  ctx.prisma.mall.findMany({
           where: {
             state: {
               id: input.state_id,
@@ -166,7 +166,7 @@ export const surauRouter = createTRPCRouter({
           },
         });
       }
-      return await ctx.prisma.mall.findMany({
+      return  ctx.prisma.mall.findMany({
         where: {
           district: {
             id: input.district_id,
@@ -177,7 +177,7 @@ export const surauRouter = createTRPCRouter({
   searchSurau: publicProcedure
     .input(z.object({ name: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await ctx.prisma.surau.findMany({
+      return  ctx.prisma.surau.findMany({
         where: {
           unique_name: {
             contains: input.name,
@@ -194,7 +194,7 @@ export const surauRouter = createTRPCRouter({
       });
     }),
   getPendingApproval: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.surau.findMany({
+    return  ctx.prisma.surau.findMany({
       where: {
         is_approved: false,
       },
@@ -212,7 +212,7 @@ export const surauRouter = createTRPCRouter({
     });
   }),
   getLatestAddedSurau: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.surau.findMany({
+    return  ctx.prisma.surau.findMany({
       where: {
         is_approved: true,
       },
