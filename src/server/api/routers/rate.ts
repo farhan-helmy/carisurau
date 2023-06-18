@@ -25,6 +25,11 @@ export const rateRouter = createTRPCRouter({
                 id: input.surau_id,
               },
             },
+            user: {
+              connect: {
+                id: ctx.session?.user.id,
+              }
+            },
             images: {
               createMany: {
                 data: input.image?.map((image) => ({

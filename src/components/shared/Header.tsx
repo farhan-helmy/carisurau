@@ -1,7 +1,9 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useSession, signIn } from "next-auth/react";
+import AvatarMenu from "./AvatarMenu";
 
 const Header = () => {
+  const { data: session } = useSession();
   return (
     <>
       <header className="relative z-10">
@@ -20,7 +22,9 @@ const Header = () => {
 
                   {/* Mobile menu and search (lg-) */}
                   {/* Logo (lg-) */}
-                  <div className="font-bold text-white">carisurau</div>
+                  <Link href="/" className="font-bold text-white">
+                    carisurau
+                  </Link>
 
                   <div className="flex flex-1 items-center justify-end">
                     <Link
@@ -32,25 +36,18 @@ const Header = () => {
 
                     <div className="flex items-center lg:ml-8">
                       {/* Help */}
-                      <Link
-                        href="#"
-                        className="text-sm font-medium text-white lg:hidden "
-                      >
-                        Sign in
-                      </Link>
-                      <a href="#" className="p-2 text-white lg:hidden">
-                        <span className="sr-only">Help</span>
-                        <QuestionMarkCircleIcon
-                          className="h-6 w-6"
-                          aria-hidden="true"
-                        />
-                      </a>
-                      <a
-                        href="#"
-                        className="hidden text-sm font-medium text-white lg:block"
-                      >
-                        Help
-                      </a>
+                      {session ? (
+                        <div>
+                          <AvatarMenu />
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => void signIn()}
+                          className="text-sm font-medium text-white lg:hidden "
+                        >
+                          Sign in
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

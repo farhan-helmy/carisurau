@@ -2,13 +2,11 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
-import { useRef } from "react";
 
 const SurauList = ({ type }: { type: "new" | "recent" }) => {
   const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
 
   const router = useRouter();
-  console.log(latestAddedSurau.data);
 
   const handleRouterPush = (e: React.FormEvent, surauName: string) => {
     e.preventDefault();

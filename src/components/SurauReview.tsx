@@ -7,9 +7,10 @@ import { api } from "../utils/api";
 import { useRouter } from "next/router";
 import Modal from "./shared/Modal";
 import ReviewSurauForm from "./ReviewSurauForm";
-import { faker } from "@faker-js/faker";
 import Head from "next/head";
 import Header from "./shared/Header";
+import { useSession } from "next-auth/react";
+import SignIn from "./shared/SignIn";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -24,6 +25,8 @@ const imagePaths = [
 const SurauReview = () => {
   const [open, setOpen] = useState(false);
   const [imagePath, setImagePath] = useState("");
+  const [openSignInModal, setOpenSignInModal] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const randomImagePath =
@@ -44,6 +47,14 @@ const SurauReview = () => {
 
   const refetchRating = () => {
     void rating.refetch();
+  };
+
+  const handleWriteReview = () => {
+    if (!session) {
+      setOpenSignInModal(true);
+      return;
+    }
+    setOpen(true);
   };
 
   if (!rating?.data) {
@@ -104,6 +115,12 @@ const SurauReview = () => {
           refetch={refetchRating}
         />
       </Modal>
+      <SignIn
+        openSignInModal={openSignInModal}
+        setOpenSignInModal={setOpenSignInModal}
+        message="Please sign in to review"
+        callbackUrl={`/surau/${surau.data?.unique_name as string}`}
+      />
       <section className="bg-white">
         {/* Hero section */}
         <div className="relative bg-gray-900">
@@ -148,9 +165,8 @@ const SurauReview = () => {
                 If you’ve been / went to this surau, write a review and post
                 some pictures.
               </p>
-
               <button
-                onClick={() => setOpen(true)}
+                onClick={() => handleWriteReview()}
                 className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
               >
                 Write a review
@@ -250,16 +266,14 @@ const SurauReview = () => {
                   <div key={review.id} className="py-8">
                     <div className="flex items-center">
                       <Image
-                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${faker.person.firstName()}&background=%23fff&radius=50&width=50&height=50}`}
+                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${1}&background=%23fff&radius=50&width=50&height=50}`}
                         alt="nil"
                         className="h-12 w-12 rounded-full"
                         width={12}
                         height={12}
                       />
                       <div className="ml-4">
-                        <h4 className="text-sm font-bold text-gray-900">
-                          {faker.person.firstName()}
-                        </h4>
+                        <h4 className="text-sm font-bold text-gray-900"></h4>
                         <div className="mt-1 flex items-center">
                           {[0, 1, 2, 3, 4].map((rating) => (
                             <StarIcon

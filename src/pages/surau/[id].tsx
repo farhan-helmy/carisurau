@@ -5,9 +5,7 @@ import Script from "next/script";
 import { useRouter } from "next/router";
 
 const SurauPage: NextPage = () => {
-
   const router = useRouter();
-  const uniqueName = router.query["id"];
 
   return (
     <div>

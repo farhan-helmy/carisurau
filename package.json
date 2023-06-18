@@ -11,6 +11,7 @@
     "db-seed": "cross-env NODE_ENV=development prisma db seed",
     "update-district": "NODE_ENV=development tsx scripts/updateDistrict.ts",
     "update-district:staging": "NODE_ENV=development dotenv -e .env.local -- tsx scripts/updateDistrict.ts",
+    "push:local": "dotenv -e .env.local -- prisma db push",
     "compare": "NODE_ENV=development tsx prisma/compare.ts",
     "setup-db": "make",
     "drizzle-seed": ""

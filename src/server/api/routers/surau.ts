@@ -65,7 +65,32 @@ export const surauRouter = createTRPCRouter({
       if (input.mall_id) {
         surau = await ctx.prisma.surau.create({
           data: {
-            ...data,
+            name: input.name,
+            brief_direction: input.brief_direction,
+            unique_name: input.unique_name,
+            is_qiblat_certified: input.is_qiblat_certified,
+            images: {
+              createMany: {
+                data: input.image.map((image) => ({
+                  file_path: image.file_path,
+                })),
+              },
+            },
+            user: {
+              connect: {
+                id: ctx.session?.user.id,
+              },
+            },
+            state: {
+              connect: {
+                id: input.state_id,
+              },
+            },
+            district: {
+              connect: {
+                id: input.district_id,
+              },
+            },
             mall: {
               connect: {
                 id: input.mall_id,

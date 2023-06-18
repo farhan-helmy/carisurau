@@ -26,6 +26,8 @@ import AddSurauForm from "../components/AddSurauForm";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
 import Header from "../components/shared/Header";
+import { useSession, signIn } from "next-auth/react";
+import SignIn from "../components/shared/SignIn";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
@@ -35,7 +37,18 @@ const imagePaths = [
 
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
+  const [openSignInModal, setOpenSignInModal] = useState(false);
   const [imagePath, setImagePath] = useState("");
+  const { data: session } = useSession();
+
+  const handleSetOpenSurauForm = () => {
+    if (!session) {
+      setOpenSignInModal(true);
+      return;
+    }
+
+    setOpenAddSurauForm(true);
+  };
 
   useEffect(() => {
     const randomImagePath =
@@ -53,7 +66,7 @@ export default function Index() {
         />
         <meta
           name="keywords"
-          content="carisurau, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
+          content="carisurau, cari, surau, surau ioi, masjid, surau near me, masjid near me, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
         />
         <meta name="author" content="farhanhelmy" />
         {/* Twitter meta tags */}
@@ -143,7 +156,7 @@ export default function Index() {
               Can`t find your Surau?{" "}
               <span
                 className="cursor-pointer font-bold underline hover:underline"
-                onClick={() => setOpenAddSurauForm(true)}
+                onClick={() => handleSetOpenSurauForm()}
               >
                 Add here
               </span>
@@ -153,6 +166,12 @@ export default function Index() {
         <Modal open={openAddSurauForm} setOpen={setOpenAddSurauForm}>
           <AddSurauForm setOpen={setOpenAddSurauForm} />
         </Modal>
+        <SignIn
+          openSignInModal={openSignInModal}
+          setOpenSignInModal={setOpenSignInModal}
+          message="Sign in to add Surau"
+          callbackUrl="/"
+        />
         <main>
           {/* Category section */}
           <section

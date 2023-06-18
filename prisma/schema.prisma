@@ -2,9 +2,10 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  binaryTargets = ["native","linux-arm64-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
+    provider      = "prisma-client-js"
+    binaryTargets = ["native", "linux-arm64-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
 }
+
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -39,6 +40,8 @@ model Surau {
     mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
     is_qiblat_certified Boolean      @default(false)
     qiblat              Qiblat[]
+    user_id             String?
+    user                User?        @relation(fields: [user_id], references: [id])
 }
 
 model Qiblat {
@@ -57,6 +60,8 @@ model Rating {
     created_at DateTime     @default(now())
     surau      Surau        @relation(fields: [surau_id], references: [id])
     surau_id   String
+    user_id    String?
+    user       User?        @relation(fields: [user_id], references: [id])
     images     SurauPhoto[]
 }
 
@@ -137,6 +142,9 @@ model User {
     image         String?
     accounts      Account[]
     sessions      Session[]
+    Surau         Surau[]
+    Rating        Rating[]
+    createdAt     DateTime  @default(now())
 }
 
 model VerificationToken {
