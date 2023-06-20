@@ -275,7 +275,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
               <div className="shadow sm:overflow-hidden sm:rounded-md">
                 <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-3 sm:col-span-2">
+                    <div className="col-span-3 md:col-span-2">
                       <label
                         htmlFor="surau-name"
                         className="block text-sm font-medium text-gray-700"
@@ -302,14 +302,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-2 sm:col-span-2">
+                    <div className="col-span-3 md:col-span-2">
                       <label
                         htmlFor="surau-name"
                         className="block text-sm font-medium text-gray-700"
                       >
                         State
                       </label>
-                      <div className="relative z-20 mt-1 block w-full rounded-md shadow-sm">
+                      <div className="relative z-20 mt-1 w-full rounded-md shadow-sm">
                         <Select
                           options={state.data}
                           getOptionLabel={(option: any) => option.name}
@@ -338,7 +338,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   {currentDistrict && currentDistrict.length > 0 ? (
                     <div>
                       <div className="grid grid-cols-3 gap-6">
-                        <div className="col-span-2 sm:col-span-2">
+                        <div className="col-span-3 md:col-span-2">
                           <label
                             htmlFor="surau-name"
                             className="block text-sm font-medium text-gray-700"
