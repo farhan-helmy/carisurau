@@ -64,21 +64,24 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                 blurDataURL="/assets/background/carisuraudefault.png"
               />
             </div>
-            <div className="mt-2 overflow-hidden flex items-center justify-center space-x-2">
+            <div className="mt-2 flex items-center justify-center space-x-2 overflow-hidden">
               {surau?.images.map((image) => (
-                <div key={image.id} className="max-h-24 overflow-hidden rounded-xl bg-gray-200 object-fill">
-                <Image
+                <div
                   key={image.id}
-                  src={image.file_path}
-                  alt={image.id}
-                  className="h-full w-full rounded-lg object-fill object-center group-hover:opacity-75"
-                  width={100}
-                  height={100}
-                  onClick={() => setImageHighlighted(image)}
-                  placeholder="blur"
-                  blurDataURL="/assets/background/carisuraudefault.png"
-                  priority
-                />
+                  className="max-h-24 overflow-hidden rounded-xl bg-gray-200 object-fill"
+                >
+                  <Image
+                    key={image.id}
+                    src={image.file_path}
+                    alt={image.id}
+                    className="h-full w-full rounded-lg object-fill object-center group-hover:opacity-75"
+                    width={100}
+                    height={100}
+                    onClick={() => setImageHighlighted(image)}
+                    placeholder="blur"
+                    blurDataURL="/assets/background/carisuraudefault.png"
+                    priority
+                  />
                 </div>
               ))}
             </div>

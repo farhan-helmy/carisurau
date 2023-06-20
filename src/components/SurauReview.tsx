@@ -153,6 +153,14 @@ const SurauReview = () => {
             ) : (
               <div>Loading...</div>
             )}
+
+            <div className="mt-2 flex flex-row space-x-2">
+              {surau.data?.is_solat_jumaat && (
+                <h3 className="font-base inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm text-green-800">
+                  Solat Jumaat
+                </h3>
+              )}
+            </div>
             <div className="mt-2">
               <h3 className="text-lg font-medium text-gray-900">Direction</h3>
               <p className="mt-1 text-sm text-gray-600">
@@ -268,14 +276,18 @@ const SurauReview = () => {
                   <div key={review.id} className="py-8">
                     <div className="flex items-center">
                       <Image
-                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${review.user?.name?.trim().toLowerCase()}&background=%23fff&radius=50&width=50&height=50}`}
+                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${review.user?.name
+                          ?.trim()
+                          .toLowerCase()}&background=%23fff&radius=50&width=50&height=50}`}
                         alt="nil"
                         className="h-12 w-12 rounded-full"
                         width={12}
                         height={12}
                       />
-                      <div className="ml-4"> 
-                        <h4 className="text-sm font-bold text-gray-900">{review.user?.name}</h4>
+                      <div className="ml-4">
+                        <h4 className="text-sm font-bold text-gray-900">
+                          {review.user?.name}
+                        </h4>
                         <div className="mt-1 flex items-center">
                           {[0, 1, 2, 3, 4].map((rating) => (
                             <StarIcon

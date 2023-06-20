@@ -78,6 +78,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     District[] | undefined
   >([]);
   const [isQiblatCertified, setIsQiblatCertified] = useState(false);
+  const [isSolatJumaat, setIsSolatJumaat] = useState(false);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [qiblatDegree, setQiblatDegree] = useState(0);
@@ -231,6 +232,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
         mall_id: mallData,
         image: filePath,
         is_qiblat_certified: isQiblatCertified,
+        is_solat_jumaat: isSolatJumaat,
         qiblat: {
           latitude: latitude,
           longitude: longitude,
@@ -408,6 +410,27 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                               <div className="ml-3 text-sm leading-6">
                                 <p className="italic text-gray-500">
                                   This Surau is Qiblat certified.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-4 max-w-lg space-y-4">
+                            <div className="relative flex items-start">
+                              <div className="flex h-6 items-center">
+                                <input
+                                  id="check-surau-qiblat"
+                                  name="check-surau-qiblat"
+                                  type="checkbox"
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                  onChange={(e) =>
+                                    setIsSolatJumaat(e.target.checked)
+                                  }
+                                />
+                              </div>
+                              <div className="ml-3 text-sm leading-6">
+                                <p className="italic text-gray-500">
+                                  This Surau perform Jumaah prayer.
                                 </p>
                               </div>
                             </div>
