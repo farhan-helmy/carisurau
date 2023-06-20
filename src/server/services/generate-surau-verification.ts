@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import nodemailer from 'nodemailer';
 import { Buffer } from 'buffer';
 import {prisma} from '../../server/db';
@@ -45,5 +49,9 @@ export async function sendApprovalMail(surauId: string): Promise<void> {
         html: emailContent
     };
 
-    await transport.sendMail(mailOptions);
+    try {
+      await transport.sendMail(mailOptions);
+    }catch(err) {
+      console.error(err);
+    }
 }

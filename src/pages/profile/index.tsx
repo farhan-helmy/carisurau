@@ -3,6 +3,7 @@ import Image from "next/image";
 import Header from "../../components/shared/Header";
 import { useState, useEffect } from "react";
 import StatsCard from "../../components/profile/StatsCard";
+import { api } from "../../utils/api";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",

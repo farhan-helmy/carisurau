@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { StarIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
@@ -266,14 +268,14 @@ const SurauReview = () => {
                   <div key={review.id} className="py-8">
                     <div className="flex items-center">
                       <Image
-                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${1}&background=%23fff&radius=50&width=50&height=50}`}
+                        src={`https://api.dicebear.com/5.x/thumbs/svg?seed=${review.user?.name?.trim().toLowerCase()}&background=%23fff&radius=50&width=50&height=50}`}
                         alt="nil"
                         className="h-12 w-12 rounded-full"
                         width={12}
                         height={12}
                       />
-                      <div className="ml-4">
-                        <h4 className="text-sm font-bold text-gray-900"></h4>
+                      <div className="ml-4"> 
+                        <h4 className="text-sm font-bold text-gray-900">{review.user?.name}</h4>
                         <div className="mt-1 flex items-center">
                           {[0, 1, 2, 3, 4].map((rating) => (
                             <StarIcon

@@ -4,49 +4,51 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { PhotoIcon, PlusCircleIcon } from '@heroicons/react/20/solid';
-import dynamic from 'next/dynamic'
-import type { FC} from 'react';
-import { useEffect } from 'react';
-import React, { useState } from 'react'
-import { useS3Upload } from 'next-s3-upload';
-import Image from 'next/image'
-import { api } from '../utils/api';
-import { resizeImage } from '../utils/image';
-import AlertModal from './shared/AlertModal';
-import type { District } from '@prisma/client';
+import { PhotoIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
+import dynamic from "next/dynamic";
+import type { FC } from "react";
+import { useEffect } from "react";
+import React, { useState } from "react";
+import { useS3Upload } from "next-s3-upload";
+import Image from "next/image";
+import { api } from "../utils/api";
+import { resizeImage } from "../utils/image";
+import AlertModal from "./shared/AlertModal";
+import type { District } from "@prisma/client";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
-})
-const AsyncCreatableSelect = dynamic(() => import("react-select/async-creatable"), {
-  ssr: true,
-})
+});
+const AsyncCreatableSelect = dynamic(
+  () => import("react-select/async-creatable"),
+  {
+    ssr: true,
+  }
+);
 
 export type AddSurauFormProps = {
-  setOpen: (open: boolean) => void
-}
+  setOpen: (open: boolean) => void;
+};
 
 export type FilePath = {
-  file_path: string
-}
+  file_path: string;
+};
 
 export type ImagePreviews = {
-  id: string,
-  url: string
-}
+  id: string;
+  url: string;
+};
 
 type MallOptions = {
-  value: string,
-  label: string,
-  id: string
-}
+  value: string;
+  label: string;
+  id: string;
+};
 
 const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
-
   const generateCombination = (): string => {
-    const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-    let combination = '';
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    let combination = "";
 
     for (let i = 0; i < 3; i++) {
       const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -71,43 +73,50 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [briefDirection, setBriefDirection] = useState("");
   const [surauNameError, setSurauNameError] = useState("");
   const [briefDirectionError, setBriefDirectionError] = useState("");
-  const [alertModalOpen, setAlertModalOpen] = useState(false)
-  const [currentDistrict, setCurrentDistrict] = useState<District[] | undefined>([]);
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [currentDistrict, setCurrentDistrict] = useState<
+    District[] | undefined
+  >([]);
   const [isQiblatCertified, setIsQiblatCertified] = useState(false);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const [qiblatDegree, setQiblatDegree] = useState(0);
-  const [qiblatInfoError, setQiblatInfoError] = useState("")
+  const [qiblatInfoError, setQiblatInfoError] = useState("");
 
   const { uploadToS3 } = useS3Upload();
 
-  const state = api.surau.getState.useQuery()
-  const district = state.data?.map((state) => state.districts).flat()
-  const mall = api.surau.getMallOnDistrict.useQuery({ district_id: choosenDistrict, state_id: choosenState })
-  const addSurau = api.surau.addSurau.useMutation()
+  const state = api.surau.getState.useQuery();
+  const district = state.data?.map((state) => state.districts).flat();
+  const mall = api.surau.getMallOnDistrict.useQuery({
+    district_id: choosenDistrict,
+    state_id: choosenState,
+  });
+  const addSurau = api.surau.addSurau.useMutation();
 
   const handleNegeriChange = (e: any) => {
-    setChoosenState(e.id)
+    setChoosenState(e.id);
     setCurrentDistrict([]);
     setFindMallForm(false);
     setFindMallChecked(false);
-  }
+  };
 
   useEffect(() => {
-    setCurrentDistrict(district?.filter((district) => district.state_id === choosenState));
-  }, [choosenState])
+    setCurrentDistrict(
+      district?.filter((district) => district.state_id === choosenState)
+    );
+  }, [choosenState]);
 
   const handleDaerahChange = (e: any) => {
-    setFindMallLoading(true)
+    setFindMallLoading(true);
     setFindMallForm(false);
     setFindMallChecked(false);
     setTimeout(() => {
-      setFindMallLoading(false)
-      setFindMallForm(true)
-    }, 1000)
+      setFindMallLoading(false);
+      setFindMallForm(true);
+    }, 1000);
 
-    setChoosenDistrict(e.id)
-  }
+    setChoosenDistrict(e.id);
+  };
 
   const transformSurauName = (name: string) => {
     setSurauName(name);
@@ -117,27 +126,35 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     const surauNameWithRandomString = `${transformedSurauName}-${randomString}`;
 
     setGeneratedSurauName(surauNameWithRandomString);
-  }
+  };
 
-  const handleAddMoreImages = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddMoreImages = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (e.target.files === null) return;
     const file = e.target?.files[0];
     const { url } = await uploadToS3(file as File);
 
-    setImagePreviews([...imagePreviews as ImagePreviews[], URL.createObjectURL(file as Blob) as unknown as ImagePreviews]);
-    const cloudFrontFilePath = url.replace("https://ratemysurau.s3.ap-southeast-1.amazonaws.com/", "https://dcm2976bhgfsz.cloudfront.net/");
-    setFilePath([...filePath, { file_path: cloudFrontFilePath} as unknown as FilePath]);
-
-   
-  }
+    setImagePreviews([
+      ...(imagePreviews as ImagePreviews[]),
+      URL.createObjectURL(file as Blob) as unknown as ImagePreviews,
+    ]);
+    const cloudFrontFilePath = url.replace(
+      "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
+      "https://dcm2976bhgfsz.cloudfront.net/"
+    );
+    setFilePath([
+      ...filePath,
+      { file_path: cloudFrontFilePath } as unknown as FilePath,
+    ]);
+  };
 
   const handleMallChange = (e: any) => {
     if (e === null) return;
-    setMallData(e.id)
-  }
+    setMallData(e.id);
+  };
 
   const onSurauImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
 
@@ -145,16 +162,21 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
     for (const element of e.target.files) {
       const resizedImage = await resizeImage(element, 100);
-      images.push(URL.createObjectURL(resizedImage) as unknown as ImagePreviews);
+      images.push(
+        URL.createObjectURL(resizedImage) as unknown as ImagePreviews
+      );
       const { url } = await uploadToS3(element);
-      const cloudFrontFilePath = url.replace("https://ratemysurau.s3.ap-southeast-1.amazonaws.com/", "https://dcm2976bhgfsz.cloudfront.net/");
+      const cloudFrontFilePath = url.replace(
+        "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
+        "https://dcm2976bhgfsz.cloudfront.net/"
+      );
 
-      urls.push({ file_path: cloudFrontFilePath});
+      urls.push({ file_path: cloudFrontFilePath });
     }
-   
+
     setFilePath(urls);
     setImagePreviews(images);
-  }
+  };
 
   const filterMall = (inputValue: string) => {
     if (!mall.data) return [];
@@ -170,33 +192,37 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       }, 1000);
     });
 
-    const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-      const qiblat = {
-        latitude: latitude,
-        longitude: longitude,
-        degree: qiblatDegree
-      }
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const qiblat = {
+      latitude: latitude,
+      longitude: longitude,
+      degree: qiblatDegree,
+    };
 
-      e.preventDefault();
+    e.preventDefault();
 
-      if (surauName === "") {
-        setSurauNameError("Surau name is required");
-        return
-      }
-      
-      if((qiblat.degree === 0 || qiblat.latitude === 0 || qiblat.longitude === 0) && isQiblatCertified) {
-        setQiblatInfoError("Qiblat information is required");
-        return
-      }
+    if (surauName === "") {
+      setSurauNameError("Surau name is required");
+      return;
+    }
 
-      if (briefDirection === "") {
-        setBriefDirectionError("Brief direction is required");
-        return
-      }
+    if (
+      (qiblat.degree === 0 ||
+        qiblat.latitude === 0 ||
+        qiblat.longitude === 0) &&
+      isQiblatCertified
+    ) {
+      setQiblatInfoError("Qiblat information is required");
+      return;
+    }
 
+    if (briefDirection === "") {
+      setBriefDirectionError("Brief direction is required");
+      return;
+    }
 
-
-      addSurau.mutateAsync({
+    addSurau
+      .mutateAsync({
         name: surauName,
         brief_direction: briefDirection,
         unique_name: generatedSurauName,
@@ -208,20 +234,20 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
         qiblat: {
           latitude: latitude,
           longitude: longitude,
-          degree: qiblatDegree
-        }
+          degree: qiblatDegree,
+        },
       })
       .then(() => {
-        setAlertModalOpen(true)
+        setAlertModalOpen(true);
         setTimeout(() => {
-          setAlertModalOpen(false)
-          setOpen(false)
-        }, 3000)
+          setAlertModalOpen(false);
+          setOpen(false);
+        }, 3000);
       })
-      .catch(e => {
-        console.log(e)
-      })
-    }
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   return (
     <>
@@ -345,26 +371,48 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       ) : null}
 
                       {!findMallLoading && findMallForm ? (
-                        <div className="mt-4 max-w-lg space-y-4">
-                          <div className="relative flex items-start">
-                            <div className="flex h-6 items-center">
-                              <input
-                                id="check-surau-mall"
-                                name="check-surau-mall"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                onChange={(e) => {
-                                  setFindMallChecked(e.target.checked);
-                                }}
-                              />
-                            </div>
-                            <div className="ml-3 text-sm leading-6">
-                              <p className="italic text-gray-500">
-                                Check if your surau is inside a mall.
-                              </p>
+                        <>
+                          <div className="mt-4 max-w-lg space-y-4">
+                            <div className="relative flex items-start">
+                              <div className="flex h-6 items-center">
+                                <input
+                                  id="check-surau-mall"
+                                  name="check-surau-mall"
+                                  type="checkbox"
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                  onChange={(e) => {
+                                    setFindMallChecked(e.target.checked);
+                                  }}
+                                />
+                              </div>
+                              <div className="ml-3 text-sm leading-6">
+                                <p className="italic text-gray-500">
+                                  Check if your surau is inside a mall.
+                                </p>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                          <div className="mt-4 max-w-lg space-y-4">
+                            <div className="relative flex items-start">
+                              <div className="flex h-6 items-center">
+                                <input
+                                  id="check-surau-qiblat"
+                                  name="check-surau-qiblat"
+                                  type="checkbox"
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                  onChange={(e) =>
+                                    setIsQiblatCertified(e.target.checked)
+                                  }
+                                />
+                              </div>
+                              <div className="ml-3 text-sm leading-6">
+                                <p className="italic text-gray-500">
+                                  This Surau is Qiblat certified.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </>
                       ) : null}
                     </div>
                   ) : null}
@@ -380,27 +428,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       />
                     </div>
                   ) : null}
-
-                  <div className="mt-4 max-w-lg space-y-4">
-                    <div className="relative flex items-start">
-                      <div className="flex h-6 items-center">
-                        <input
-                          id="check-surau-qiblat"
-                          name="check-surau-qiblat"
-                          type="checkbox"
-                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                          onChange={(e) =>
-                            setIsQiblatCertified(e.target.checked)
-                          }
-                        />
-                      </div>
-                      <div className="ml-3 text-sm leading-6">
-                        <p className="italic text-gray-500">
-                          This Surau is Qiblat certified.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
 
                   {isQiblatCertified ? (
                     <div className="grid grid-cols-3 gap-2 md:gap-6">
@@ -583,6 +610,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       </div>
     </>
   );
-}
+};
 
 export default AddSurauForm;

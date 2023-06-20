@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import { surauRouter } from "./routers/surau";
 import { rateRouter } from "./routers/rate";
+import { profileRouter } from "./routers/profile";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { rateRouter } from "./routers/rate";
 export const appRouter = createTRPCRouter({
   surau: surauRouter,
   rate: rateRouter,
+  profile: profileRouter,
 });
 
 // export type definition of API

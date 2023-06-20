@@ -50,6 +50,11 @@ export const rateRouter = createTRPCRouter({
               id: input.surau_id,
             },
           },
+          user: {
+            connect: {
+              id: ctx.session?.user.id,
+            }
+          },
           rating: input.rating,
           review: input.review,
         },
@@ -62,9 +67,12 @@ export const rateRouter = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input }) => {
-      const ratings: Rating[] = await ctx.prisma.rating.findMany({
+      const ratings = await ctx.prisma.rating.findMany({
         where: {
           surau_id: input.surau_id,
+        },
+        include: {
+          user: true,
         },
       });
       const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import type { SurauTableColumn } from "./types";
 import { sendApprovalMail } from "../../services/generate-surau-verification";
-import { Surau } from "../../../../prisma/client";
+import type { Surau } from "../../../../prisma/client";
 
 export const surauRouter = createTRPCRouter({
   addSurau: publicProcedure
@@ -41,6 +41,11 @@ export const surauRouter = createTRPCRouter({
             data: input.image.map((image) => ({
               file_path: image.file_path,
             })),
+          },
+        },
+        user: {
+          connect: {
+            id: ctx.session?.user.id,
           },
         },
         state: {
