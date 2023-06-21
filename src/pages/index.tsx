@@ -26,7 +26,7 @@ import AddSurauForm from "../components/AddSurauForm";
 import SearchBar from "../components/SearchBar";
 import Script from "next/script";
 import Header from "../components/shared/Header";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
 
 const imagePaths = [
@@ -66,7 +66,7 @@ export default function Index() {
         />
         <meta
           name="keywords"
-          content="carisurau, cari, surau, surau ioi, masjid, surau near me, masjid near me, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
+          content="carisurau, cari, surau, cari surau, surau ioi, masjid, surau near me, masjid near me, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
         />
         <meta name="author" content="farhanhelmy" />
         {/* Twitter meta tags */}
