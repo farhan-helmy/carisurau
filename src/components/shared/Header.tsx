@@ -3,7 +3,8 @@ import { useSession, signIn } from "next-auth/react";
 import AvatarMenu from "./AvatarMenu";
 
 const Header = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
   return (
     <>
       <header className="relative z-10">
@@ -27,23 +28,16 @@ const Header = () => {
                   </Link>
 
                   <div className="flex flex-1 items-center justify-end">
-                    <Link
-                      href="#"
-                      className="hidden text-sm font-medium text-white lg:block"
-                    >
-                      Sign in
-                    </Link>
-
                     <div className="flex items-center lg:ml-8">
                       {/* Help */}
-                      {session ? (
+                      {status == "authenticated" ? (
                         <div>
                           <AvatarMenu />
                         </div>
                       ) : (
                         <button
                           onClick={() => void signIn()}
-                          className="text-sm font-medium text-white lg:hidden "
+                          className="text-sm font-medium text-white"
                         >
                           Sign in
                         </button>

@@ -44,7 +44,7 @@ const ProfilePage = () => {
         <Header />
       </div>
 
-      <div className="overflow-hidden rounded-lg bg-white shadow">
+      <div className="container mx-auto h-screen min-w-max overflow-hidden rounded-lg bg-white p-4 mix-blend-multiply shadow xl:max-w-screen-xl">
         <h2 className="sr-only" id="profile-overview-title">
           Profile Overview
         </h2>
@@ -70,12 +70,11 @@ const ProfilePage = () => {
 
                 {/* <p className="text-sm font-medium text-gray-600">{user.role}</p> */}
               </div>
-            
             </div>
-            <div className=" flex flex-col items-center justify-center rounded-xl bg-indigo-700">
-                <p className="text-xl font-bold text-white">0</p>
-                <p className="text-white">Contribution Points! 🤯</p>
-              </div>
+            <div className=" flex flex-col items-center justify-center rounded-xl bg-indigo-700 px-4 py-2">
+              <p className="text-xl font-bold text-white">0</p>
+              <p className="text-white">Contribution Points! 🤯</p>
+            </div>
             {/* <div className="mt-5 flex justify-center sm:mt-0">
               <a
                 href="#"
