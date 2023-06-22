@@ -64,7 +64,7 @@ const SignIn: FC<SignInProps> = ({
                         onClick={() => setOpenSignInModal(false)}
                         className="text-sm font-semibold leading-6 text-white"
                       >
-                        Cancel <span aria-hidden="true">→</span>
+                        Cancel
                       </button>
                     </div>
                     <svg

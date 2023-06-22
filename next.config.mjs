@@ -32,9 +32,13 @@ const config = {
       "dcm2976bhgfsz.cloudfront.net",
       "ratemysurau.s3.ap-southeast-1.amazonaws.com",
       "carisurau-staging.s3.ap-southeast-1.amazonaws.com",
-      "lh3.googleusercontent.com"
+      "lh3.googleusercontent.com",
+      "uploadthing.com"
     ],
     dangerouslyAllowSVG: true,
   },
+  experimental: {
+    esmExternals: false,
+  }
 };
 export default config;
