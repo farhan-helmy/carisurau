@@ -4,17 +4,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import { PhotoIcon, PlusCircleIcon } from "@heroicons/react/20/solid";
 import dynamic from "next/dynamic";
 import type { FC } from "react";
 import { useEffect } from "react";
 import React, { useState } from "react";
-import { useS3Upload } from "next-s3-upload";
 import Image from "next/image";
 import { api } from "../utils/api";
-import { resizeImage } from "../utils/image";
 import AlertModal from "./shared/AlertModal";
 import type { District } from "@prisma/client";
+import { UploadButton } from "../utils/uploadthing";
+// You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
+import "@uploadthing/react/styles.css";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -32,6 +32,11 @@ export type AddSurauFormProps = {
 
 export type FilePath = {
   file_path: string;
+};
+
+type UploadThingFilePath = {
+  fileUrl: string;
+  fileKey: string;
 };
 
 export type ImagePreviews = {
@@ -84,8 +89,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
 
-  const { uploadToS3 } = useS3Upload();
-
   const state = api.surau.getState.useQuery();
   const district = state.data?.map((state) => state.districts).flat();
   const mall = api.surau.getMallOnDistrict.useQuery({
@@ -129,51 +132,19 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setGeneratedSurauName(surauNameWithRandomString);
   };
 
-  const handleAddMoreImages = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.files === null) return;
-    const file = e.target?.files[0];
-    const { url } = await uploadToS3(file as File);
-
-    setImagePreviews([
-      ...(imagePreviews as ImagePreviews[]),
-      URL.createObjectURL(file as Blob) as unknown as ImagePreviews,
-    ]);
-    const cloudFrontFilePath = url.replace(
-      "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
-      "https://dcm2976bhgfsz.cloudfront.net/"
-    );
-    setFilePath([
-      ...filePath,
-      { file_path: cloudFrontFilePath } as unknown as FilePath,
-    ]);
-  };
-
   const handleMallChange = (e: any) => {
     if (e === null) return;
     setMallData(e.id);
   };
 
-  const onSurauImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadThing = (uploadThingUrl: UploadThingFilePath[]) => {
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
 
-    if (e.target.files === null) return;
-
-    for (const element of e.target.files) {
-      const resizedImage = await resizeImage(element, 100);
-      images.push(
-        URL.createObjectURL(resizedImage) as unknown as ImagePreviews
-      );
-      const { url } = await uploadToS3(element);
-      const cloudFrontFilePath = url.replace(
-        "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
-        "https://dcm2976bhgfsz.cloudfront.net/"
-      );
-
-      urls.push({ file_path: cloudFrontFilePath });
-    }
+    uploadThingUrl.forEach((url) => {
+      urls.push({ file_path: url.fileUrl });
+      images.push({ id: url.fileKey, url: url.fileUrl });
+    });
 
     setFilePath(urls);
     setImagePreviews(images);
@@ -271,363 +242,330 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
             </div>
           </div>
           <div className="mt-4 md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
-              <div className="shadow sm:overflow-hidden sm:rounded-md">
-                <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-3 md:col-span-2">
-                      <label
-                        htmlFor="surau-name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Surau Name
+            <div className="shadow sm:overflow-hidden sm:rounded-md">
+              <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="col-span-3 md:col-span-2">
+                    <label
+                      htmlFor="surau-name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Surau Name
+                    </label>
+                    <div className="mt-1 rounded-md shadow-sm">
+                      <input
+                        type="text"
+                        name="surau-name"
+                        id="surau-name"
+                        className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        placeholder=""
+                        onChange={(e) => {
+                          transformSurauName(e.target.value);
+                        }}
+                      />
+                      {surauNameError ? (
+                        <p className="text-xs italic text-red-500">
+                          {surauNameError}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-6">
+                  <div className="col-span-3 md:col-span-2">
+                    <label
+                      htmlFor="surau-name"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      State
+                    </label>
+                    <div className="relative z-20 mt-1 w-full rounded-md shadow-sm">
+                      <Select
+                        options={state.data}
+                        getOptionLabel={(option: any) => option.name}
+                        getOptionValue={(option: any) => option.id}
+                        onChange={(e) => handleNegeriChange(e)}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+                {loading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="relative">
+                      <div
+                        className=" absolute h-4 w-4 rounded-full
+                            border-4 border-solid border-gray-200"
+                      ></div>
+                      <div
+                        className="absolute h-4 w-4 animate-spin rounded-full
+                            border-4 border-solid border-green-500 border-t-transparent"
+                      ></div>
+                    </div>
+                  </div>
+                ) : null}
+
+                {currentDistrict && currentDistrict.length > 0 ? (
+                  <div>
+                    <div className="grid grid-cols-3 gap-6">
+                      <div className="col-span-3 md:col-span-2">
+                        <label
+                          htmlFor="surau-name"
+                          className="block text-sm font-medium text-gray-700"
+                        >
+                          District
+                        </label>
+                        <div className="relative z-10 mt-1 block w-full rounded-md shadow-sm">
+                          <Select
+                            options={currentDistrict}
+                            getOptionLabel={(option: any) => option.name}
+                            getOptionValue={(option: any) => option.id}
+                            onChange={(e) => handleDaerahChange(e)}
+                            required
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {findMallLoading ? (
+                      <div className="mt-4 flex items-center justify-center">
+                        <div className="relative">
+                          <div
+                            className=" absolute h-4 w-4 rounded-full
+                            border-4 border-solid border-gray-200"
+                          ></div>
+                          <div
+                            className="absolute h-4 w-4 animate-spin rounded-full
+                            border-4 border-solid border-green-500 border-t-transparent"
+                          ></div>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {!findMallLoading && findMallForm ? (
+                      <>
+                        <div className="mt-4 max-w-lg space-y-4">
+                          <div className="relative flex items-start">
+                            <div className="flex h-6 items-center">
+                              <input
+                                id="check-surau-mall"
+                                name="check-surau-mall"
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                onChange={(e) => {
+                                  setFindMallChecked(e.target.checked);
+                                }}
+                              />
+                            </div>
+                            <div className="ml-3 text-sm leading-6">
+                              <p className="italic text-gray-500">
+                                Check if your surau is inside a mall.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="mt-4 max-w-lg space-y-4">
+                          <div className="relative flex items-start">
+                            <div className="flex h-6 items-center">
+                              <input
+                                id="check-surau-qiblat"
+                                name="check-surau-qiblat"
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                onChange={(e) =>
+                                  setIsQiblatCertified(e.target.checked)
+                                }
+                              />
+                            </div>
+                            <div className="ml-3 text-sm leading-6">
+                              <p className="italic text-gray-500">
+                                This Surau is Qiblat certified.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 max-w-lg space-y-4">
+                          <div className="relative flex items-start">
+                            <div className="flex h-6 items-center">
+                              <input
+                                id="check-surau-qiblat"
+                                name="check-surau-qiblat"
+                                type="checkbox"
+                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                onChange={(e) =>
+                                  setIsSolatJumaat(e.target.checked)
+                                }
+                              />
+                            </div>
+                            <div className="ml-3 text-sm leading-6">
+                              <p className="italic text-gray-500">
+                                This Surau perform Jumaah prayer.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {findMallChecked ? (
+                  <div>
+                    <AsyncCreatableSelect
+                      isClearable
+                      onChange={(e) => handleMallChange(e)}
+                      loadOptions={promiseOptions}
+                      cacheOptions
+                      defaultOptions
+                    />
+                  </div>
+                ) : null}
+
+                {isQiblatCertified ? (
+                  <div className="grid grid-cols-3 gap-2 md:gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Latitude
+                      </label>
+                      <div className="mt-1 rounded-md shadow-sm">
+                        <input
+                          type="number"
+                          name="latitude"
+                          id="latitude"
+                          className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          placeholder="0.000"
+                          onChange={(e) => {
+                            setLatitude(parseFloat(e.target.value));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Longitude
+                      </label>
+                      <div className="mt-1 rounded-md shadow-sm">
+                        <input
+                          type="number"
+                          name="longitude"
+                          id="longitude"
+                          className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                          placeholder="0.000"
+                          onChange={(e) => {
+                            setLongitude(parseFloat(e.target.value));
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        Qiblat Degree
                       </label>
                       <div className="mt-1 rounded-md shadow-sm">
                         <input
                           type="text"
-                          name="surau-name"
-                          id="surau-name"
+                          name="qiblat-degree"
+                          id="longitude"
                           className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder=""
+                          placeholder="0.000"
                           onChange={(e) => {
-                            transformSurauName(e.target.value);
+                            setQiblatDegree(parseFloat(e.target.value));
                           }}
                         />
-                        {surauNameError ? (
-                          <p className="text-xs italic text-red-500">
-                            {surauNameError}
-                          </p>
-                        ) : null}
                       </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="col-span-3 md:col-span-2">
-                      <label
-                        htmlFor="surau-name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        State
-                      </label>
-                      <div className="relative z-20 mt-1 w-full rounded-md shadow-sm">
-                        <Select
-                          options={state.data}
-                          getOptionLabel={(option: any) => option.name}
-                          getOptionValue={(option: any) => option.id}
-                          onChange={(e) => handleNegeriChange(e)}
-                          required
-                        />
-                      </div>
-                    </div>
+                ) : null}
+
+                {qiblatInfoError ? (
+                  <p className="text-xs italic text-red-500">
+                    {qiblatInfoError}
+                  </p>
+                ) : null}
+
+                <div>
+                  <label
+                    htmlFor="about"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Direction / guide
+                  </label>
+                  <div className="mt-1">
+                    <textarea
+                      id="about"
+                      name="about"
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      defaultValue={""}
+                      onChange={(e) => {
+                        setBriefDirection(e.target.value);
+                      }}
+                    />
                   </div>
-                  {loading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="relative">
-                        <div
-                          className=" absolute h-4 w-4 rounded-full
-                            border-4 border-solid border-gray-200"
-                        ></div>
-                        <div
-                          className="absolute h-4 w-4 animate-spin rounded-full
-                            border-4 border-solid border-green-500 border-t-transparent"
-                        ></div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {currentDistrict && currentDistrict.length > 0 ? (
-                    <div>
-                      <div className="grid grid-cols-3 gap-6">
-                        <div className="col-span-3 md:col-span-2">
-                          <label
-                            htmlFor="surau-name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            District
-                          </label>
-                          <div className="relative z-10 mt-1 block w-full rounded-md shadow-sm">
-                            <Select
-                              options={currentDistrict}
-                              getOptionLabel={(option: any) => option.name}
-                              getOptionValue={(option: any) => option.id}
-                              onChange={(e) => handleDaerahChange(e)}
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {findMallLoading ? (
-                        <div className="mt-4 flex items-center justify-center">
-                          <div className="relative">
-                            <div
-                              className=" absolute h-4 w-4 rounded-full
-                            border-4 border-solid border-gray-200"
-                            ></div>
-                            <div
-                              className="absolute h-4 w-4 animate-spin rounded-full
-                            border-4 border-solid border-green-500 border-t-transparent"
-                            ></div>
-                          </div>
-                        </div>
-                      ) : null}
-
-                      {!findMallLoading && findMallForm ? (
-                        <>
-                          <div className="mt-4 max-w-lg space-y-4">
-                            <div className="relative flex items-start">
-                              <div className="flex h-6 items-center">
-                                <input
-                                  id="check-surau-mall"
-                                  name="check-surau-mall"
-                                  type="checkbox"
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                  onChange={(e) => {
-                                    setFindMallChecked(e.target.checked);
-                                  }}
-                                />
-                              </div>
-                              <div className="ml-3 text-sm leading-6">
-                                <p className="italic text-gray-500">
-                                  Check if your surau is inside a mall.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="mt-4 max-w-lg space-y-4">
-                            <div className="relative flex items-start">
-                              <div className="flex h-6 items-center">
-                                <input
-                                  id="check-surau-qiblat"
-                                  name="check-surau-qiblat"
-                                  type="checkbox"
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                  onChange={(e) =>
-                                    setIsQiblatCertified(e.target.checked)
-                                  }
-                                />
-                              </div>
-                              <div className="ml-3 text-sm leading-6">
-                                <p className="italic text-gray-500">
-                                  This Surau is Qiblat certified.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="mt-4 max-w-lg space-y-4">
-                            <div className="relative flex items-start">
-                              <div className="flex h-6 items-center">
-                                <input
-                                  id="check-surau-qiblat"
-                                  name="check-surau-qiblat"
-                                  type="checkbox"
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                  onChange={(e) =>
-                                    setIsSolatJumaat(e.target.checked)
-                                  }
-                                />
-                              </div>
-                              <div className="ml-3 text-sm leading-6">
-                                <p className="italic text-gray-500">
-                                  This Surau perform Jumaah prayer.
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  ) : null}
-
-                  {findMallChecked ? (
-                    <div>
-                      <AsyncCreatableSelect
-                        isClearable
-                        onChange={(e) => handleMallChange(e)}
-                        loadOptions={promiseOptions}
-                        cacheOptions
-                        defaultOptions
-                      />
-                    </div>
-                  ) : null}
-
-                  {isQiblatCertified ? (
-                    <div className="grid grid-cols-3 gap-2 md:gap-6">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Latitude
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                          <input
-                            type="number"
-                            name="latitude"
-                            id="latitude"
-                            className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            placeholder="0.000"
-                            onChange={(e) => {
-                              setLatitude(parseFloat(e.target.value));
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Longitude
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                          <input
-                            type="number"
-                            name="longitude"
-                            id="longitude"
-                            className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            placeholder="0.000"
-                            onChange={(e) => {
-                              setLongitude(parseFloat(e.target.value));
-                            }}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                          Qiblat Degree
-                        </label>
-                        <div className="mt-1 rounded-md shadow-sm">
-                          <input
-                            type="text"
-                            name="qiblat-degree"
-                            id="longitude"
-                            className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            placeholder="0.000"
-                            onChange={(e) => {
-                              setQiblatDegree(parseFloat(e.target.value));
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : null}
-
-                  {qiblatInfoError ? (
+                  <p className="mt-2 text-sm italic text-gray-500">
+                    Brief direction or guide to the surau. eg. near to the
+                    mosque, near to the shop lot, etc.
+                  </p>
+                  {briefDirectionError ? (
                     <p className="text-xs italic text-red-500">
-                      {qiblatInfoError}
+                      {briefDirectionError}
                     </p>
                   ) : null}
-
-                  <div>
-                    <label
-                      htmlFor="about"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Direction / guide
-                    </label>
-                    <div className="mt-1">
-                      <textarea
-                        id="about"
-                        name="about"
-                        rows={3}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                        defaultValue={""}
-                        onChange={(e) => {
-                          setBriefDirection(e.target.value);
-                        }}
-                      />
-                    </div>
-                    <p className="mt-2 text-sm italic text-gray-500">
-                      Brief direction or guide to the surau. eg. near to the
-                      mosque, near to the shop lot, etc.
-                    </p>
-                    {briefDirectionError ? (
-                      <p className="text-xs italic text-red-500">
-                        {briefDirectionError}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  {!imagePreviews ? (
-                    <div className="flex text-sm text-gray-600">
-                      <label
-                        htmlFor="product-image-upload"
-                        className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                      >
-                        <div className="group relative m-4">
-                          <PhotoIcon className="h-12 w-12" />
-                          <span className="text-md absolute top-10 scale-0 rounded bg-gray-800 p-2 text-white transition-all group-hover:scale-100">
-                            ✨ click to add photo!
-                          </span>
-                        </div>
-                        <input
-                          type="file"
-                          name="product-image-upload"
-                          id="product-image-upload"
-                          className="sr-only"
-                          onChange={(e) => void onSurauImageChange(e)}
-                          multiple
-                          accept="image/*"
-                        />
-                      </label>
-                    </div>
-                  ) : null}
-
-                  <div className="">
-                    <div className="grid grid-cols-2 gap-2 space-y-2">
-                      {imagePreviews
-                        ? imagePreviews.map((imagePreview, index) => (
-                            <div key={index}>
-                              <h1>{imagePreview.url}</h1>
-                              <Image
-                                src={imagePreview as unknown as string}
-                                alt="xsd"
-                                sizes="100vw"
-                                width={250}
-                                height={250}
-                              />
-                            </div>
-                          ))
-                        : null}
-                      {imagePreviews ? (
-                        <div className="flex h-32 flex-col items-center justify-center rounded-lg border border-b">
-                          <label
-                            htmlFor="add-more-product-image-upload"
-                            className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                          >
-                            <span>
-                              <PlusCircleIcon
-                                className="h-5 w-5"
-                                aria-hidden="true"
-                              />
-                            </span>
-                            <input
-                              type="file"
-                              name="add-more-product-image-upload"
-                              id="add-more-product-image-upload"
-                              className="sr-only"
-                              onChange={(e) => void handleAddMoreImages(e)}
-                              multiple
-                              accept="image/*"
-                            />
-                          </label>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
                 </div>
-                <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
-                  <button
-                    onClick={(e) => handleSubmit(e)}
-                    className=" justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                  >
-                    Submit
-                  </button>
-                  <div
-                    className="mb-2 font-light underline"
-                    onClick={() => setOpen(false)}
-                  >
-                    Close
+                <div>
+                  <div className="text-xs font-light italic text-center mb-2">
+                    Upload image here
+                  </div>
+                  <UploadButton
+                    endpoint="imageUploader"
+                    onClientUploadComplete={(res) => {
+                      // Do something with the response
+                      alert("Upload Completed");
+                      if (res) {
+                        void handleUploadThing(res);
+                      }
+                    }}
+                    onUploadError={(error: Error) => {
+                      // Do something with the error.
+                      alert(`ERROR! ${error.message}`);
+                    }}
+                  />
+                </div>
+
+                <div className="">
+                  <div className="grid grid-cols-2 gap-2 space-y-2">
+                    {imagePreviews
+                      ? imagePreviews.map((imagePreview, index) => (
+                          <div key={index}>
+                            <Image
+                              src={imagePreview.url}
+                              alt="image preview"
+                              sizes="100vw"
+                              width={250}
+                              height={250}
+                            />
+                          </div>
+                        ))
+                      : null}
                   </div>
                 </div>
               </div>
-            </form>
+              <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
+                <button
+                  onClick={(e) => handleSubmit(e)}
+                  className=" justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                >
+                  Submit
+                </button>
+                <div
+                  className="mb-2 font-light underline"
+                  onClick={() => setOpen(false)}
+                >
+                  Close
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
