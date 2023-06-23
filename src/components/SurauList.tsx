@@ -56,10 +56,10 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
 
   return (
     <div className="bg-white ">
-      <div className="mx-auto shadow-lg max-w-2xl py-2 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl py-2 px-4 shadow-lg sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Surau</h2>
 
-        <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
+        <div className="grid grid-cols-1 gap-y-10 gap-x-6 p-2 sm:grid-cols-2 md:p-0 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-6">
           {latestAddedSurau.isLoading ? (
             <div>Loading...</div>
           ) : latestAddedSurau.isError ? (
@@ -68,31 +68,35 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
             latestAddedSurau.data?.map((surau) => (
               <a key={surau.id} href="#" className="group">
                 <div
-                  className="max-h-72 overflow-hidden object-fill rounded-xl bg-gray-200"
+                  className="max-h-72 overflow-hidden rounded-xl bg-gray-200 object-fill"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
                   {surau.images[0]?.file_path ? (
-                    <Image
-                      src={surau.images[0]?.file_path}
-                      alt={surau.images[0].id}
-                      className="h-full w-full object-fill object-center group-hover:opacity-75"
-                      width={200}
-                      height={200}
-                    />
+                    <div className="flex h-72 items-center justify-center">
+                      <Image
+                        src={surau.images[0]?.file_path}
+                        alt={surau.images[0].id}
+                        width={500}
+                        height={500}
+                        className="h-full w-full object-cover group-hover:opacity-75"
+                      />
+                    </div>
                   ) : (
                     <>
-                      <Image
-                        src="/assets/background/carisuraudefault.png"
-                        alt="default"
-                        className="h-full w-full object-fill object-center group-hover:opacity-75"
-                        width={200}
-                        height={200}
-                      />
+                      <div className="flex h-72 w-auto items-center justify-center">
+                        <Image
+                          src="/assets/background/carisuraudefault.png"
+                          alt="default"
+                          className="h-64 w-auto object-contain group-hover:opacity-75"
+                          width={500}
+                          height={500}
+                        />
+                      </div>
                     </>
                   )}
                 </div>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
-                <p className="mt-1 text-lg font-medium text-gray-900">
+                <p className="mt-1 text-lg font-medium text-gray-900 text-start truncate">
                   {surau.name}
                 </p>
               </a>

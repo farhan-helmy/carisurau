@@ -40,7 +40,7 @@ const SearchBarResult = (props: ResultPropsType) => {
                 } ${data.length - 1 == idx ? "rounded-b-md" : ""}`}
               >
                 <div className="flex flex-col items-start">
-                  <div className="text-lg font-bold text-gray-600">
+                  <div className="text-lg font-semibold text-gray-600 text-start text-ellipsis overflow-hidden">
                     {capitalizeFirstLetter(surau.name)}
                   </div>
                   <div className="text-xs font-light italic">
