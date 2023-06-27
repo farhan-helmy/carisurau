@@ -35,12 +35,12 @@ const SearchBarResult = (props: ResultPropsType) => {
               <div
                 key={surau.id}
                 onClick={() => redirectToSurauPage(surau.unique_name)}
-                className={`flex w-full items-start justify-start border border-transparent bg-white py-3 px-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:cursor-pointer ${
+                className={`flex w-full items-start justify-start border border-transparent bg-white py-3 px-2 text-base font-medium text-gray-900 hover:cursor-pointer hover:bg-gray-100 ${
                   idx == 0 ? "rounded-t-md" : ""
                 } ${data.length - 1 == idx ? "rounded-b-md" : ""}`}
               >
                 <div className="flex flex-col items-start">
-                  <div className="text-lg font-semibold text-gray-600 text-start text-ellipsis overflow-hidden">
+                  <div className="overflow-hidden text-ellipsis text-start text-lg font-semibold text-gray-600">
                     {capitalizeFirstLetter(surau.name)}
                   </div>
                   <div className="text-xs font-light italic">
@@ -58,10 +58,15 @@ const SearchBarResult = (props: ResultPropsType) => {
 
 const SearchBar = () => {
   const [surauInput, setSurauInput] = useState<string>("");
+  const router = useRouter();
+
+  const redirectToSearchPage = () => {
+    void router.push(`/search`);
+  };
 
   return (
     <>
-      <div className="absolute mt-24 w-full p-4">
+      <div onClick={() => redirectToSearchPage()} className="w-full">
         <div>
           <input
             type="text"
