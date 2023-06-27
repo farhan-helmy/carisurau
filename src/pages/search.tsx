@@ -12,6 +12,7 @@ import Image from "next/image";
 import { api } from "../utils/api";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import useSurauStore from "../store/surau";
+import { truncateName } from "../utils";
 
 const surauUnorderedListVariants = {
   open: {
@@ -112,7 +113,7 @@ const SurauList = () => {
           <div className="w-full border border-b text-center" key={surau.id}>
             <div className="flex justify-between p-2">
               <div className="flex flex-col items-start justify-start">
-                <p className="font-semibold">{surau.name}</p>
+                <span className="font-semibold">{truncateName(surau.name, 20)}</span>
                 <p className="text-xs font-light">{surau.district.name}, {surau.state.name}</p>
               </div>
               <div className="max-h-12 overflow-hidden rounded-xl bg-gray-200 object-fill">

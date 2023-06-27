@@ -14,3 +14,11 @@ export const generateCombination = (): string => {
 
   return combination;
 };
+
+export const truncateName = (name: string, maxLength: number) => {
+  if (name.length <= maxLength) {
+    return name; // No need to truncate
+  } else {
+    return name.slice(0, maxLength - 3) + "..."; // Truncate and add ellipsis
+  }
+}
