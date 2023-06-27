@@ -15,10 +15,14 @@ import type { District } from "@prisma/client";
 import { UploadButton } from "../utils/uploadthing";
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
 import "@uploadthing/react/styles.css";
+import StateSelect from "./shared/StateSelect";
+import { generateCombination } from "../utils";
+import DistrictSelect from "./shared/DistrictSelect";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 });
+
 const AsyncCreatableSelect = dynamic(
   () => import("react-select/async-creatable"),
   {
@@ -51,26 +55,10 @@ type MallOptions = {
 };
 
 const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
-  const generateCombination = (): string => {
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
-    let combination = "";
-
-    for (let i = 0; i < 3; i++) {
-      const randomIndex = Math.floor(Math.random() * alphabet.length);
-      const letter = alphabet[randomIndex];
-      combination += letter;
-    }
-
-    return combination;
-  };
-
   const [findMallChecked, setFindMallChecked] = useState(false);
-  const [findMallForm, setFindMallForm] = useState(false);
   const [choosenState, setChoosenState] = useState("");
   const [choosenDistrict, setChoosenDistrict] = useState("");
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
-  const [loading, setLoading] = useState(false);
-  const [findMallLoading, setFindMallLoading] = useState(false);
   const [generatedSurauName, setGeneratedSurauName] = useState("");
   const [mallData, setMallData] = useState("");
   const [filePath, setFilePath] = useState<FilePath[]>([]);
@@ -79,9 +67,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [surauNameError, setSurauNameError] = useState("");
   const [briefDirectionError, setBriefDirectionError] = useState("");
   const [alertModalOpen, setAlertModalOpen] = useState(false);
-  const [currentDistrict, setCurrentDistrict] = useState<
-    District[] | undefined
-  >([]);
   const [isQiblatCertified, setIsQiblatCertified] = useState(false);
   const [isSolatJumaat, setIsSolatJumaat] = useState(false);
   const [latitude, setLatitude] = useState(0);
@@ -89,8 +74,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
 
-  const state = api.surau.getState.useQuery();
-  const district = state.data?.map((state) => state.districts).flat();
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
     state_id: choosenState,
@@ -99,26 +82,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const handleNegeriChange = (e: any) => {
     setChoosenState(e.id);
-    setCurrentDistrict([]);
-    setFindMallForm(false);
     setFindMallChecked(false);
   };
 
-  useEffect(() => {
-    setCurrentDistrict(
-      district?.filter((district) => district.state_id === choosenState)
-    );
-  }, [choosenState]);
-
   const handleDaerahChange = (e: any) => {
-    setFindMallLoading(true);
-    setFindMallForm(false);
-    setFindMallChecked(false);
-    setTimeout(() => {
-      setFindMallLoading(false);
-      setFindMallForm(true);
-    }, 1000);
-
     setChoosenDistrict(e.id);
   };
 
@@ -271,211 +238,148 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-6">
-                  <div className="col-span-3 md:col-span-2">
-                    <label
-                      htmlFor="surau-name"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      State
-                    </label>
-                    <div className="relative z-20 mt-1 w-full rounded-md shadow-sm">
-                      <Select
-                        options={state.data}
-                        getOptionLabel={(option: any) => option.name}
-                        getOptionValue={(option: any) => option.id}
-                        onChange={(e) => handleNegeriChange(e)}
-                        required
-                      />
-                    </div>
-                  </div>
-                </div>
-                {loading ? (
-                  <div className="flex items-center justify-center">
-                    <div className="relative">
-                      <div
-                        className=" absolute h-4 w-4 rounded-full
-                            border-4 border-solid border-gray-200"
-                      ></div>
-                      <div
-                        className="absolute h-4 w-4 animate-spin rounded-full
-                            border-4 border-solid border-green-500 border-t-transparent"
-                      ></div>
-                    </div>
-                  </div>
+                <StateSelect handleNegeriChange={handleNegeriChange} label={true} />
+                {choosenState ? (
+                  <DistrictSelect
+                    handleDaerahChange={handleDaerahChange}
+                    choosenState={choosenState}
+                    label={true}
+                  />
                 ) : null}
 
-                {currentDistrict && currentDistrict.length > 0 ? (
-                  <div>
-                    <div className="grid grid-cols-3 gap-6">
-                      <div className="col-span-3 md:col-span-2">
-                        <label
-                          htmlFor="surau-name"
-                          className="block text-sm font-medium text-gray-700"
-                        >
-                          District
-                        </label>
-                        <div className="relative z-10 mt-1 block w-full rounded-md shadow-sm">
-                          <Select
-                            options={currentDistrict}
-                            getOptionLabel={(option: any) => option.name}
-                            getOptionValue={(option: any) => option.id}
-                            onChange={(e) => handleDaerahChange(e)}
-                            required
+                {choosenDistrict ? (
+                  <>
+                    <div className="mt-4 max-w-lg space-y-4">
+                      <div className="relative flex items-start">
+                        <div className="flex h-6 items-center">
+                          <input
+                            id="check-surau-mall"
+                            name="check-surau-mall"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            onChange={(e) => {
+                              setFindMallChecked(e.target.checked);
+                            }}
+                          />
+                        </div>
+                        <div className="ml-3 text-sm leading-6">
+                          <p className="italic text-gray-500">
+                            Check if your surau is inside a mall.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    {findMallChecked ? (
+                      <div className="grid grid-cols-3 gap-6">
+                        <div className="col-span-3 md:col-span-2">
+                          <label className="block text-sm font-medium text-gray-700">
+                            Mall
+                          </label>
+                          <AsyncCreatableSelect
+                            isClearable
+                            onChange={(e) => handleMallChange(e)}
+                            loadOptions={promiseOptions}
+                            cacheOptions
+                            defaultOptions
                           />
                         </div>
                       </div>
+                    ) : null}
+                    <div className="mt-4 max-w-lg space-y-4">
+                      <div className="relative flex items-start">
+                        <div className="flex h-6 items-center">
+                          <input
+                            id="check-surau-qiblat"
+                            name="check-surau-qiblat"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            onChange={(e) =>
+                              setIsQiblatCertified(e.target.checked)
+                            }
+                          />
+                        </div>
+                        <div className="ml-3 text-sm leading-6">
+                          <p className="italic text-gray-500">
+                            This Surau is Qiblat certified.
+                          </p>
+                        </div>
+                      </div>
                     </div>
-
-                    {findMallLoading ? (
-                      <div className="mt-4 flex items-center justify-center">
-                        <div className="relative">
-                          <div
-                            className=" absolute h-4 w-4 rounded-full
-                            border-4 border-solid border-gray-200"
-                          ></div>
-                          <div
-                            className="absolute h-4 w-4 animate-spin rounded-full
-                            border-4 border-solid border-green-500 border-t-transparent"
-                          ></div>
+                    {isQiblatCertified ? (
+                      <div className="grid grid-cols-3 gap-2 md:gap-6">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Latitude
+                          </label>
+                          <div className="mt-1 rounded-md shadow-sm">
+                            <input
+                              type="number"
+                              name="latitude"
+                              id="latitude"
+                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="0.000"
+                              onChange={(e) => {
+                                setLatitude(parseFloat(e.target.value));
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Longitude
+                          </label>
+                          <div className="mt-1 rounded-md shadow-sm">
+                            <input
+                              type="number"
+                              name="longitude"
+                              id="longitude"
+                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="0.000"
+                              onChange={(e) => {
+                                setLongitude(parseFloat(e.target.value));
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">
+                            Qiblat Degree
+                          </label>
+                          <div className="mt-1 rounded-md shadow-sm">
+                            <input
+                              type="text"
+                              name="qiblat-degree"
+                              id="longitude"
+                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              placeholder="0.000"
+                              onChange={(e) => {
+                                setQiblatDegree(parseFloat(e.target.value));
+                              }}
+                            />
+                          </div>
                         </div>
                       </div>
                     ) : null}
 
-                    {!findMallLoading && findMallForm ? (
-                      <>
-                        <div className="mt-4 max-w-lg space-y-4">
-                          <div className="relative flex items-start">
-                            <div className="flex h-6 items-center">
-                              <input
-                                id="check-surau-mall"
-                                name="check-surau-mall"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                onChange={(e) => {
-                                  setFindMallChecked(e.target.checked);
-                                }}
-                              />
-                            </div>
-                            <div className="ml-3 text-sm leading-6">
-                              <p className="italic text-gray-500">
-                                Check if your surau is inside a mall.
-                              </p>
-                            </div>
-                          </div>
+                    <div className="mt-4 max-w-lg space-y-4">
+                      <div className="relative flex items-start">
+                        <div className="flex h-6 items-center">
+                          <input
+                            id="check-surau-qiblat"
+                            name="check-surau-qiblat"
+                            type="checkbox"
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            onChange={(e) => setIsSolatJumaat(e.target.checked)}
+                          />
                         </div>
-                        <div className="mt-4 max-w-lg space-y-4">
-                          <div className="relative flex items-start">
-                            <div className="flex h-6 items-center">
-                              <input
-                                id="check-surau-qiblat"
-                                name="check-surau-qiblat"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                onChange={(e) =>
-                                  setIsQiblatCertified(e.target.checked)
-                                }
-                              />
-                            </div>
-                            <div className="ml-3 text-sm leading-6">
-                              <p className="italic text-gray-500">
-                                This Surau is Qiblat certified.
-                              </p>
-                            </div>
-                          </div>
+                        <div className="ml-3 text-sm leading-6">
+                          <p className="italic text-gray-500">
+                            This Surau perform Jumaah prayer.
+                          </p>
                         </div>
-
-                        <div className="mt-4 max-w-lg space-y-4">
-                          <div className="relative flex items-start">
-                            <div className="flex h-6 items-center">
-                              <input
-                                id="check-surau-qiblat"
-                                name="check-surau-qiblat"
-                                type="checkbox"
-                                className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                                onChange={(e) =>
-                                  setIsSolatJumaat(e.target.checked)
-                                }
-                              />
-                            </div>
-                            <div className="ml-3 text-sm leading-6">
-                              <p className="italic text-gray-500">
-                                This Surau perform Jumaah prayer.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    ) : null}
-                  </div>
-                ) : null}
-
-                {findMallChecked ? (
-                  <div>
-                    <AsyncCreatableSelect
-                      isClearable
-                      onChange={(e) => handleMallChange(e)}
-                      loadOptions={promiseOptions}
-                      cacheOptions
-                      defaultOptions
-                    />
-                  </div>
-                ) : null}
-
-                {isQiblatCertified ? (
-                  <div className="grid grid-cols-3 gap-2 md:gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Latitude
-                      </label>
-                      <div className="mt-1 rounded-md shadow-sm">
-                        <input
-                          type="number"
-                          name="latitude"
-                          id="latitude"
-                          className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="0.000"
-                          onChange={(e) => {
-                            setLatitude(parseFloat(e.target.value));
-                          }}
-                        />
                       </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Longitude
-                      </label>
-                      <div className="mt-1 rounded-md shadow-sm">
-                        <input
-                          type="number"
-                          name="longitude"
-                          id="longitude"
-                          className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="0.000"
-                          onChange={(e) => {
-                            setLongitude(parseFloat(e.target.value));
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Qiblat Degree
-                      </label>
-                      <div className="mt-1 rounded-md shadow-sm">
-                        <input
-                          type="text"
-                          name="qiblat-degree"
-                          id="longitude"
-                          className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                          placeholder="0.000"
-                          onChange={(e) => {
-                            setQiblatDegree(parseFloat(e.target.value));
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+                  </>
                 ) : null}
 
                 {qiblatInfoError ? (
@@ -514,7 +418,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   ) : null}
                 </div>
                 <div>
-                  <div className="text-xs font-light italic text-center mb-2">
+                  <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
                   <UploadButton

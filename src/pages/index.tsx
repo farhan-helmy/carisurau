@@ -143,7 +143,7 @@ export default function Index() {
           {/* Navigation */}
           <Header />
 
-          <div className="relative mx-auto flex max-w-3xl flex-col items-center py-20 px-6 text-center sm:py-64 lg:px-0">
+          <div className="relative mx-auto flex max-w-3xl flex-col items-center py-2 px-6 text-center sm:py-64 lg:px-0">
             <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
               Carisurau.com
             </h1>
@@ -151,6 +151,7 @@ export default function Index() {
               Discover Your Perfect Prayer Haven with Ease!
             </p>
             {/* Search bar component */}
+            
             <SearchBar />
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
