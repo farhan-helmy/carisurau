@@ -3,7 +3,7 @@
 import type { NextPage } from "next";
 import { motion } from "framer-motion";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import DistrictSelect from "../components/shared/DistrictSelect";
 import StateSelect from "../components/shared/StateSelect";
@@ -11,6 +11,7 @@ import Sort from "../components/shared/Sort";
 import Image from "next/image";
 import { api } from "../utils/api";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
+import useSurauStore from "../store/surau";
 
 const surauUnorderedListVariants = {
   open: {
@@ -38,69 +39,37 @@ const surauListVariants = {
   },
 };
 
-type FilterProps = {
-  filter: string;
-  setFilter: (filter: string) => void;
-};
-
-type SurauListProps = {
-  sort: string;
-  filter: string;
-}
-
-const Filter: React.FC<FilterProps> = ({ filter, setFilter }) => {
-  const [choosenState, setChoosenState] = useState("");
-  const [choosenDistrict, setChoosenDistrict] = useState("");
+const Filter = () => {
   const router = useRouter();
+  const surauStore = useSurauStore();
 
   const redirectToHomePage = () => {
     void router.push("/");
   };
 
   const handleNegeriChange = (e: any) => {
-    console.log(e);
-    setChoosenState(e.id);
+    surauStore.setFilterType("state");
+    surauStore.setState(e.id)
   };
 
   const handleDaerahChange = (e: any) => {
-    console.log(e);
-    setChoosenDistrict(e.id);
+    surauStore.setFilterType("district");
+    surauStore.setDistrict(e.id)
   };
-
-  const filterSurau = () => {
-    console.log("filter")
-  };
-
   return (
     <div className="bg-white p-4">
       <div className="w-full rounded-md border border-b shadow-md">
         <div className="items-center space-y-2 px-4 py-5 sm:flex sm:space-x-2 sm:space-y-0 sm:p-6">
-          <div className="">
-            <input
-              type="text"
-              name="keyword"
-              id="keyword"
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="Insert anything"
-            />
-          </div>
           <StateSelect handleNegeriChange={handleNegeriChange} label={false} />
-          {choosenState ? (
+          {surauStore.state ? (
             <DistrictSelect
               handleDaerahChange={handleDaerahChange}
-              choosenState={choosenState}
+              choosenState={surauStore.state}
               label={false}
             />
           ) : null}
 
           <div className="flex items-end justify-end gap-4">
-            <button
-              onClick={() => filterSurau()}
-              className="inline-flex items-center gap-x-1.5 rounded-md bg-indigo-600 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              <CheckCircleIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-              Filter
-            </button>
             <button onClick={redirectToHomePage} className="text-xs underline">
               Go back
             </button>
@@ -112,10 +81,26 @@ const Filter: React.FC<FilterProps> = ({ filter, setFilter }) => {
 };
 
 const SurauList = () => {
-  const { data, isLoading, isError } = api.surau.getAllSurau.useQuery();
+  const surauStore = useSurauStore();
+  const { data, isLoading, isError } = api.surau.getAllSurau.useQuery({
+    filterType: surauStore.filterType,
+    state: surauStore.state,
+    district: surauStore.district,
+  });
 
   if (isError) return <div>error</div>;
   if (isLoading) return <LoadingSpinner />;
+  if (data === undefined || data.length === 0) return (
+    <div>
+      <Image
+        src="/assets/background/empty.png"
+        alt="Empty pic"
+        width={500}
+        height={500}
+      />
+    </div>
+  )
+
   return (
     <>
       {data?.map((surau) => (
@@ -163,27 +148,25 @@ const SurauList = () => {
 };
 
 const SearchPage: NextPage = () => {
-  const [filter, setFilter] = useState("");
-  const [sort, setSort] = useState("");
-
+  const surauStore = useSurauStore();
   useEffect(() => {
-    setSort("");
-  },[]);
-
+    surauStore.setFilterType("All");
+    surauStore.setState("");
+    surauStore.setDistrict("");
+  }, [])
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
     >
       <div className="mt-4">
-        <Filter filter={filter} setFilter={setFilter} />
+        <Filter />
       </div>
 
       <div className="p-4">
-        <Sort setSort={setSort} />
+        <Sort />
         <motion.ul
           variants={surauUnorderedListVariants}
-          animate={sort === "All" ? "open" : "closed"}
         >
           <SurauList />
         </motion.ul>

@@ -132,20 +132,61 @@ export const surauRouter = createTRPCRouter({
         },
       });
     }),
-  getAllSurau: publicProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma.surau.findMany({
-      where: {
-        is_approved: true,
-      },
-      include: {
-        state: true,
-        district: true,
-        mall: true,
-        images: true,
-        qiblat: true,
-      },
-    });
-  }),
+  getAllSurau: publicProcedure
+    .input(z.object({ filterType: z.string().optional(), district: z.string().optional(), state: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      if (input.filterType === "All") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+            qiblat: true,
+          },
+        });
+      }
+
+      if (input.filterType === "district") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+            district: {
+              id: input.district,
+            },
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+            qiblat: true,
+          },
+        });
+      }
+      if (input.filterType === "state") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            state: {
+              id: input.state,
+            }
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+            qiblat: true,
+          },
+        });
+      }
+
+      return undefined;
+
+    }),
   getState: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.state.findMany({
       include: {

@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import useSurauStore from "../../store/surau";
 
 const sortOptions = [
   { name: "All", href: "#" },
@@ -10,11 +11,8 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-type SortProps = {
-  setSort: (sort: string) => void;
-};
-
-const Sort: React.FC<SortProps> = ({setSort}) => {
+const Sort = () => {
+  const surauStore = useSurauStore();
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -42,7 +40,7 @@ const Sort: React.FC<SortProps> = ({setSort}) => {
               <Menu.Item key={i}>
                 {({ active }) => (
                   <button
-                  onClick={() => setSort(option.name)}
+                  onClick={() => surauStore.setFilterType(option.name)}
                     className={classNames(
                       active ? "bg-gray-100" : "",
                       "block px-4 py-2 text-sm font-medium text-gray-900"
