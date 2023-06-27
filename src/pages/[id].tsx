@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import SurauReview from "../../components/SurauReview";
+import SurauReview from "../components/SurauReview";
 import Head from "next/head";
 import Script from "next/script";
 import { useRouter } from "next/router";

@@ -10,7 +10,7 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
 
   const handleRouterPush = (e: React.FormEvent, surauName: string) => {
     e.preventDefault();
-    void router.push(`/surau/${surauName}`);
+    void router.push(`/${surauName}`);
   };
 
   if (type === "new") {

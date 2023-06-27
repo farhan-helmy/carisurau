@@ -13,6 +13,7 @@ import { api } from "../utils/api";
 import LoadingSpinner from "../components/shared/LoadingSpinner";
 import useSurauStore from "../store/surau";
 import { truncateName } from "../utils";
+import Link from "next/link";
 
 const surauUnorderedListVariants = {
   open: {
@@ -110,37 +111,39 @@ const SurauList = () => {
           whileTap={{ scale: 0.95 }}
           key={surau.id}
         >
-          <div className="w-full border border-b text-center" key={surau.id}>
-            <div className="flex justify-between p-2">
-              <div className="flex flex-col items-start justify-start">
-                <span className="font-semibold">{truncateName(surau.name, 20)}</span>
-                <p className="text-xs font-light">{surau.district.name}, {surau.state.name}</p>
-              </div>
-              <div className="max-h-12 overflow-hidden rounded-xl bg-gray-200 object-fill">
-                {surau.images[0]?.file_path ? (
-                  <div className="flex h-12 items-center justify-center">
-                    <Image
-                      src={surau.images[0]?.file_path}
-                      alt="test"
-                      className="h-12 w-12 object-cover group-hover:opacity-75"
-                      width={25}
-                      height={25}
-                    />
-                  </div>
-                ) : <>
-                  <div className="flex h-12 w-auto items-center justify-center">
-                    <Image
-                      src="/assets/background/carisuraudefault.png"
-                      alt="default"
-                      className="h-12 w-auto object-contain group-hover:opacity-75"
-                      width={500}
-                      height={500}
-                    />
-                  </div>
-                </>}
+          <Link href={`/${surau.unique_name}`}>
+            <div className="w-full border border-b text-center" key={surau.id}>
+              <div className="flex justify-between p-2">
+                <div className="flex flex-col items-start justify-start">
+                  <span className="font-semibold">{truncateName(surau.name, 20)}</span>
+                  <p className="text-xs font-light">{surau.district.name}, {surau.state.name}</p>
+                </div>
+                <div className="max-h-12 overflow-hidden rounded-xl bg-gray-200 object-fill">
+                  {surau.images[0]?.file_path ? (
+                    <div className="flex h-12 items-center justify-center">
+                      <Image
+                        src={surau.images[0]?.file_path}
+                        alt="test"
+                        className="h-12 w-12 object-cover group-hover:opacity-75"
+                        width={25}
+                        height={25}
+                      />
+                    </div>
+                  ) : <>
+                    <div className="flex h-12 w-auto items-center justify-center">
+                      <Image
+                        src="/assets/background/carisuraudefault.png"
+                        alt="default"
+                        className="h-12 w-auto object-contain group-hover:opacity-75"
+                        width={500}
+                        height={500}
+                      />
+                    </div>
+                  </>}
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         </motion.li>
       ))
       }
