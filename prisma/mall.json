@@ -91,10 +91,7 @@
                     ]
                 },
                 "Labuan": {
-                    "mall": [
-                        "Financial Park Labuan",
-                        "Labuan Times Square"
-                    ]
+                    "mall": ["Financial Park Labuan", "Labuan Times Square"]
                 },
                 "Putrajaya": {
                     "mall": [
@@ -153,16 +150,10 @@
                     ]
                 },
                 "Kluang": {
-                    "mall": [
-                        "Kluang Mall",
-                        "Kluang Parade"
-                    ]
+                    "mall": ["Kluang Mall", "Kluang Parade"]
                 },
                 "Kota Tinggi": {
-                    "mall": [
-                        "Heritage Mall",
-                        "Plaza Kota Tinggi"
-                    ]
+                    "mall": ["Heritage Mall", "Plaza Kota Tinggi"]
                 },
                 "Kulai": {
                     "mall": [
@@ -173,20 +164,13 @@
                     ]
                 },
                 "Muar": {
-                    "mall": [
-                        "Wetex Parade",
-                        "Muar Trade Centre"
-                    ]
+                    "mall": ["Wetex Parade", "Muar Trade Centre"]
                 },
                 "Pengerang": {
-                    "mall": [
-                        "SKS City Mall"
-                    ]
+                    "mall": ["SKS City Mall"]
                 },
                 "Pontian": {
-                    "mall": [
-                        "Plaza Pontian"
-                    ]
+                    "mall": ["Plaza Pontian"]
                 },
                 "Segamat": {
                     "mall": [
@@ -208,14 +192,10 @@
                     ]
                 },
                 "Kubang Pasu": {
-                    "mall": [
-                        "Jitra Mall"
-                    ]
+                    "mall": ["Jitra Mall"]
                 },
                 "Kulim": {
-                    "mall": [
-                        "Kulim Landmark Central"
-                    ]
+                    "mall": ["Kulim Landmark Central"]
                 },
                 "Langkawi": {
                     "mall": [
@@ -251,9 +231,7 @@
         "Malacca": {
             "district": {
                 "Alor Gajah": {
-                    "mall": [
-                        "Freeport A'Famosa Outlet"
-                    ]
+                    "mall": ["Freeport A'Famosa Outlet"]
                 },
                 "Malacca City": {
                     "mall": [
@@ -277,20 +255,13 @@
         "Negeri Sembilan": {
             "district": {
                 "Jempol": {
-                    "mall": [
-                        "Kiara Square, Bahau"
-                    ]
+                    "mall": ["Kiara Square, Bahau"]
                 },
                 "Nilai": {
-                    "mall": [
-                        "\u00c6ON Mall Nilai",
-                        "MesaMall Nilai"
-                    ]
+                    "mall": ["\u00c6ON Mall Nilai", "MesaMall Nilai"]
                 },
                 "Port Dickson": {
-                    "mall": [
-                        "Regina Mall"
-                    ]
+                    "mall": ["Regina Mall"]
                 },
                 "Seremban": {
                     "mall": [
@@ -335,15 +306,10 @@
                     ]
                 },
                 "Temerloh": {
-                    "mall": [
-                        "Temerloh Mall",
-                        "TMG Temerloh"
-                    ]
+                    "mall": ["Temerloh Mall", "TMG Temerloh"]
                 },
                 "Mentakab": {
-                    "mall": [
-                        "Mentakab Star Mall"
-                    ]
+                    "mall": ["Mentakab Star Mall"]
                 }
             }
         },
@@ -388,61 +354,77 @@
         },
         "Perak": {
             "district": {
-                "Ipoh": {
+                "Kinta": {
                     "mall": [
                         "\u00c6ON Mall Ipoh Station 18",
                         "\u00c6ON Mall Kinta City",
                         "\u00c6ON Mall Klebang",
                         "\u00c6ON Midtown Falim",
-                        "Angsana Ipoh Mall"
+                        "Angsana Ipoh Mall",
+                        "Giant Hypermarket Falim",
+                        "Mydin Mall Manjoi",
+                        "Mydin Mall Meru Raya",
+                        "Perak IT Mall",
+                        "Ipoh Parade",
+                        "De Garden Mall",
+                        "Octagon Shopping Centre",
+                        "Pengkalan Emas Mall",
+                        "Jelapang Square",
+                        "Yik Foong Complex",
+                        "Mydin Mall RTC Perak"
                     ]
                 },
                 "Kampar": {
                     "mall": [
                         "Kampar Terminal Mall",
-                        "Tin Village Mall"
+                        "Tin Village Mall",
+                        "Lotus Kampar"
                     ]
                 },
                 "Kerian": {
                     "mall": [
-                        "Kerian Sentral Mall, Parit Buntar"
+                        "Kerian Sentral Mall, Parit Buntar",
+                        "Mydin Mall Parit Buntar"
                     ]
                 },
                 "Manjung": {
                     "mall": [
-                        "\u00c6ON Mall Seri Manjung"
+                        "\u00c6ON Mall Seri Manjung",
+                        "Giant Sri Manjung Mall",
+                        "The Store Sitiawan"
                     ]
                 },
                 "Perak Tengah": {
-                    "mall": [
-                        "D'Mall, Seri Iskandar"
-                    ]
+                    "mall": ["D'Mall, Seri Iskandar"]
                 },
-                "Taiping": {
+                "Larut, Matang and Selama": {
                     "mall": [
                         "\u00c6ON Mall Taiping",
                         "Taiping Mall",
-                        "Taiping Sentral Mall"
+                        "Taiping Sentral Mall",
+                        "Econsave Kamunting",
+                        "Giant Hypermarket Taiping",
+                        "Taiping Sentral Mall",
+                        "Lotus Taiping",
+                        "The Store Taiping",
+                        "\u00c6ON Jusco Kamunting"
                     ]
+                },
+                "Hilir Perak": {
+                    "mall": ["Tesco Mall Teluk Intan"]
                 }
             }
         },
         "Sabah": {
             "district": {
                 "Interior Division": {
-                    "mall": [
-                        "Keningau Mall"
-                    ]
+                    "mall": ["Keningau Mall"]
                 },
                 "Sandakan Division": {
-                    "mall": [
-                        "Harbour Mall Sandakan"
-                    ]
+                    "mall": ["Harbour Mall Sandakan"]
                 },
                 "Tawau Division": {
-                    "mall": [
-                        "Eastern Plaza"
-                    ]
+                    "mall": ["Eastern Plaza"]
                 },
                 "Kota Kinabalu": {
                     "mall": [
@@ -530,9 +512,7 @@
                     ]
                 },
                 "Limbang": {
-                    "mall": [
-                        "Limbang Plaza"
-                    ]
+                    "mall": ["Limbang Plaza"]
                 },
                 "Miri": {
                     "mall": [
@@ -548,14 +528,10 @@
                     ]
                 },
                 "Mukah": {
-                    "mall": [
-                        "Medan Mall"
-                    ]
+                    "mall": ["Medan Mall"]
                 },
                 "Serian": {
-                    "mall": [
-                        "Eastern Mall"
-                    ]
+                    "mall": ["Eastern Mall"]
                 },
                 "Sibu": {
                     "mall": [
@@ -569,9 +545,7 @@
                     ]
                 },
                 "Sri Aman": {
-                    "mall": [
-                        "Plaza Simanggang"
-                    ]
+                    "mall": ["Plaza Simanggang"]
                 }
             }
         },
@@ -587,11 +561,7 @@
                     ]
                 },
                 "Bandar Baru Bangi": {
-                    "mall": [
-                        "Bangi Gateway",
-                        "De Centrum Mall",
-                        "Evo Bangi"
-                    ]
+                    "mall": ["Bangi Gateway", "De Centrum Mall", "Evo Bangi"]
                 },
                 "Cheras": {
                     "mall": [
@@ -607,10 +577,7 @@
                     ]
                 },
                 "Kajang": {
-                    "mall": [
-                        "Metro Point Kajang",
-                        "Plaza Metro Kajang"
-                    ]
+                    "mall": ["Metro Point Kajang", "Plaza Metro Kajang"]
                 },
                 "Klang": {
                     "mall": [
@@ -653,15 +620,10 @@
                     ]
                 },
                 "Semenyih": {
-                    "mall": [
-                        "Ecohill Walk Mall"
-                    ]
+                    "mall": ["Ecohill Walk Mall"]
                 },
                 "Sepang": {
-                    "mall": [
-                        "Gateway@klia2",
-                        "Mitsui Outlet Park KLIA Sepang"
-                    ]
+                    "mall": ["Gateway@klia2", "Mitsui Outlet Park KLIA Sepang"]
                 },
                 "Seri Kembangan": {
                     "mall": [
@@ -704,20 +666,14 @@
                     ]
                 },
                 "Telok Panglima Garang": {
-                    "mall": [
-                        "Quayside Mall",
-                        "Sanctuary Mall"
-                    ]
+                    "mall": ["Quayside Mall", "Sanctuary Mall"]
                 }
             }
         },
         "Terengganu": {
             "district": {
                 "Kemaman": {
-                    "mall": [
-                        "Kemaman Centre Point",
-                        "Mesra Mall, Kemasik"
-                    ]
+                    "mall": ["Kemaman Centre Point", "Mesra Mall, Kemasik"]
                 },
                 "Kuala Terengganu": {
                     "mall": [
