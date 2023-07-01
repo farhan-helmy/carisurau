@@ -17,7 +17,7 @@ const seedPerakMall = async () => {
     await prisma.district
       .findUnique({
         where: {
-          unique_name: district.toLocaleLowerCase().replace(/\s/g, '-'),
+          unique_name: district.toLocaleLowerCase().replace(/[\s,]+/g, '-')
         },
       })
       .then(async (res) => {
@@ -27,7 +27,7 @@ const seedPerakMall = async () => {
               data: {
                 name: mallName,
                 label: mallName,
-                value: mallName.toLocaleLowerCase().replace(' ', '-'),
+                value: mallName.toLocaleLowerCase().replace(/[\s,]+/g, '-'),
                 district: {
                   connect: {
                     id: res.id,
