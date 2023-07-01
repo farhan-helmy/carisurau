@@ -59,7 +59,7 @@ model Rating {
     rating     Int
     review     String?
     created_at DateTime     @default(now())
-    surau      Surau        @relation(fields: [surau_id], references: [id])
+    surau      Surau        @relation(fields: [surau_id], references: [id], onDelete: Cascade)
     surau_id   String
     user_id    String?
     user       User?        @relation(fields: [user_id], references: [id])
