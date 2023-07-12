@@ -3,7 +3,6 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
 
 # Carisurau.com (Formerly Ratemysurau.com)
 
@@ -72,5 +71,3 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [stars-url]: https://github.com/farhan-helmy/ratemysurau/stargazers
 [issues-shield]: https://img.shields.io/github/issues/farhan-helmy/ratemysurau.svg?style=for-the-badge
 [issues-url]: https://github.com/farhan-helmy/ratemysurau/issues
-[license-shield]: https://img.shields.io/github/license/farhan-helmy/ratemysurau.svg?style=for-the-badge
-[license-url]: https://github.com/farhan-helmy/ratemysurau/blob/master/LICENSE.txt
