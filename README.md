@@ -17,10 +17,6 @@
 
 ⭐️ Can't find the surau you want? You can make a difference by adding it to our platform! With just one click of the 'Add Surau' button, you can help others find their way to a place of prayer.
 
-📺 Watch our exciting promotional video below to learn more and get inspired! 😄
-
-
-
 ### Built With
 
 - Next.js
