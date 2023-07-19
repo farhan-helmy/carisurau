@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { api } from "../../utils/api";
 import LoadingSpinner from "./LoadingSpinner";
+import { useEffect } from "react";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -19,9 +20,14 @@ const DistrictSelect: React.FC<DistrictSelectProps> = ({
   choosenState,
   label,
 }) => {
-  const { data, isLoading } = api.surau.getDistrict.useQuery({
+  const { data, isLoading, refetch } = api.surau.getDistrict.useQuery({
     id: choosenState,
   });
+
+  useEffect(() => {
+    void refetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [choosenState])
 
   if (isLoading) return <LoadingSpinner />;
   return (

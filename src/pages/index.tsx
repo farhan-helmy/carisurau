@@ -107,7 +107,7 @@ export default function Index() {
         ></script>
       </Head>
 
-      <div className="bg-white">
+      <div className="bg-white">        
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"

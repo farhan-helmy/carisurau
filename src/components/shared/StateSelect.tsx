@@ -10,6 +10,7 @@ const Select = dynamic(() => import("react-select"), {
 
 type StateSelectProps = {
   handleNegeriChange: (e: any) => void;
+  setChoosenDistrict: (e: any) => void;
   label: boolean;
 };
 
@@ -17,6 +18,7 @@ const StateSelect: React.FC<StateSelectProps> = ({
   handleNegeriChange,
   label,
 }) => {
+
   const { data, isLoading } = api.surau.getState.useQuery();
   if (isLoading) return <LoadingSpinner />;
   return (
