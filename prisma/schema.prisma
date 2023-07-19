@@ -6,6 +6,12 @@ generator client {
     binaryTargets = ["native", "linux-arm64-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
 }
 
+generator kysely {
+    provider = "prisma-kysely"
+    output   = "../kysely"
+    fileName = "kyselyschema.ts"
+}
+
 datasource db {
     provider = "postgresql"
     // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
@@ -13,12 +19,6 @@ datasource db {
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
-}
-
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
 }
 
 model Surau {
@@ -43,6 +43,8 @@ model Surau {
     is_solat_jumaat     Boolean      @default(false)
     user_id             String?
     user                User?        @relation(fields: [user_id], references: [id])
+    application_id      String?
+    application         Application? @relation(fields: [application_id], references: [id])
 }
 
 model Qiblat {
@@ -127,6 +129,18 @@ model Account {
     @@unique([provider, providerAccountId])
 }
 
+model Application {
+    id        String   @id @default(cuid())
+    name      String
+    appKey    String   @unique
+    appSecret String   @unique
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    user      User     @relation(fields: [userId], references: [id])
+    userId    String
+    Surau     Surau[]
+}
+
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
@@ -136,16 +150,17 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String        @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?       @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
     Surau         Surau[]
     Rating        Rating[]
-    createdAt     DateTime  @default(now())
+    Application   Application[]
+    createdAt     DateTime      @default(now())
 }
 
 model VerificationToken {

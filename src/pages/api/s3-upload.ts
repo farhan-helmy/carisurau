@@ -1,1 +1,3 @@
-export { APIRoute as default } from "next-s3-upload";
+export const s3UploadHandler = () => {
+  console.log("test");
+};

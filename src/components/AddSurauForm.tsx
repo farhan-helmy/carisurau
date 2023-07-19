@@ -6,22 +6,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import dynamic from "next/dynamic";
 import type { FC } from "react";
-import { useEffect } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
 import AlertModal from "./shared/AlertModal";
-import type { District } from "@prisma/client";
 import { UploadButton } from "../utils/uploadthing";
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
 import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
-
-const Select = dynamic(() => import("react-select"), {
-  ssr: true,
-});
 
 const AsyncCreatableSelect = dynamic(
   () => import("react-select/async-creatable"),
@@ -74,10 +68,15 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
 
+  const Select = dynamic(() => import("react-select"), {
+    ssr: true,
+  });  
+
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
     state_id: choosenState,
   });
+
   const addSurau = api.surau.addSurau.useMutation();
 
   const handleNegeriChange = (e: any) => {
@@ -116,20 +115,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setFilePath(urls);
     setImagePreviews(images);
   };
-
-  const filterMall = (inputValue: string) => {
-    if (!mall.data) return [];
-    return mall.data?.filter((i) =>
-      i.value.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  };
-
-  const promiseOptions = (inputValue: string) =>
-    new Promise<MallOptions[]>((resolve) => {
-      setTimeout(() => {
-        resolve(filterMall(inputValue));
-      }, 1000);
-    });
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const qiblat = {
@@ -189,6 +174,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       });
   };
 
+
   return (
     <>
       <AlertModal
@@ -238,11 +224,12 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                 </div>
-                <StateSelect handleNegeriChange={handleNegeriChange} label={true} />
+                <StateSelect handleNegeriChange={handleNegeriChange} label={true} setChoosenDistrict={setChoosenDistrict} />
                 {choosenState ? (
                   <DistrictSelect
                     handleDaerahChange={handleDaerahChange}
                     choosenState={choosenState}
+                    
                     label={true}
                   />
                 ) : null}
@@ -275,12 +262,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           <label className="block text-sm font-medium text-gray-700">
                             Mall
                           </label>
-                          <AsyncCreatableSelect
+                          <Select
                             isClearable
                             onChange={(e) => handleMallChange(e)}
-                            loadOptions={promiseOptions}
-                            cacheOptions
-                            defaultOptions
+                            options={mall.data}
+                            getOptionLabel={(option: any) => option.name}
+                            getOptionValue={(option: any) => option.id}
+                            placeholder="Mall"
                           />
                         </div>
                       </div>
