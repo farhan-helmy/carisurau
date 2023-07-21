@@ -87,7 +87,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   src={image.file_path}
                   key={image.id}
                   alt={image.id}
-                  className="h-24 min-w-[9rem] rounded-md object-cover hover:cursor-pointer group-hover:opacity-75"
+                  className="h-24 min-w-[9rem] max-w-[9rem] rounded-md object-cover hover:cursor-pointer group-hover:opacity-75"
                   onClick={() => setImageHighlighted(image)}
                   width={400}
                   height={400}
