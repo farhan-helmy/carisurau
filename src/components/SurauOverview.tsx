@@ -4,8 +4,7 @@ import { useRouter } from "next/router";
 import type { FC } from "react";
 import { capitalizeFirstLetter } from "../utils";
 import { useEffect, useState } from "react";
-import ImageCarousel from "./shared/ImageCarousel";
-import Modal from "./shared/Modal";
+import ImageModal from "./shared/ImageModal";
 
 type Surau = {
   id: string;
@@ -75,21 +74,23 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
             </div>
 
             {showCarousel && imageHighlighted && (
-              <Modal open={showCarousel} setOpen={setShowCarousel}>
-                <ImageCarousel url={imageHighlighted?.file_path} />
-              </Modal>
+              <ImageModal
+                url={imageHighlighted?.file_path}
+                open={showCarousel}
+                onClose={() => setShowCarousel(false)}
+              />
             )}
 
-            <div className="mt-2 flex items-center space-x-2 overflow-scroll">
+            <div className="mt-2 flex w-full items-center justify-between gap-2 overflow-scroll">
               {surau?.images.map((image) => (
                 <Image
-                  key={image.id}
                   src={image.file_path}
+                  key={image.id}
                   alt={image.id}
-                  className="h-24 w-36 rounded-lg object-cover hover:cursor-pointer group-hover:opacity-75"
+                  className="h-24 min-w-[9rem] rounded-md object-cover hover:cursor-pointer group-hover:opacity-75"
                   onClick={() => setImageHighlighted(image)}
-                  width={200}
-                  height={200}
+                  width={400}
+                  height={400}
                   placeholder="blur"
                   blurDataURL="/assets/background/carisuraudefault.png"
                   priority
