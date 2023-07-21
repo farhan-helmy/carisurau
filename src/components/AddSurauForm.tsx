@@ -97,6 +97,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setMallData(e.id);
   };
 
+  // TODO: Add mechanism to store temporary image url and file key
+  // User can delete the image before submitting the form
+
   const handleUploadThing = (uploadThingUrl: UploadThingFilePath[]) => {
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
@@ -445,7 +448,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   Submit
                 </button>
                 <div
-                  className="mb-2 font-light underline"
+                  className="mb-2 font-light underline hover:text-indigo-500 cursor-pointer"
                   onClick={() => setOpen(false)}
                 >
                   Close

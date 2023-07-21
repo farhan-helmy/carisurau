@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import type { FC } from "react";
 import { capitalizeFirstLetter } from "../utils";
 import { useEffect, useState } from "react";
+import ImageModal from "./shared/ImageModal";
 
 type Surau = {
   id: string;
@@ -20,12 +21,18 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
   const [imageHighlighted, setImageHighlighted] = useState<
     SurauPhoto | null | undefined
   >(null);
+  const [showCarousel, setShowCarousel] = useState<boolean>(false);
 
   useEffect(() => {
     if (surau?.images.length) {
       setImageHighlighted(surau.images[0]);
     }
   }, [surau]);
+
+  const handleImageClick = (image: SurauPhoto) => {
+    setImageHighlighted(image);
+    setShowCarousel(true);
+  };
 
   return (
     <>
@@ -52,37 +59,42 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
           </div>
         ) : (
           <>
-            <div className="max-h-72 overflow-hidden rounded-xl bg-gray-200 object-fill">
+            <div className="flex h-72 w-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
               <Image
                 src={imageHighlighted?.file_path as string}
                 alt=""
-                className="h-full w-full rounded-lg object-fill object-center group-hover:opacity-75"
+                className="h-full w-full rounded-lg object-cover object-center group-hover:opacity-75"
                 width={200}
                 height={200}
                 priority
                 placeholder="blur"
                 blurDataURL="/assets/background/carisuraudefault.png"
+                onClick={() => handleImageClick(imageHighlighted as SurauPhoto)}
               />
             </div>
-            <div className="mt-2 flex items-center justify-center space-x-2 overflow-hidden">
+
+            {showCarousel && imageHighlighted && (
+              <ImageModal
+                url={imageHighlighted?.file_path}
+                open={showCarousel}
+                onClose={() => setShowCarousel(false)}
+              />
+            )}
+
+            <div className="mt-2 flex w-full items-center justify-between gap-2 overflow-scroll">
               {surau?.images.map((image) => (
-                <div
+                <Image
+                  src={image.file_path}
                   key={image.id}
-                  className="max-h-24 overflow-hidden rounded-xl bg-gray-200 object-fill"
-                >
-                  <Image
-                    key={image.id}
-                    src={image.file_path}
-                    alt={image.id}
-                    className="h-full w-full rounded-lg object-fill object-center group-hover:opacity-75"
-                    width={100}
-                    height={100}
-                    onClick={() => setImageHighlighted(image)}
-                    placeholder="blur"
-                    blurDataURL="/assets/background/carisuraudefault.png"
-                    priority
-                  />
-                </div>
+                  alt={image.id}
+                  className="h-24 min-w-[9rem] max-w-[9rem] rounded-md object-cover hover:cursor-pointer group-hover:opacity-75"
+                  onClick={() => setImageHighlighted(image)}
+                  width={400}
+                  height={400}
+                  placeholder="blur"
+                  blurDataURL="/assets/background/carisuraudefault.png"
+                  priority
+                />
               ))}
             </div>
           </>
