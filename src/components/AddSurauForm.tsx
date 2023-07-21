@@ -6,7 +6,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import dynamic from "next/dynamic";
 import type { FC } from "react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
 import AlertModal from "./shared/AlertModal";
@@ -16,13 +16,9 @@ import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
-
-const AsyncCreatableSelect = dynamic(
-  () => import("react-select/async-creatable"),
-  {
-    ssr: true,
-  }
-);
+const Select = dynamic(() => import("react-select"), {
+  ssr: true,
+});
 
 export type AddSurauFormProps = {
   setOpen: (open: boolean) => void;
@@ -68,9 +64,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
 
-  const Select = dynamic(() => import("react-select"), {
-    ssr: true,
-  });  
+ 
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
