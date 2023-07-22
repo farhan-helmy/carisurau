@@ -6,11 +6,11 @@ generator client {
     binaryTargets = ["native", "linux-arm64-openssl-1.0.x", "linux-musl-openssl-3.0.x"]
 }
 
-generator kysely {
-    provider = "prisma-kysely"
-    output   = "../kysely"
-    fileName = "kyselyschema.ts"
-}
+// generator kysely {
+//     provider = "prisma-kysely"
+//     output   = "../kysely"
+//     fileName = "kyselyschema.ts"
+// }
 
 datasource db {
     provider = "postgresql"
@@ -69,14 +69,15 @@ model Rating {
 }
 
 model SurauPhoto {
-    id         String   @id @default(cuid())
-    file_path  String
-    caption    String?
-    created_at DateTime @default(now())
-    surau      Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
-    surau_id   String
-    rating     Rating?  @relation(fields: [rating_id], references: [id], onDelete: Cascade)
-    rating_id  String?
+    id           String   @id @default(cuid())
+    file_path    String
+    is_thubmnail Boolean  @default(false)
+    caption      String?
+    created_at   DateTime @default(now())
+    surau        Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
+    surau_id     String
+    rating       Rating?  @relation(fields: [rating_id], references: [id], onDelete: Cascade)
+    rating_id    String?
 }
 
 model State {

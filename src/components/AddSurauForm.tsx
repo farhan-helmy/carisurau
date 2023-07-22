@@ -16,6 +16,10 @@ import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
+import { UploadDropzone } from "../utils/uploadthing";
+import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { utapi } from "uploadthing/server";
+
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
 });
@@ -26,6 +30,7 @@ export type AddSurauFormProps = {
 
 export type FilePath = {
   file_path: string;
+  is_thumbnail: boolean;
 };
 
 type UploadThingFilePath = {
@@ -48,7 +53,16 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [findMallChecked, setFindMallChecked] = useState(false);
   const [choosenState, setChoosenState] = useState("");
   const [choosenDistrict, setChoosenDistrict] = useState("");
-  const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>();
+  const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>([
+    {
+      id: "1",
+      url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
+    },
+    {
+      id: "2",
+      url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
+    },
+  ]);
   const [generatedSurauName, setGeneratedSurauName] = useState("");
   const [mallData, setMallData] = useState("");
   const [filePath, setFilePath] = useState<FilePath[]>([]);
@@ -63,8 +77,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [longitude, setLongitude] = useState(0);
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
-
- 
+  const [tempImageList, setTempImageList] = useState<UploadThingFilePath[]>([]);
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
@@ -73,6 +86,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const addSurau = api.surau.addSurau.useMutation();
 
+  const deleteSurau = api.uploader.deleteFile.useMutation();
+
   const handleNegeriChange = (e: any) => {
     setChoosenState(e.id);
     setFindMallChecked(false);
@@ -80,6 +95,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const handleDaerahChange = (e: any) => {
     setChoosenDistrict(e.id);
+  };
+
+  const handleDeleteImage = async (id: string) => {
+    await deleteSurau.mutateAsync(id).then(() => console.log("Done"));
   };
 
   const transformSurauName = (name: string) => {
@@ -98,19 +117,33 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   };
 
   // TODO: Add mechanism to store temporary image url and file key
-  // User can delete the image before submitting the form
+  // User can delete the image before submitting the form - deleting image will not delete from server
+  // make image a single object that can be preview before uploading - once checkbox ticked, data send
+  // to server and mark the thumbnail image
 
   const handleUploadThing = (uploadThingUrl: UploadThingFilePath[]) => {
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
 
     uploadThingUrl.forEach((url) => {
-      urls.push({ file_path: url.fileUrl });
+      urls.push({ file_path: url.fileUrl, is_thumbnail: false });
       images.push({ id: url.fileKey, url: url.fileUrl });
     });
 
     setFilePath(urls);
     setImagePreviews(images);
+  };
+
+  const markThumbnail = (id: string) => {
+    const newFilePath = filePath.map((item) => {
+      if (item.file_path === id) {
+        return { ...item, is_thumbnail: true };
+      }
+      console.log(item);
+      return item;
+    });
+
+    setFilePath(newFilePath);
   };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -171,7 +204,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       });
   };
 
-
   return (
     <>
       <AlertModal
@@ -221,12 +253,15 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                 </div>
-                <StateSelect handleNegeriChange={handleNegeriChange} label={true} setChoosenDistrict={setChoosenDistrict} />
+                <StateSelect
+                  handleNegeriChange={handleNegeriChange}
+                  label={true}
+                  setChoosenDistrict={setChoosenDistrict}
+                />
                 {choosenState ? (
                   <DistrictSelect
                     handleDaerahChange={handleDaerahChange}
                     choosenState={choosenState}
-                    
                     label={true}
                   />
                 ) : null}
@@ -406,11 +441,12 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
-                  <UploadButton
+                  <UploadDropzone
                     endpoint="imageUploader"
                     onClientUploadComplete={(res) => {
                       // Do something with the response
                       alert("Upload Completed");
+                      console.log("uploadimageRes", res);
                       if (res) {
                         void handleUploadThing(res);
                       }
@@ -423,17 +459,44 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                 </div>
 
                 <div className="">
-                  <div className="grid grid-cols-2 gap-2 space-y-2">
+                  <div className="flex flex-col">
+                    {imagePreviews.length > 0 ? (
+                      <div className="mb-2 text-center text-xs font-light italic">
+                        Please choose image for thumbnail
+                      </div>
+                    ) : null}
                     {imagePreviews
                       ? imagePreviews.map((imagePreview, index) => (
-                          <div key={index}>
+                          <div
+                            id="imagePreviewDiv"
+                            key={index}
+                            className="m-1 inline-flex items-center overflow-hidden rounded-md border p-2"
+                          >
+                            <input
+                              type="checkbox"
+                              className="mr-2 h-4 w-4 rounded-sm border"
+                              onClick={() => markThumbnail(imagePreview.id)}
+                            />
                             <Image
                               src={imagePreview.url}
                               alt="image preview"
-                              sizes="100vw"
-                              width={250}
-                              height={250}
+                              className="h-20 min-w-[5rem] max-w-[5rem] rounded-sm object-cover"
+                              quality={100}
+                              width={100}
+                              height={100}
                             />
+                            <div className="ml-2 justify-center overflow-hidden border text-xs sm:text-sm">
+                              <p className="overflow-hidden text-ellipsis">
+                                {imagePreview.id.split("_").slice(1).join("_")}
+                              </p>
+                              <p className="text-slate-500">2.4mb</p>
+                            </div>
+                            <button
+                              // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                              onClick={() => handleDeleteImage(imagePreview.id)}
+                            >
+                              <TrashIcon className="h-5 w-5 text-red-500" />
+                            </button>
                           </div>
                         ))
                       : null}
@@ -448,7 +511,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   Submit
                 </button>
                 <div
-                  className="mb-2 font-light underline hover:text-indigo-500 cursor-pointer"
+                  className="mb-2 cursor-pointer font-light underline hover:text-indigo-500"
                   onClick={() => setOpen(false)}
                 >
                   Close
