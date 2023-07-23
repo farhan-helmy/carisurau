@@ -62,7 +62,7 @@ export default function Index() {
         {/* Google meta tags */}
         <meta
           name="description"
-          content="Carisurau - The Ultimate Surau Finder. Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
+          content="Carisurau - Cari surau berdekatan anda dengan mudah. Cari waktu solat, kemudahan, dan arah ke surau."
         />
         <meta
           name="keywords"
@@ -74,7 +74,7 @@ export default function Index() {
         <meta name="twitter:site" content="@farhanhelmycode" />
         <meta
           name="twitter:title"
-          content="Carisurau - Surau Finder | Find Surau Near You"
+          content="Carisurau | Cari surau berdekatan anda dengan mudah"
         />
         <meta
           name="twitter:description"
@@ -89,7 +89,7 @@ export default function Index() {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Carisurau - Surau Finder | Find Surau Near You"
+          content="Carisurau | Cari surau berdekatan anda dengan mudah"
         />
         <meta
           property="og:description"
@@ -99,12 +99,8 @@ export default function Index() {
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
-        <title>Carisurau | Find Surau Near You</title>
-        <script
-          src="https://beamanalytics.b-cdn.net/beam.min.js"
-          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
-          async
-        ></script>
+        <title>Carisurau | Cari surau berdekatan anda dengan mudah</title>
+        
       </Head>
 
       <div className="bg-white">        
@@ -121,12 +117,18 @@ export default function Index() {
               gtag('config', 'G-ZDMV4PB3GF');
               `}
         </Script>
+        <Script
+          src="https://beamanalytics.b-cdn.net/beam.min.js"
+          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
+          async
+        ></Script>
 
         {/* Hero section */}
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            <Image
+            {imagePath !== "" ? (
+              <Image
               src={imagePath}
               alt="random background image"
               className="h-full w-full object-cover object-center"
@@ -134,6 +136,7 @@ export default function Index() {
               height={1080}
               priority
             />
+            ) : null}   
           </div>
           <div
             aria-hidden="true"

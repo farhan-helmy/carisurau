@@ -44,12 +44,6 @@ export type ImagePreviews = {
   url: string;
 };
 
-type MallOptions = {
-  value: string;
-  label: string;
-  id: string;
-};
-
 const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [findMallChecked, setFindMallChecked] = useState(false);
   const [choosenState, setChoosenState] = useState("");
@@ -254,11 +248,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                 </div>
-                <StateSelect
-                  handleNegeriChange={handleNegeriChange}
-                  label={true}
-                  setChoosenDistrict={setChoosenDistrict}
-                />
+                <StateSelect handleNegeriChange={handleNegeriChange} label={true} />
                 {choosenState ? (
                   <DistrictSelect
                     handleDaerahChange={handleDaerahChange}

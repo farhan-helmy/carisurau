@@ -1,4 +1,4 @@
-name: Deploy to production
+name: Deploy to staging
 
 on:
   workflow_dispatch:
@@ -45,4 +45,4 @@ jobs:
       - name: Set Env
         run: echo $'DATABASE_URL=$DATABASE_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nNEXTAUTH_URL=$NEXTAUTH_URL\nDISCORD_CLIENT_ID=$DISCORD_CLIENT_ID\nDISCORD_CLIENT_SECRET=$DISCORD_CLIENT_SECRET\nS3_UPLOAD_KEY=$S3_UPLOAD_KEY\nS3_UPLOAD_SECRET=$S3_UPLOAD_SECRET\nS3_UPLOAD_BUCKET=$S3_UPLOAD_BUCKET\nS3_UPLOAD_REGION=$S3_UPLOAD_REGION\nNEXT_PUBLIC_CLOUDFRONT_URL=$NEXT_PUBLIC_CLOUDFRONT_URL\nNODE_ENV=$NODE_ENV' > .env
       - name: Deploy
-        run: yarn sst deploy --stage prod
+        run: yarn sst deploy --stage staging

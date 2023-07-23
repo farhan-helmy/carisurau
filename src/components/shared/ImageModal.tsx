@@ -1,7 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Image from "next/image";
-import React, { FC } from "react";
+import type { FC } from "react";
+import React from "react";
 
 import { XCircleIcon } from "@heroicons/react/20/solid";
 

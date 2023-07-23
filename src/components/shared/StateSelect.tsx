@@ -10,7 +10,6 @@ const Select = dynamic(() => import("react-select"), {
 
 type StateSelectProps = {
   handleNegeriChange: (e: any) => void;
-  setChoosenDistrict: (e: any) => void;
   label: boolean;
 };
 
