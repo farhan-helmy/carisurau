@@ -27,8 +27,9 @@ function CustomUpload() {
   const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
     "imageUploader",
     {
-      onClientUploadComplete: () => {
+      onClientUploadComplete: (res) => {
         toast.success("Upload complete!");
+        console.log(res);
       },
       onUploadError: () => {
         alert("error occurred while uploading");
@@ -50,17 +51,8 @@ function CustomUpload() {
 
   return (
     <div>
+      {/* This need to be imported here to render toast */}
       <CustomToast />
-      <button onClick={() => toast.success("Upload complete!")}>
-        Toast Test
-      </button>
-      <button onClick={() => toast.warning("Upload complete!")}>
-        Toast Test
-      </button>
-      <button onClick={() => toast.error("Upload complete!")}>
-        Toast Test
-      </button>
-
       <div
         className={classNames(
           "mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-2",
@@ -108,9 +100,8 @@ function CustomUpload() {
         </div>
       </div>
       {files.length > 0 && !isUploading && (
-        <div>
-          <h4>Files</h4>
-          <ul className="mb-2 rounded-lg border">
+        <div className="mt-2">
+          <ul className="mb-2 rounded-lg border px-2 pt-2">
             {files.map((file: FileWithPath) => (
               <li
                 id="imagePreviewDiv"
@@ -121,29 +112,12 @@ function CustomUpload() {
                   <p className="overflow-hidden text-ellipsis">{file.name}</p>
                   <p className="text-slate-500">{sizeConverter(file.size)}</p>
                 </div>
-                <button onClick={() => removeFile(file)}>
+                <button onClick={() => removeFile(file)} className="sm:pr-4">
                   <TrashIcon className="h-5 w-5 text-red-500" />
                 </button>
               </li>
             ))}
           </ul>
-          {/* <div>
-            {files.length > 0 && (
-              <>
-                <div className="flex flex-row gap-2">
-                  <button className="rounded-md border bg-indigo-600 px-2 py-1 text-sm text-white">
-                    Upload {files.length} files
-                  </button>
-                  <button
-                    className="rounded-md border bg-indigo-600 px-2 py-1 text-sm text-white"
-                    onClick={() => setFiles([])}
-                  >
-                    Remove all
-                  </button>
-                </div>
-              </>
-            )}
-          </div> */}
         </div>
       )}
     </div>

@@ -8,10 +8,9 @@ export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 10 } })
     // eslint-disable-next-line @typescript-eslint/require-await
-    .onUploadComplete(async ({ file }) => {
+    .onUploadComplete(async (data) => {
       // This code RUNS ON YOUR SERVER after upload
-
-      console.log("file url", file.url);
+      console.log("uploadData", data);
     }),
 } satisfies FileRouter;
 

@@ -55,14 +55,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [choosenState, setChoosenState] = useState("");
   const [choosenDistrict, setChoosenDistrict] = useState("");
   const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>([
-    {
-      id: "1",
-      url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
-    },
-    {
-      id: "2",
-      url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
-    },
+    // {
+    //   id: "1",
+    //   url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
+    // },
+    // {
+    //   id: "2",
+    //   url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
+    // },
   ]);
   const [generatedSurauName, setGeneratedSurauName] = useState("");
   const [mallData, setMallData] = useState("");
@@ -460,7 +460,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <CustomUpload />
                 </div>
 
-                {/* <div className="">
+                <div className="">
                   <div className="flex flex-col">
                     {imagePreviews.length > 0 ? (
                       <div className="mb-2 text-center text-xs font-light italic">
@@ -472,30 +472,37 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           <div
                             id="imagePreviewDiv"
                             key={index}
-                            className="m-1 inline-flex items-center overflow-hidden rounded-md border p-2"
+                            className="my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2"
                           >
-                            <input
-                              type="checkbox"
-                              className="mr-2 h-4 w-4 rounded-sm border"
-                              onClick={() => markThumbnail(imagePreview.id)}
-                            />
-                            <Image
-                              src={imagePreview.url}
-                              alt="image preview"
-                              className="h-20 min-w-[5rem] max-w-[5rem] rounded-sm object-cover"
-                              quality={100}
-                              width={100}
-                              height={100}
-                            />
-                            <div className="ml-2 justify-center overflow-hidden border text-xs sm:text-sm">
-                              <p className="overflow-hidden text-ellipsis">
-                                {imagePreview.id.split("_").slice(1).join("_")}
-                              </p>
-                              <p className="text-slate-500">2.4mb</p>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                className="mr-2 h-4 w-4 rounded-sm border"
+                                onClick={() => markThumbnail(imagePreview.id)}
+                              />
+                              <Image
+                                src={imagePreview.url}
+                                alt="image preview"
+                                className="h-20 min-w-[5rem] max-w-[5rem] rounded-sm object-cover"
+                                quality={100}
+                                width={100}
+                                height={100}
+                              />
+                              <div className="ml-2 justify-center overflow-hidden text-xs sm:text-sm">
+                                <p className="overflow-hidden text-ellipsis">
+                                  {imagePreview.id
+                                    .split("_")
+                                    .slice(1)
+                                    .join("_")}
+                                </p>
+                                <p className="text-slate-500">2.4mb</p>
+                              </div>
                             </div>
+
                             <button
                               // eslint-disable-next-line @typescript-eslint/no-misused-promises
                               onClick={() => handleDeleteImage(imagePreview.id)}
+                              className="sm:pr-4 pr-2"
                             >
                               <TrashIcon className="h-5 w-5 text-red-500" />
                             </button>
@@ -503,7 +510,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         ))
                       : null}
                   </div>
-                </div> */}
+                </div>
               </div>
               <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button
