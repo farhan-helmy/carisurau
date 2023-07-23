@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+
 import { StarIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import SurauOverview from "./SurauOverview";
@@ -38,13 +39,13 @@ const SurauReview = () => {
 
   const router = useRouter();
   const uniqueName = router.query["id"];
-
+  
   const surau = api.surau.getSurau.useQuery({
-    unique_name: uniqueName as string,
+    unique_name: uniqueName ? uniqueName as string : "",
   });
 
   const rating = api.rate.getRating.useQuery({
-    surau_id: surau.data?.id as string,
+    surau_id: surau.isFetched ? surau.data?.id as string : "",
   });
 
   const refetchRating = () => {
@@ -67,46 +68,50 @@ const SurauReview = () => {
     <>
       <Head>
         {/* Google meta tags */}
-        <meta
-          name="description"
-          content={`Carisurau | ${surau.data?.name as string}`}
-        />
-        <meta
-          name="keywords"
-          content="carisurau, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
-        />
-        <meta name="author" content="farhanhelmy" />
-        {/* Twitter meta tags */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@farhanhelmycode" />
-        <meta
-          name="twitter:title"
-          content={`Carisurau | ${surau.data?.name as string}`}
-        />
-        <meta
-          name="twitter:description"
-          content={`Carisurau | ${surau.data?.name as string}`}
-        />
-        <meta
-          name="twitter:image"
-          content={surau.data?.images[0]?.file_path as string}
-        ></meta>
-        {/* Facebook meta tags */}
-        <meta property="og:url" content="https://carisurau.com" />
-        <meta property="og:type" content="website" />
-        <meta
-          property="og:title"
-          content={`Carisurau | ${surau.data?.name as string}`}
-        />
-        <meta property="og:description" content={surau.data?.name as string} />
-        <meta property="fb:app_id" content="571114311611632" />
-        <meta
-          property="og:image"
-          content={surau.data?.images[0]?.file_path as string}
-        />
-        <meta property="og:image:alt" content="Carisurau Logo" />
-        <meta property="og:site_name" content="Carisurau"></meta>
-        <title>Carisurau | {surau.data?.name}</title>
+        {surau.data ? (
+          <>
+            <meta
+              name="description"
+              content={`Carisurau | ${surau.data.name}`}
+            />
+            <meta
+              name="keywords"
+              content="carisurau, surau finder, next.js, prayer times, mosque finder, surau locator, Islamic prayer app"
+            />
+            <meta name="author" content="farhanhelmy" />
+            {/* Twitter meta tags */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="@farhanhelmycode" />
+            <meta
+              name="twitter:title"
+              content={`Carisurau | ${surau.data.name}`}
+            />
+            <meta
+              name="twitter:description"
+              content={`Carisurau | ${surau.data.name}`}
+            />
+            <meta
+              name="twitter:image"
+              content={surau.data?.images[0]?.file_path as string}
+            ></meta>
+            {/* Facebook meta tags */}
+            <meta property="og:url" content="https://carisurau.com" />
+            <meta property="og:type" content="website" />
+            <meta
+              property="og:title"
+              content={`Carisurau | ${surau.data.name}`}
+            />
+            <meta property="og:description" content={surau.data.name} />
+            <meta property="fb:app_id" content="571114311611632" />
+            <meta
+              property="og:image"
+              content={surau.data?.images[0]?.file_path as string}
+            />
+            <meta property="og:image:alt" content="Carisurau Logo" />
+            <meta property="og:site_name" content="Carisurau"></meta>
+            <title>Carisurau | {surau.data?.name}</title>
+          </>
+        ) : null}
       </Head>
 
       <Modal open={open} setOpen={setOpen}>
@@ -128,14 +133,16 @@ const SurauReview = () => {
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            <Image
-              src={imagePath}
-              alt="random background image"
-              className="h-full w-full object-cover object-center"
-              width={1920}
-              height={1080}
-              priority
-            />
+            {imagePath !== "" ? (
+              <Image
+                src={imagePath}
+                alt="random background image"
+                className="h-full w-full object-cover object-center"
+                width={1920}
+                height={1080}
+                priority
+              />
+            ) : null}
           </div>
           <div
             aria-hidden="true"

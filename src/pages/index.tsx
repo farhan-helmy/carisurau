@@ -100,11 +100,7 @@ export default function Index() {
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
         <title>Carisurau | Find Surau Near You</title>
-        <script
-          src="https://beamanalytics.b-cdn.net/beam.min.js"
-          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
-          async
-        ></script>
+        
       </Head>
 
       <div className="bg-white">        
@@ -121,12 +117,18 @@ export default function Index() {
               gtag('config', 'G-ZDMV4PB3GF');
               `}
         </Script>
+        <Script
+          src="https://beamanalytics.b-cdn.net/beam.min.js"
+          data-token="985d914f-a13a-4d21-9289-bf51f9d27097"
+          async
+        ></Script>
 
         {/* Hero section */}
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            <Image
+            {imagePath !== "" ? (
+              <Image
               src={imagePath}
               alt="random background image"
               className="h-full w-full object-cover object-center"
@@ -134,6 +136,7 @@ export default function Index() {
               height={1080}
               priority
             />
+            ) : null}   
           </div>
           <div
             aria-hidden="true"

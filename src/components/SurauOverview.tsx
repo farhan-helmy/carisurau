@@ -60,17 +60,21 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
         ) : (
           <>
             <div className="flex h-72 w-full items-center justify-center overflow-hidden rounded-xl bg-gray-200">
-              <Image
-                src={imageHighlighted?.file_path as string}
-                alt=""
-                className="h-full w-full rounded-lg object-cover object-center group-hover:opacity-75"
-                width={200}
-                height={200}
-                priority
-                placeholder="blur"
-                blurDataURL="/assets/background/carisuraudefault.png"
-                onClick={() => handleImageClick(imageHighlighted as SurauPhoto)}
-              />
+              {imageHighlighted?.file_path ? (
+                <Image
+                  src={imageHighlighted?.file_path}
+                  alt=""
+                  className="h-full w-full rounded-lg object-cover object-center group-hover:opacity-75"
+                  width={200}
+                  height={200}
+                  priority
+                  placeholder="blur"
+                  blurDataURL="/assets/background/carisuraudefault.png"
+                  onClick={() =>
+                    handleImageClick(imageHighlighted)
+                  }
+                />
+              ) : null}
             </div>
 
             {showCarousel && imageHighlighted && (
