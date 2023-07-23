@@ -19,6 +19,7 @@ import DistrictSelect from "./shared/DistrictSelect";
 import { UploadDropzone } from "../utils/uploadthing";
 import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { utapi } from "uploadthing/server";
+import CustomUpload from "./shared/CustomUpload";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -441,7 +442,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
-                  <UploadDropzone
+                  {/* <UploadDropzone
                     endpoint="imageUploader"
                     onClientUploadComplete={(res) => {
                       // Do something with the response
@@ -455,10 +456,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       // Do something with the error.
                       alert(`ERROR! ${error.message}`);
                     }}
-                  />
+                  /> */}
+                  <CustomUpload />
                 </div>
 
-                <div className="">
+                {/* <div className="">
                   <div className="flex flex-col">
                     {imagePreviews.length > 0 ? (
                       <div className="mb-2 text-center text-xs font-light italic">
@@ -501,7 +503,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         ))
                       : null}
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button
