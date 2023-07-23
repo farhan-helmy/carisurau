@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import {prisma} from '../../../server/db';
 import { Buffer } from 'buffer';
 
