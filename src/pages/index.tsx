@@ -62,7 +62,7 @@ export default function Index() {
         {/* Google meta tags */}
         <meta
           name="description"
-          content="Carisurau - The Ultimate Surau Finder. Discover and locate suraus near you with ease. Find prayer times, facilities, and directions."
+          content="Carisurau - Cari surau berdekatan anda dengan mudah. Cari waktu solat, kemudahan, dan arah ke surau."
         />
         <meta
           name="keywords"
@@ -74,7 +74,7 @@ export default function Index() {
         <meta name="twitter:site" content="@farhanhelmycode" />
         <meta
           name="twitter:title"
-          content="Carisurau - Surau Finder | Find Surau Near You"
+          content="Carisurau | Cari surau berdekatan anda dengan mudah"
         />
         <meta
           name="twitter:description"
@@ -89,7 +89,7 @@ export default function Index() {
         <meta property="og:type" content="website" />
         <meta
           property="og:title"
-          content="Carisurau - Surau Finder | Find Surau Near You"
+          content="Carisurau | Cari surau berdekatan anda dengan mudah"
         />
         <meta
           property="og:description"
@@ -99,7 +99,7 @@ export default function Index() {
         <meta property="og:image:alt" content="Carisurau Logo" />
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
-        <title>Carisurau | Find Surau Near You</title>
+        <title>Carisurau | Cari surau berdekatan anda dengan mudah</title>
         
       </Head>
 

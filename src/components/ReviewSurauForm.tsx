@@ -1,11 +1,11 @@
-import { PhotoIcon, PlusCircleIcon, StarIcon } from "@heroicons/react/20/solid";
+import { StarIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import type { FC } from "react";
 import { useState } from "react";
-import { resizeImage } from "../utils/image";
-import type { FilePath } from "./AddSurauForm";
-import { useS3Upload } from "next-s3-upload";
+import type { FilePath, ImagePreviews } from "./AddSurauForm";
 import { api } from "../utils/api";
+import { UploadButton } from "../utils/uploadthing";
+import "@uploadthing/react/styles.css";
 
 export type ReviewSurauFormProps = {
   setOpen: (open: boolean) => void;
@@ -14,8 +14,9 @@ export type ReviewSurauFormProps = {
   refetch: () => void;
 };
 
-type ImagePreviews = {
-  url: string;
+type UploadThingFilePath = {
+  fileUrl: string;
+  fileKey: string;
 };
 
 const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
@@ -30,7 +31,6 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
   const [checkImageUpload, setCheckImageUpload] = useState(false);
   const [ratingError, setRatingError] = useState(false);
   const [review, setReview] = useState("");
-  const { uploadToS3 } = useS3Upload();
   const addRating = api.rate.addRating.useMutation();
 
   const handleRatingChange = (newRating: number) => {
@@ -54,40 +54,15 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
     return stars;
   };
 
-  const handleAddMoreImages = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.files === null) return;
-    const file = e.target?.files[0];
-    const { url } = await uploadToS3(file as File);
-
-    setImagePreviews([
-      ...(imagePreviews as ImagePreviews[]),
-      URL.createObjectURL(file as Blob) as unknown as ImagePreviews,
-    ]);
-    setFilePath([...filePath, url as unknown as FilePath]);
-  };
-
-  const onSurauImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadThing = (uploadThingUrl: UploadThingFilePath[]) => {
     const images: ImagePreviews[] = [];
     const urls: FilePath[] = [];
 
-    if (e.target.files === null) return;
+    uploadThingUrl.forEach((url) => {
+      urls.push({ file_path: url.fileUrl });
+      images.push({ id: url.fileKey, url: url.fileUrl });
+    });
 
-    for (const element of e.target.files) {
-      const resizedImage = await resizeImage(element, 100);
-      images.push(
-        URL.createObjectURL(resizedImage) as unknown as ImagePreviews
-      );
-
-      const { url } = await uploadToS3(element);
-      const cloudFrontFilePath = url.replace(
-        "https://ratemysurau.s3.ap-southeast-1.amazonaws.com/",
-        "https://dcm2976bhgfsz.cloudfront.net/"
-      );
-
-      urls.push({ file_path: cloudFrontFilePath });
-    }
     setFilePath(urls);
     setImagePreviews(images);
   };
@@ -181,38 +156,29 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                 </div>
               </div>
               {!imagePreviews && checkImageUpload ? (
-                <div className="flex text-sm text-gray-600">
-                  <label
-                    htmlFor="product-image-upload"
-                    className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                  >
-                    <div className="group relative m-4">
-                      <PhotoIcon className="h-12 w-12" />
-                      <span className="text-md absolute top-10 scale-0 rounded bg-gray-800 p-2 text-white transition-all group-hover:scale-100">
-                        ✨ click to add photo!
-                      </span>
-                    </div>
-                    <input
-                      type="file"
-                      name="product-image-upload"
-                      id="product-image-upload"
-                      className="sr-only"
-                      onChange={(e) => void onSurauImageChange(e)}
-                      multiple
-                      accept="image/*"
-                    />
-                  </label>
-                </div>
+                <UploadButton
+                endpoint="imageUploader"
+                onClientUploadComplete={(res) => {
+                  // Do something with the response
+                  alert("Upload Completed");
+                  if (res) {
+                    void handleUploadThing(res);
+                  }
+                }}
+                onUploadError={(error: Error) => {
+                  // Do something with the error.
+                  alert(`ERROR! ${error.message}`);
+                }}
+              />
               ) : null}
               <div className="flex flex-row gap-2">
                 <div className="grid grid-cols-2 gap-2 space-y-2">
                   {imagePreviews
                     ? imagePreviews.map((imagePreview, index) => (
                         <div key={index}>
-                          <h1>{imagePreview.url}</h1>
                           <Image
-                            src={imagePreview as unknown as string}
-                            alt="xsd"
+                            src={imagePreview.url}
+                            alt="image preview"
                             sizes="100vw"
                             width={250}
                             height={250}
@@ -220,30 +186,6 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                         </div>
                       ))
                     : null}
-                  {imagePreviews ? (
-                    <div className="flex h-32 flex-col items-center justify-center rounded-lg border border-b">
-                      <label
-                        htmlFor="add-more-product-image-upload"
-                        className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
-                      >
-                        <span>
-                          <PlusCircleIcon
-                            className="h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        </span>
-                        <input
-                          type="file"
-                          name="add-more-product-image-upload"
-                          id="add-more-product-image-upload"
-                          className="sr-only"
-                          onChange={(e) => void handleAddMoreImages(e)}
-                          multiple
-                          accept="image/*"
-                        />
-                      </label>
-                    </div>
-                  ) : null}
                 </div>
               </div>
             </div>
