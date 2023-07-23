@@ -1,8 +1,12 @@
 import React from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CheckCircleIcon, ExclamationCircleIcon, ExclamationTriangleIcon, InformationCircleIcon } from "@heroicons/react/20/solid";
-import { type } from "os";
+import {
+  CheckCircleIcon,
+  ExclamationCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+} from "@heroicons/react/20/solid";
 
 type ToastType = "success" | "error" | "info" | "warning" | "default" | "dark";
 
@@ -15,7 +19,11 @@ const iconContext: { [key in ToastType]: string } = {
   dark: "text-gray-500",
 };
 
-const CustomToast = () => {
+interface Props {
+  duration?: number;
+}
+
+const CustomToast = ({ duration }: Props) => {
   return (
     <div>
       <ToastContainer
@@ -27,7 +35,7 @@ const CustomToast = () => {
           "md:text-md text-sm font-med p-4 sm:p-4 text-gray-800 flex justify-between items-center"
         }
         position="top-center"
-        autoClose={2000}
+        autoClose={duration || 2000}
         newestOnTop={true}
         icon={({ type }) =>
           type == "success" ? (

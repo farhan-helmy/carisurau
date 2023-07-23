@@ -37,7 +37,7 @@
     "@trpc/react-query": "^10.9.0",
     "@trpc/server": "^10.9.0",
     "@types/nodemailer": "^6.4.8",
-    "@uploadthing/react": "^5.0.0",
+    "@uploadthing/react": "^5.2.0",
     "framer-motion": "^10.12.16",
     "next": "13.1.6",
     "next-auth": "^4.19.0",
@@ -52,7 +52,7 @@
     "sharp": "^0.32.1",
     "superjson": "1.9.1",
     "tsx": "^3.12.5",
-    "uploadthing": "^5.0.0",
+    "uploadthing": "^5.2.1",
     "use-debounce": "^9.0.3",
     "zod": "^3.20.2",
     "zustand": "^4.3.8"

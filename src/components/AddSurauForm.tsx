@@ -194,7 +194,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
           setOpen(false);
         }, 3000);
       })
-      .catch((e) => {
+      .catch((e: string | undefined) => {
         console.log(e);
       });
   };

@@ -2,11 +2,11 @@ import { useCallback, useState } from "react";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { useUploadThing } from "../../utils/uploadthing";
 import { classNames, generateClientDropzoneAccept } from "uploadthing/client";
-import Image from "next/image";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import "@uploadthing/react/styles.css";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import CustomToast from "./CustomToast";
+import ProgressCircle from "./ProgressCircle";
 
 type ValidFileTypes = "image" | "video" | "audio" | "blob";
 
@@ -17,6 +17,7 @@ function CustomUpload() {
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     setFiles(acceptedFiles);
   }, []);
+  const [progress, setProgress] = useState(0);
 
   const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
     useDropzone({
@@ -30,9 +31,14 @@ function CustomUpload() {
       onClientUploadComplete: (res) => {
         toast.success("Upload complete!");
         console.log(res);
+        setProgress(0);
       },
-      onUploadError: () => {
-        alert("error occurred while uploading");
+      onUploadError: (e) => {
+        toast.error(`Error occurred while uploading. ${e.message}`);
+        setProgress(0);
+      },
+      onUploadProgress: (progress: number) => {
+        setProgress(progress);
       },
     }
   );
@@ -75,26 +81,32 @@ function CustomUpload() {
           </div>
           {files.length > 0 && (
             <div className="mt-4 flex items-center justify-center">
-              <button
-                className="flex h-10 w-36 items-center justify-center rounded-md bg-blue-600"
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (!files) return;
+              {!isUploading ? (
+                <button
+                  className="flex h-10 w-36 items-center justify-center rounded-md bg-blue-600"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (!files) return;
 
-                  void startUpload(files);
-                }}
-              >
-                <span className="px-3 py-2 text-white">
-                  {isUploading ? (
-                    <Spinner />
-                  ) : (
-                    `Upload ${files.length} file${
-                      files.length === 1 ? "" : "s"
-                    }`
-                  )}
-                </span>
-              </button>
+                    void startUpload(files);
+                  }}
+                >
+                  <span className="px-3 py-2 text-white">
+                    {isUploading ? (
+                      <Spinner />
+                    ) : (
+                      `Upload ${files.length} file${
+                        files.length === 1 ? "" : "s"
+                      }`
+                    )}
+                  </span>
+                </button>
+              ) : (
+                <div>
+                  <ProgressCircle progress={progress} />
+                </div>
+              )}
             </div>
           )}
         </div>
