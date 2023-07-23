@@ -48,8 +48,10 @@ Join us today and be part of this open source project that aims to make prayer a
 5. Run the following yarn commands:
    - `yarn`
    - `yarn setup-db` <- make sure make is installed
-   - `yarn dev` <- this will start the server and the client
+   - `yarn prisma migrate dev` <- run prisma migration file
    - `yarn db-seed` <- this will seed the database with some data
+   - `yarn dev` <- this will start the server and the client
+
 6. Go to `localhost:3000` to see the app
 
 ## Roadmap
