@@ -29,7 +29,7 @@ Contributions are what make the open source community such an amazing place to l
 
 Join us today and be part of this open source project that aims to make prayer accessible to all, everywhere.
 
-### Prerequisites
+### Pre-requisites
 
 - NodeJS 18 (you can use [nvm](https://github.com/nvm-sh/nvm))
 - [Docker](https://www.docker.com)
