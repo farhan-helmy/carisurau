@@ -8,14 +8,32 @@
       "parserOptions": {
         "project": "tsconfig.json"
       }
+    },
+    {
+      "extends": [
+        "plugin:vitest/recommended"
+      ],
+      "files": ["*.spec.ts"],
+      "parserOptions": {
+        "project": "tsconfig.test.json"
+      }
+    },
+    {
+      "files": ["**/__tests__/*.{j,t}s?(x)", "**/*.spec.{j,t}s?(x)"],
+      "env": {
+        "vitest-globals/env": true
+      },
+      "rules": {
+        "@typescript-eslint/unbound-method": "off"
+      }
     }
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["@typescript-eslint", "vitest"],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:vitest/recommended", "plugin:vitest-globals/recommended"],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn"
   }
