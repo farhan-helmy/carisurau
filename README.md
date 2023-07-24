@@ -1,4 +1,5 @@
 <!-- PROJECT SHIELDS -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -38,6 +39,7 @@ Join us today and be part of this open source project that aims to make prayer a
   - run `corepack enable` (Node.js >= 16.10)
   - run `npm i -g corepack` (Node.js < 16.10)
 - [Google Identity](https://developers.google.com/identity/oauth2/web/guides/get-google-api-clientid)
+  - Refer to our [Wiki](https://github.com/farhan-helmy/ratemysurau/wiki/Google-OAuth-Setup) on how to setup your own google identity
 - [UploadThing](https://uploadthing.com/)
 
 ### Installation
@@ -69,6 +71,7 @@ See the [open issues](https://github.com/farhan-helmy/ratemysurau/issues) for a 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/farhan-helmy/ratemysurau.svg?style=for-the-badge
 [contributors-url]: https://github.com/farhan-helmy/ratemysurau/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/farhan-helmy/ratemysurau.svg?style=for-the-badge
