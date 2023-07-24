@@ -29,28 +29,34 @@ Contributions are what make the open source community such an amazing place to l
 
 Join us today and be part of this open source project that aims to make prayer accessible to all, everywhere.
 
-### Prerequisites
+### Pre-requisites
 
+- NodeJS 18 (you can use [nvm](https://github.com/nvm-sh/nvm))
 - [Docker](https://www.docker.com)
 - make
 - [yarn](https://yarnpkg.com)
   - run `corepack enable` (Node.js >= 16.10)
   - run `npm i -g corepack` (Node.js < 16.10)
+- [Google Identity](https://developers.google.com/identity/oauth2/web/guides/get-google-api-clientid)
+- [UploadThing](https://uploadthing.com/)
 
 ### Installation
 
-1. Clone this repo.
-2. Run `cd ratemysurau`
-3. Run `cp .env.example .env` to create the .env file
-4. Get a free API Key at [uploadthing](https://uploadthing.com/) <- I'm using this to upload images to S3
-   - Create your own account and get the API key
-   - Or you can reach out to me for API credentials
-5. Run the following yarn commands:
-   - `yarn`
-   - `yarn setup-db` <- make sure make is installed
-   - `yarn dev` <- this will start the server and the client
-   - `yarn db-seed` <- this will seed the database with some data
-6. Go to `localhost:3000` to see the app
+```bash
+$ git clone git@github.com:farhan-helmy/ratemysurau.git
+
+# Copy & update .env base on pre-requisite above
+$ cp .env.example .env
+
+$ yarn
+
+# DB Setup
+$ yarn db:setup
+$ yarn db:migrate
+$ yarn db:seed
+
+$ yarn dev
+```
 
 ## Roadmap
 
