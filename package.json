@@ -20,7 +20,7 @@
     "setup-db": "make",
     "test": "vitest run",
     "test:watch": "vitest watch",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
     "drizzle-seed": ""
   },
   "prisma": {
