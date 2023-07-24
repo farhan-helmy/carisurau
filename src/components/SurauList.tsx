@@ -71,32 +71,43 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
                   className="max-h-72 overflow-hidden rounded-xl bg-gray-200 object-fill"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
-                  {surau.images[0]?.file_path ? (
-                    <div className="flex h-72 items-center justify-center">
-                      <Image
-                        src={surau.images[0]?.file_path}
-                        alt={surau.images[0].id}
-                        width={500}
-                        height={500}
-                        className="h-full w-full object-cover group-hover:opacity-75"
-                      />
-                    </div>
+                  {surau.images.some((image) => image.is_thumbnail) ? (
+                    // Display the image marked as thumbnail
+                    <Image
+                      src={
+                        surau.images.find((image) => image.is_thumbnail)
+                          ?.file_path || ""
+                      }
+                      alt={
+                        surau.images.find((image) => image.is_thumbnail)?.id ||
+                        ""
+                      }
+                      width={500}
+                      height={500}
+                      className="h-full w-full object-cover group-hover:opacity-75"
+                    />
+                  ) : surau.images[0]?.file_path ? (
+                    // Display the first image
+                    <Image
+                      src={surau.images[0]?.file_path}
+                      alt={surau.images[0]?.id}
+                      width={500}
+                      height={500}
+                      className="h-full w-full object-cover group-hover:opacity-75"
+                    />
                   ) : (
-                    <>
-                      <div className="flex h-72 w-auto items-center justify-center">
-                        <Image
-                          src="/assets/background/carisuraudefault.png"
-                          alt="default"
-                          className="h-64 w-auto object-contain group-hover:opacity-75"
-                          width={500}
-                          height={500}
-                        />
-                      </div>
-                    </>
+                    // Display the default image
+                    <Image
+                      src="/assets/background/carisuraudefault.png"
+                      alt="default"
+                      width={500}
+                      height={500}
+                      className="h-full w-full object-cover group-hover:opacity-75"
+                    />
                   )}
                 </div>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
-                <p className="mt-1 text-lg font-medium text-gray-900 text-start truncate">
+                <p className="mt-1 truncate text-start text-lg font-medium text-gray-900">
                   {surau.name}
                 </p>
               </a>

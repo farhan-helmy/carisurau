@@ -6,18 +6,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import dynamic from "next/dynamic";
 import type { FC } from "react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { api } from "../utils/api";
 import AlertModal from "./shared/AlertModal";
-import { UploadButton } from "../utils/uploadthing";
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
 import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
-import { UploadDropzone } from "../utils/uploadthing";
-import { CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { TrashIcon } from "@heroicons/react/24/outline";
 import { utapi } from "uploadthing/server";
 import CustomUpload from "./shared/CustomUpload";
 
@@ -34,7 +32,7 @@ export type FilePath = {
   is_thumbnail: boolean;
 };
 
-type UploadThingFilePath = {
+export type UploadThingFilePath = {
   fileUrl: string;
   fileKey: string;
 };
@@ -48,16 +46,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [findMallChecked, setFindMallChecked] = useState(false);
   const [choosenState, setChoosenState] = useState("");
   const [choosenDistrict, setChoosenDistrict] = useState("");
-  const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>([
-    // {
-    //   id: "1",
-    //   url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
-    // },
-    // {
-    //   id: "2",
-    //   url: "https://images.unsplash.com/photo-1689613188558-80e320f0aab9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80",
-    // },
-  ]);
+  const [imagePreviews, setImagePreviews] = useState<ImagePreviews[]>([]);
   const [generatedSurauName, setGeneratedSurauName] = useState("");
   const [mallData, setMallData] = useState("");
   const [filePath, setFilePath] = useState<FilePath[]>([]);
@@ -73,6 +62,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
   const [tempImageList, setTempImageList] = useState<UploadThingFilePath[]>([]);
+  const [thumbnailChecked, setThumbnailChecked] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState("");
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
@@ -82,6 +73,55 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const addSurau = api.surau.addSurau.useMutation();
 
   const deleteSurau = api.uploader.deleteFile.useMutation();
+
+  useEffect(() => {
+    if (tempImageList.length > 0) {
+      setFilePath((prev) => {
+        const updatedFilePath = [...prev];
+        tempImageList.forEach((image) => {
+          updatedFilePath.push({
+            file_path: image.fileUrl,
+            is_thumbnail: false,
+          });
+        });
+        return updatedFilePath;
+      });
+
+      setImagePreviews((prev) => {
+        const updatedImagePreviews = [...prev];
+        tempImageList.forEach((image) => {
+          updatedImagePreviews.push({ id: image.fileKey, url: image.fileUrl });
+        });
+        return updatedImagePreviews;
+      });
+    }
+  }, [tempImageList]);
+
+  const markThumbnail = (id: string) => {
+    const fileUrl = imagePreviews.find((image) => image.id === id)?.url;
+
+    filePath.forEach((file) => {
+      if (file.file_path === fileUrl) {
+        file.is_thumbnail = true;
+      } else {
+        file.is_thumbnail = false;
+      }
+    });
+
+    setFilePath((prev) => {
+      const updatedFilePath = [...prev];
+      updatedFilePath.forEach((file) => {
+        if (file.file_path === fileUrl) {
+          file.is_thumbnail = true;
+        } else {
+          file.is_thumbnail = false;
+        }
+      });
+      return updatedFilePath;
+    });
+
+    setThumbnailChecked(true);
+  };
 
   const handleNegeriChange = (e: any) => {
     setChoosenState(e.id);
@@ -94,6 +134,16 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const handleDeleteImage = async (id: string) => {
     await deleteSurau.mutateAsync(id).then(() => console.log("Done"));
+
+    setFilePath((prev) => {
+      const updatedFilePath = prev.filter((file) => file.file_path !== id);
+      return updatedFilePath;
+    });
+
+    setImagePreviews((prev) => {
+      const updatedImagePreviews = prev.filter((image) => image.id !== id);
+      return updatedImagePreviews;
+    });
   };
 
   const transformSurauName = (name: string) => {
@@ -111,37 +161,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setMallData(e.id);
   };
 
-  // TODO: Add mechanism to store temporary image url and file key
-  // User can delete the image before submitting the form - deleting image will not delete from server
-  // make image a single object that can be preview before uploading - once checkbox ticked, data send
-  // to server and mark the thumbnail image
-
-  const handleUploadThing = (uploadThingUrl: UploadThingFilePath[]) => {
-    const images: ImagePreviews[] = [];
-    const urls: FilePath[] = [];
-
-    uploadThingUrl.forEach((url) => {
-      urls.push({ file_path: url.fileUrl, is_thumbnail: false });
-      images.push({ id: url.fileKey, url: url.fileUrl });
-    });
-
-    setFilePath(urls);
-    setImagePreviews(images);
-  };
-
-  const markThumbnail = (id: string) => {
-    const newFilePath = filePath.map((item) => {
-      if (item.file_path === id) {
-        return { ...item, is_thumbnail: true };
-      }
-      console.log(item);
-      return item;
-    });
-
-    setFilePath(newFilePath);
-  };
-
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const thumbnailCount = filePath.filter((file) => file.is_thumbnail).length;
+
     const qiblat = {
       latitude: latitude,
       longitude: longitude,
@@ -168,6 +190,16 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     if (briefDirection === "") {
       setBriefDirectionError("Brief direction is required");
       return;
+    }
+
+    if (filePath.length > 0) {
+      if (!thumbnailChecked) {
+        setThumbnailError("Please choose a thumbnail");
+        return;
+      } else if (thumbnailCount > 1) {
+        setThumbnailError("Please choose only one thumbnail");
+        return;
+      }
     }
 
     addSurau
@@ -248,7 +280,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     </div>
                   </div>
                 </div>
-                <StateSelect handleNegeriChange={handleNegeriChange} label={true} />
+                <StateSelect
+                  handleNegeriChange={handleNegeriChange}
+                  label={true}
+                />
                 {choosenState ? (
                   <DistrictSelect
                     handleDaerahChange={handleDaerahChange}
@@ -432,22 +467,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
-                  {/* <UploadDropzone
-                    endpoint="imageUploader"
-                    onClientUploadComplete={(res) => {
-                      // Do something with the response
-                      alert("Upload Completed");
-                      console.log("uploadimageRes", res);
-                      if (res) {
-                        void handleUploadThing(res);
-                      }
-                    }}
-                    onUploadError={(error: Error) => {
-                      // Do something with the error.
-                      alert(`ERROR! ${error.message}`);
-                    }}
-                  /> */}
-                  <CustomUpload />
+                  <CustomUpload uploadedFileList={setTempImageList} />
+
+                  {/* This custom uploader return uploaded file on success */}
                 </div>
 
                 <div className="">
@@ -478,7 +500,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                                 width={100}
                                 height={100}
                               />
-                              <div className="ml-2 justify-center overflow-hidden text-xs sm:text-sm">
+                              <div className="ml-2 max-w-[8rem] justify-center overflow-hidden text-xs sm:text-sm">
                                 <p className="overflow-hidden text-ellipsis">
                                   {imagePreview.id
                                     .split("_")
@@ -492,7 +514,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             <button
                               // eslint-disable-next-line @typescript-eslint/no-misused-promises
                               onClick={() => handleDeleteImage(imagePreview.id)}
-                              className="sm:pr-4 pr-2"
+                              className="pr-2 sm:pr-4"
                             >
                               <TrashIcon className="h-5 w-5 text-red-500" />
                             </button>
@@ -501,6 +523,11 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       : null}
                   </div>
                 </div>
+                {thumbnailError ? (
+                  <p className="text-xs italic text-red-500">
+                    {thumbnailError}
+                  </p>
+                ) : null}
               </div>
               <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button

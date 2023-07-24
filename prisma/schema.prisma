@@ -71,7 +71,7 @@ model Rating {
 model SurauPhoto {
     id           String   @id @default(cuid())
     file_path    String
-    is_thubmnail Boolean  @default(false)
+    is_thumbnail Boolean  @default(false)
     caption      String?
     created_at   DateTime @default(now())
     surau        Surau    @relation(fields: [surau_id], references: [id], onDelete: Cascade)
