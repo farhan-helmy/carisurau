@@ -20,11 +20,6 @@ vi.mock('buffer', () => ({
   }
 }))
 
-
-// const mocks = vi.hoisted(() => ({
-//   sendMail: vi.fn(),
-// }))
-//
 vi.mock('nodemailer', () => ({
   default: {
     createTransport: vi.fn(() => ({ sendMail: vi.fn() }))
