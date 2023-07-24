@@ -16,7 +16,6 @@ import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import { utapi } from "uploadthing/server";
 import CustomUpload from "./shared/CustomUpload";
 
 const Select = dynamic(() => import("react-select"), {
