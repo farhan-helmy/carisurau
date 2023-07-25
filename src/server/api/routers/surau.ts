@@ -18,6 +18,7 @@ export const surauRouter = createTRPCRouter({
         image: z.array(
           z.object({
             file_path: z.string(),
+            is_thumbnail: z.boolean().optional(),
           })
         ),
         is_qiblat_certified: z.boolean().default(false),
@@ -42,6 +43,7 @@ export const surauRouter = createTRPCRouter({
           createMany: {
             data: input.image.map((image) => ({
               file_path: image.file_path,
+              is_thumbnail: !!image.is_thumbnail,
             })),
           },
         },
