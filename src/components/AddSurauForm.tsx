@@ -132,7 +132,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   };
 
   const handleDeleteImage = async (id: string) => {
-    await deleteSurau.mutateAsync(id).then(() => console.log("Done"));
+    await deleteSurau.mutateAsync(id);
 
     setFilePath((prev) => {
       const updatedFilePath = prev.filter((file) => file.file_path !== id);
