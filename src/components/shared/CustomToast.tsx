@@ -60,7 +60,7 @@ const CustomToast = ({ duration }: Props) => {
         position="top-center"
         autoClose={duration || 2000}
         newestOnTop={true}
-        icon={({ type }) => <IconComponent type={type} />}
+        icon={IconComponent}
         closeButton={false}
       />
     </div>
