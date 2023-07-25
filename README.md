@@ -60,6 +60,20 @@ $ yarn db:seed
 $ yarn dev
 ```
 
+## Tests
+
+We are using Vitest to test the application. You can use your knowledge on Jest into this as well.
+
+https://vitest.dev/
+
+```bash
+# One time execution, useful for pipeline
+$ yarn test
+
+# Continuously watch changes on spec
+$ yarn test:watch
+```
+
 ## Roadmap
 
 - [ ] Add tests
