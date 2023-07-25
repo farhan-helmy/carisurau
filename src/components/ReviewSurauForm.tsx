@@ -59,7 +59,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
     const urls: FilePath[] = [];
 
     uploadThingUrl.forEach((url) => {
-      urls.push({ file_path: url.fileUrl });
+      urls.push({ file_path: url.fileUrl, is_thumbnail: false });
       images.push({ id: url.fileKey, url: url.fileUrl });
     });
 

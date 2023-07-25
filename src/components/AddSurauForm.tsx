@@ -63,6 +63,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [tempImageList, setTempImageList] = useState<UploadThingFilePath[]>([]);
   const [thumbnailChecked, setThumbnailChecked] = useState(false);
   const [thumbnailError, setThumbnailError] = useState("");
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
@@ -96,8 +97,9 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     }
   }, [tempImageList]);
 
-  const markThumbnail = (id: string) => {
+  const markThumbnail = (id: string, index: number) => {
     const fileUrl = imagePreviews.find((image) => image.id === id)?.url;
+    setThumbnailIndex(index);
 
     filePath.forEach((file) => {
       if (file.file_path === fileUrl) {
@@ -483,14 +485,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           <div
                             id="imagePreviewDiv"
                             key={index}
-                            className="my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2"
+                            className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${thumbnailIndex === index ? "border-indigo-500" : "border-gray-300"}`}
+                            onClick={() => markThumbnail(imagePreview.id, index)}
                           >
                             <div className="flex items-center">
-                              <input
-                                type="checkbox"
-                                className="mr-2 h-4 w-4 rounded-sm border"
-                                onClick={() => markThumbnail(imagePreview.id)}
-                              />
                               <Image
                                 src={imagePreview.url}
                                 alt="image preview"

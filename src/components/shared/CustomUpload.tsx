@@ -180,6 +180,10 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
         </div>
       </div>
       {files.length > 0 && !isUploading && (
+        <>
+        <div className="italic text-xs text-center mt-2">
+          Please press upload button first to upload the files
+        </div>
         <div className="mt-2">
           <ul className="mb-2 rounded-lg border pt-2">
             {files.map((file: FileWithPath) => (
@@ -199,6 +203,7 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
             ))}
           </ul>
         </div>
+        </>
       )}
     </div>
   );
