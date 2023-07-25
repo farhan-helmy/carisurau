@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import CustomToast from "./CustomToast";
 import ProgressCircle from "./ProgressCircle";
 import type { UploadThingFilePath } from "../AddSurauForm";
+import { capitalizeFirstLetter } from "../../utils";
 
 type UploadedFileProps = {
   uploadedFileList: (
@@ -26,10 +27,6 @@ interface Config {
     maxFileCount?: number;
   };
 }
-
-const capitalizeStart = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-};
 
 const formatString = (config?: Config): string => {
   if (!config) return "";
@@ -64,7 +61,7 @@ const formatString = (config?: Config): string => {
 };
 
 const allowedContentTextLabelGenerator = (config?: Config): string => {
-  return capitalizeStart(formatString(config));
+  return capitalizeFirstLetter(formatString(config));
 };
 
 const sizeConverter = (bytes: number) => {
@@ -191,7 +188,7 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
                 key={file.path}
                 className="m-1 flex items-start justify-between rounded-md p-2"
               >
-                <div className="ml-2 max-w-[13rem] sm:max-w-none justify-center overflow-hidden text-xs sm:text-sm">
+                <div className="ml-2 max-w-[13rem] justify-center overflow-hidden text-xs sm:max-w-none sm:text-sm">
                   <p className="overflow-hidden text-ellipsis">{file.name}</p>
                   <p className="text-slate-500">{sizeConverter(file.size)}</p>
                 </div>

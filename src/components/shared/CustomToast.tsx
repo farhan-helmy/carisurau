@@ -1,4 +1,4 @@
-import React from "react";
+import type { ElementType } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -19,6 +19,29 @@ const iconContext: { [key in ToastType]: string } = {
   dark: "text-gray-500",
 };
 
+const iconComponents: { [key in ToastType]: ElementType } = {
+  success: CheckCircleIcon,
+  error: ExclamationTriangleIcon,
+  info: InformationCircleIcon,
+  warning: ExclamationCircleIcon,
+  default: CheckCircleIcon,
+  dark: CheckCircleIcon,
+};
+
+interface IconComponentProps {
+  type: keyof typeof iconComponents;
+}
+
+const IconComponent = ({ type }: IconComponentProps) => {
+  const IconComponentResolver = iconComponents[type];
+
+  return (
+    <IconComponentResolver
+      className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
+    />
+  );
+};
+
 interface Props {
   duration?: number;
 }
@@ -37,29 +60,7 @@ const CustomToast = ({ duration }: Props) => {
         position="top-center"
         autoClose={duration || 2000}
         newestOnTop={true}
-        icon={({ type }) =>
-          type == "success" ? (
-            <CheckCircleIcon
-              className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
-            />
-          ) : type == "error" ? (
-            <ExclamationTriangleIcon
-              className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
-            />
-          ) : type == "info" ? (
-            <InformationCircleIcon
-              className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
-            />
-          ) : type == "warning" ? (
-            <ExclamationCircleIcon
-              className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
-            />
-          ) : type == "default" ? (
-            <CheckCircleIcon
-              className={`h-4 w-4 sm:h-8 sm:w-8 ${iconContext[type]}`}
-            />
-          ) : null
-        }
+        icon={({ type }) => <IconComponent type={type} />}
         closeButton={false}
       />
     </div>
