@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import nodemailer from 'nodemailer';
 import { Buffer } from 'buffer';
 import {prisma} from '../../server/db';
+import {Mailer} from "./mailer";
 
 export async function sendApprovalMail(surauId: string): Promise<void> {
     const surau = await prisma.surau.findFirstOrThrow({
@@ -24,15 +24,6 @@ export async function sendApprovalMail(surauId: string): Promise<void> {
 
     const endpoint = `${process.env.APPLICATION_URL}magic-link/approve?token=${decodedSurauId}`
 
-    const transport = nodemailer.createTransport({
-        host: process.env.MAIL_HOST,
-        port: process.env.MAIL_PORT,
-        auth: {
-          user: process.env.MAIL_USERNAME,
-          pass: process.env.MAIL_PASSWORD,
-        }      
-    } as nodemailer.TransportOptions );
-    
     const emailContent = `<p> Surau: ${surau.name}</p>` +
     `<p> Qibla Certified: ${surau.is_qiblat_certified ? 'Yes' : 'No'}</p>` +
     `<p> State: ${surau.state.name}</p>` +
@@ -43,15 +34,11 @@ export async function sendApprovalMail(surauId: string): Promise<void> {
     `<a href="${endpoint}">Verify Me</a>`;
 
     const mailOptions = {
-        from: 'your-email@gmail.com', 
+        from: 'your-email@gmail.com',
         to: 'recipient@example.com',
         subject: 'New Surau Added',
         html: emailContent
     };
 
-    try {
-      await transport.sendMail(mailOptions);
-    }catch(err) {
-      console.error(err);
-    }
+    await Mailer.send(mailOptions)
 }

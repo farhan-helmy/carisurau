@@ -3,8 +3,7 @@ import {prisma} from "../db";
 import type {SurauFixtureType} from "../../../tests/fixtures/surau.fixture";
 import {surauFixture} from "../../../tests/fixtures/surau.fixture";
 import {Buffer} from 'buffer';
-import type {Transporter} from "nodemailer";
-import nodemailer, {createTransport} from "nodemailer";
+import {Mailer} from "./mailer";
 
 vi.mock('../../server/db', () => ({
   prisma: {
@@ -20,15 +19,14 @@ vi.mock('buffer', () => ({
   }
 }))
 
-vi.mock('nodemailer', () => ({
-  default: {
-    createTransport: vi.fn(() => ({ sendMail: vi.fn() }))
-  }
-}))
+vi.mock('./mailer')
 
 describe('generate-surau-verification', () => {
   const surauId = 'surau_id';
-  const sendMailMock = vi.fn();
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  })
 
   it('exists', () => {
     expect(sendApprovalMail).toBeDefined()
@@ -50,24 +48,12 @@ describe('generate-surau-verification', () => {
       },
     })
     expect(Buffer.from).toHaveBeenCalled()
+    expect(Mailer.send).toHaveBeenCalledTimes(1)
   })
 
   it('can send email', async () => {
-    vi.spyOn( nodemailer, 'createTransport' ).mockImplementation(() => ({
-      sendMail: sendMailMock,
-    } as never));
-
     await sendApprovalMail(surauId)
 
-    expect(nodemailer.createTransport).toBeCalledWith({
-      host: process.env.MAIL_HOST,
-      port: process.env.MAIL_PORT,
-      auth: {
-        user: process.env.MAIL_USERNAME,
-        pass: process.env.MAIL_PASSWORD,
-      }
-    })
-    expect(sendMailMock).toHaveBeenCalledTimes(1)
-
+    expect(Mailer.send).toHaveBeenCalledTimes(1)
   })
 })
