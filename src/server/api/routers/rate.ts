@@ -100,12 +100,15 @@ export const rateRouter = createTRPCRouter({
         rating: Number(key),
         count: counts[Number(key)] ?? 0,
       }));
+      
+      const totalFeedback = formattedCounts.reduce((acc, curr) => acc + curr.count, 0);
 
       return {
         averageRatingRounded,
         ratings,
         formattedCounts,
-        totalRating
+        totalRating,
+        totalFeedback
       };
     }),
 });
