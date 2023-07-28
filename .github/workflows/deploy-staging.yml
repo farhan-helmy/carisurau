@@ -14,8 +14,8 @@ env:
   AWS_DEFAULT_REGION: ap-southeast-1
 
 permissions:
-    id-token: write # This is required for requesting the JWT
-    contents: read  # This is required for actions/checkout
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   deploy:
@@ -44,9 +44,9 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Build
-        run: yarn build
       - name: Set Env
         run: echo $'DATABASE_URL=$DATABASE_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nNEXTAUTH_URL=$NEXTAUTH_URL\nNODE_ENV=$NODE_ENV\nUPLOADTHING_APP_ID=$UPLOADTHING_APP_ID\nUPLOADTHING_SECRET=$UPLOADTHING_SECRET\nGOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID\nGOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET' > .env
+      - name: Build
+        run: yarn build
       - name: Deploy
         run: yarn sst deploy --stage staging
