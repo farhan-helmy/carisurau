@@ -6,9 +6,9 @@ on:
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXTAUTH_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  DISCORD_CLIENT_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  DISCORD_CLIENT_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  NEXTAUTH_URL: ${{ secrets.AWS_ACCESS_ROLE }}
+  DISCORD_CLIENT_ID: ${{ secrets.AWS_ACCESS_ROLE }}
+  DISCORD_CLIENT_SECRET: ${{ secrets.AWS_ACCESS_ROLE }}
   AWS_DEFAULT_REGION: ap-southeast-1
 
 permissions:
