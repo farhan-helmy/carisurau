@@ -11,7 +11,6 @@ env:
   UPLOADTHING_SECRET: ${{ secrets.UPLOADTHING_SECRET }}
   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-  NODE_ENV: ${{ secrets.NODE_ENV }}
   AWS_DEFAULT_REGION: ap-southeast-1
 
 permissions:
@@ -45,8 +44,6 @@ jobs:
           node-version: 18
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Set Env
-        run: echo $'DATABASE_URL=$DATABASE_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nNEXTAUTH_URL=$NEXTAUTH_URL\nUPLOADTHING_APP_ID=$UPLOADTHING_APP_ID\nUPLOADTHING_SECRET=$UPLOADTHING_SECRET\nGOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID\nGOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET' > .env
       - name: Build
         run: yarn build
       - name: Deploy
