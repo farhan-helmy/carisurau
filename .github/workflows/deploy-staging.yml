@@ -4,15 +4,16 @@ on:
   workflow_dispatch:
 
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
   NEXTAUTH_URL: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DISCORD_CLIENT_ID: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   DISCORD_CLIENT_SECRET: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_DEFAULT_REGION: ap-southeast-1
+
+permissions:
+    id-token: write # This is required for requesting the JWT
+    contents: read  # This is required for actions/checkout
 
 jobs:
   deploy:
@@ -21,7 +22,13 @@ jobs:
       id-token: write
       contents: read
     steps:
-      - uses: actions/checkout@v3
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::190930221916:role/github-action-role
+          aws-region: ${{ env.AWS_DEFAULT_REGION }}
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Cache modules
         uses: actions/cache@v3
         id: yarn-cache
@@ -29,11 +36,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: ${{ runner.os }}-yarn-
-      - name: Configure AWS CLI
-        run: |
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set default.region ap-southeast-1
       - name: Use Node.js 18.x
         uses: actions/setup-node@v3
         with:
