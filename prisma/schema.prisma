@@ -156,6 +156,8 @@ model User {
     email         String?       @unique
     emailVerified DateTime?
     image         String?
+    token         String?
+    is_developer  Boolean       @default(false)
     accounts      Account[]
     sessions      Session[]
     Surau         Surau[]

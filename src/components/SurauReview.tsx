@@ -262,7 +262,7 @@ const SurauReview = () => {
                       {count.count > 0 ? (
                         <>
                           {Math.round(
-                            (count.count / rating.data.totalRating) * 100
+                            (count.count / rating.data.totalFeedback) * 100
                           )}
                           %
                         </>
