@@ -85,7 +85,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               />
             )}
 
-            <div className="mt-2 flex w-full items-center justify-start gap-2 overflow-scroll">
+            <div className="mt-2 flex w-full items-center justify-start gap-2 overflow-x-auto">
               {surau?.images.map((image) => (
                 <Image
                   src={image.file_path}
