@@ -187,6 +187,42 @@ export const surauRouter = createTRPCRouter({
         });
       }
 
+      if (input.filterType === "Recently Added") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+          },
+          orderBy: {
+            created_at: "desc",
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+          },
+        });
+      }
+
+      if (input.filterType === "Most Reviewed") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+          },
+          orderBy: {
+            ratings: {
+              _count: "desc"
+            }
+          },
+          include: {
+            ratings: true,
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+          },
+        });
+      }
       return undefined;
 
     }),

@@ -5,6 +5,8 @@ import useSurauStore from "../../store/surau";
 
 const sortOptions = [
   { name: "All", href: "#" },
+  { name: "Recently Added", href: "#" },
+  { name: "Most Reviewed", href: "#" },
 ];
 
 function classNames(...classes: string[]) {
