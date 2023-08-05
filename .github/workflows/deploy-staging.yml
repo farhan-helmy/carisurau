@@ -6,14 +6,16 @@ on:
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
   NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-  NEXTAUTH_URL: ${{ secrets.AWS_ACCESS_ROLE }}
-  DISCORD_CLIENT_ID: ${{ secrets.AWS_ACCESS_ROLE }}
-  DISCORD_CLIENT_SECRET: ${{ secrets.AWS_ACCESS_ROLE }}
+  NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+  UPLOADTHING_APP_ID: ${{ secrets.UPLOADTHING_APP_ID }}
+  UPLOADTHING_SECRET: ${{ secrets.UPLOADTHING_SECRET }}
+  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
   AWS_DEFAULT_REGION: ap-southeast-1
 
 permissions:
-    id-token: write # This is required for requesting the JWT
-    contents: read  # This is required for actions/checkout
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
 
 jobs:
   deploy:
@@ -44,7 +46,5 @@ jobs:
         run: yarn --frozen-lockfile
       - name: Build
         run: yarn build
-      - name: Set Env
-        run: echo $'DATABASE_URL=$DATABASE_URL\nNEXTAUTH_SECRET=$NEXTAUTH_SECRET\nNEXTAUTH_URL=$NEXTAUTH_URL\nDISCORD_CLIENT_ID=$DISCORD_CLIENT_ID\nDISCORD_CLIENT_SECRET=$DISCORD_CLIENT_SECRET\nS3_UPLOAD_KEY=$S3_UPLOAD_KEY\nS3_UPLOAD_SECRET=$S3_UPLOAD_SECRET\nS3_UPLOAD_BUCKET=$S3_UPLOAD_BUCKET\nS3_UPLOAD_REGION=$S3_UPLOAD_REGION\nNEXT_PUBLIC_CLOUDFRONT_URL=$NEXT_PUBLIC_CLOUDFRONT_URL\nNODE_ENV=$NODE_ENV' > .env
       - name: Deploy
         run: yarn sst deploy --stage staging
