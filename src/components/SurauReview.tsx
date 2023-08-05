@@ -15,7 +15,6 @@ import Header from "./shared/Header";
 import { useSession } from "next-auth/react";
 import SignIn from "./shared/SignIn";
 import SkeletonLoader from "./shared/SkeletonLoader";
-import SkeletonCircle from "./shared/SkeletonCircle";
 import SkeletonRectangle from "./shared/SkeletonRectangle";
 
 function classNames(...classes: string[]) {
@@ -63,18 +62,13 @@ const SurauReview = () => {
     setOpen(true);
   };
 
-  // TODO: Add the skeleton here
-  // TODO: Think if I could refactor on how to handle this
   if (!rating?.data) {
-    // return <div>Loading...</div>; // or handle the case in a different way
-
     return (
       <section className="bg-white">
         <div className="relative bg-gray-900">
           <Header />
         </div>
         <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
-          {/* Surau Info */}
           <SkeletonLoader className="gap-2 overflow-hidden lg:col-span-4">
             <SkeletonRectangle height={24} />
             <SkeletonRectangle height={32} marginTop={4} marginBottom={8} />
@@ -95,18 +89,6 @@ const SurauReview = () => {
             <SkeletonRectangle height={20} marginTop={12} marginBottom={24} />
             <SkeletonRectangle height={20} lines={5} gap={12} />
           </SkeletonLoader>
-
-          {/* TODO: See if review section skeleton is needed. Initial thought is no, since it might not exist (i.e. when it's no review) so there's no point showing skeleton there */}
-          {/* Reviews */}
-          {/* <div className="mt-16 py-8 lg:col-span-7 lg:col-start-6 lg:mt-0">
-            <SkeletonLoader className="flex gap-x-6">
-              <SkeletonCircle size={48} />
-              <SkeletonRectangle height={20} lines={2} />
-            </SkeletonLoader>
-            <SkeletonLoader className="mt-4">
-              <SkeletonRectangle height={72} />
-            </SkeletonLoader>
-          </div> */}
         </div>
       </section>
     );
