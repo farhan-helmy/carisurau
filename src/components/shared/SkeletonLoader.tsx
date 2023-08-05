@@ -1,9 +1,8 @@
-import type { ComponentPropsWithRef } from "react";
+import type { ComponentPropsWithRef, FC } from "react";
 
-// TODO: See if wanna stick with this or get better method. Maybe gain inspiration from current implimentation
 type DivProps = ComponentPropsWithRef<"div">;
 
-const SkeletonLoader: React.FC<DivProps> = ({
+const SkeletonLoader: FC<DivProps> = ({
   children,
   className,
   ...props

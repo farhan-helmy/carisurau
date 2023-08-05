@@ -1,28 +1,25 @@
 type Props = {
   lines?: number;
-  gap?: number;
-  height?: number;
+  gap?: number; // px
+  height?: number; // px
   width?: string;
   className?: string;
-  marginBottom?: number;
-  marginTop?: number;
+  marginBottom?: number; // px
+  marginTop?: number; // px
   flexDirection?: "column" | "row";
-  // TODO: See if really need this? Because it sounds like too abstact :(
-  isContainerWidthFit?: boolean;
 };
 
 const SkeletonRectangle: React.FC<Props> = ({
-  gap = 4, // px
-  lines = 1, // rename to something else. Maybe amount?
-  height = 20, // px
-  width = "w-full", // TODO: Is this enough for default
+  gap = 4, 
+  lines = 1,
+  height = 20, 
+  width = "w-full",
   className = "rounded-md bg-gray-200",
-  marginBottom, // px
-  marginTop, // px
+  marginBottom, 
+  marginTop, 
   flexDirection = "column",
-  isContainerWidthFit,
 }) => {
-  const items = new Array(lines || 1).fill("x");
+  const items = new Array(lines).fill("x");
 
   return (
     <div
@@ -30,20 +27,18 @@ const SkeletonRectangle: React.FC<Props> = ({
       style={{
         gap: gap,
         flexDirection: flexDirection,
-        width: isContainerWidthFit ? "fit-content" : "100%",
       }}
     >
       {items.map((_, index) => {
         return (
           <div
             key={index}
-            // TODO: Verify the code convention in this project for this
             style={{
               height: height,
               marginBottom: marginBottom,
               marginTop: marginTop,
             }}
-            className={[width, className].join(" ")}
+            className={[width, className].join(' ')}
           />
         );
       })}
