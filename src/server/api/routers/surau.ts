@@ -173,6 +173,7 @@ export const surauRouter = createTRPCRouter({
       if (input.filterType === "state") {
         return await ctx.prisma.surau.findMany({
           where: {
+            is_approved: true,
             state: {
               id: input.state,
             }
