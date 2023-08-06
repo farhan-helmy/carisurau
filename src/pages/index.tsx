@@ -100,10 +100,9 @@ export default function Index() {
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
         <title>Carisurau | Cari surau berdekatan anda dengan mudah</title>
-        
       </Head>
 
-      <div className="bg-white">        
+      <div className="bg-white">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"
@@ -129,14 +128,14 @@ export default function Index() {
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
             {imagePath !== "" ? (
               <Image
-              src={imagePath}
-              alt="random background image"
-              className="h-full w-full object-cover object-center"
-              width={1920}
-              height={1080}
-              priority
-            />
-            ) : null}   
+                src={imagePath}
+                alt="random background image"
+                className="h-full w-full object-cover object-center"
+                width={1920}
+                height={1080}
+                priority
+              />
+            ) : null}
           </div>
           <div
             aria-hidden="true"
@@ -154,7 +153,7 @@ export default function Index() {
               Discover Your Perfect Prayer Haven with Ease!
             </p>
             {/* Search bar component */}
-            
+
             <SearchBar />
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}

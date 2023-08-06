@@ -19,6 +19,7 @@ type UploadedFileProps = {
       | UploadThingFilePath[]
       | ((prev: UploadThingFilePath[]) => UploadThingFilePath[])
   ) => void;
+  setUploadCompleted: (value: boolean) => void;
 };
 
 interface Config {
@@ -82,7 +83,7 @@ const generatePermittedFileTypes = (config?: Config) => {
   return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
-function CustomUpload({ uploadedFileList }: UploadedFileProps) {
+function CustomUpload({ uploadedFileList, setUploadCompleted }: UploadedFileProps) {
   const [files, setFiles] = useState<File[]>([]);
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     setFiles(acceptedFiles);
@@ -98,6 +99,7 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
         setFiles([]);
         setProgress(0);
         uploadedFileList(res || []);
+        setUploadCompleted(true);
       },
       onUploadError: (e) => {
         toast.error(`Error occurred while uploading. ${e.message}`);
