@@ -29,10 +29,15 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::190930221916:role/github-action-role
           aws-region: ${{ env.AWS_DEFAULT_REGION }}
-      - name: TruffleHog OSS
-        uses: trufflesecurity/trufflehog@v3.46.2
       - name: Checkout
         uses: actions/checkout@v3
+      - name: TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --debug --only-verified
       - name: Cache modules
         uses: actions/cache@v3
         id: yarn-cache
