@@ -38,8 +38,24 @@ const imagePaths = [
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
   const [openSignInModal, setOpenSignInModal] = useState(false);
+  const [locality, setLocality] = useState("");
   const [imagePath, setImagePath] = useState("");
   const { data: session } = useSession();
+
+  const getposition = () => {
+    navigator.geolocation.getCurrentPosition(
+      (position: GeolocationPosition) => {
+        const geoApiURL = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`;
+
+        const res = fetch(geoApiURL)
+          .then((res) => res.json())
+          .then((data) => {
+            setLocality(data.locality as string);
+          })
+          .catch((err) => console.log(err));
+      }
+    );
+  };
 
   const handleSetOpenSurauForm = () => {
     if (!session) {
@@ -51,6 +67,7 @@ export default function Index() {
   };
 
   useEffect(() => {
+    getposition();
     const randomImagePath =
       imagePaths[Math.floor(Math.random() * imagePaths.length)];
     setImagePath(randomImagePath as string);
