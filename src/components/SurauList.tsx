@@ -3,8 +3,11 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
 
-const SurauList = ({ type }: { type: "new" | "recent" }) => {
-  const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
+const SurauList = ({ type, district, state }: { type: "new" | "recent", district: string, state: string, }) => {
+  const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery({
+    district: district,
+    state: state,
+  });
 
   const router = useRouter();
 
