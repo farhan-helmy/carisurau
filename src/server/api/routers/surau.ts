@@ -316,7 +316,7 @@ export const surauRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
     const maxtake=8; //max number of displayed surau
 
-    const surauInDistrict = await ctx.prisma.surau.findMany({ 
+    const surauindistrict = await ctx.prisma.surau.findMany({ 
       where: {
         is_approved: false,
         district: {
@@ -338,7 +338,7 @@ export const surauRouter = createTRPCRouter({
       take: maxtake,
     });
 
-    const surauInStateButDistrict = await ctx.prisma.surau.findMany({ 
+    const surauinstatebutdistrict = await ctx.prisma.surau.findMany({ 
       where: {
         is_approved: true,
         district: {
@@ -362,7 +362,7 @@ export const surauRouter = createTRPCRouter({
       take: maxtake,
     });
 
-    const allOtherSurau = await ctx.prisma.surau.findMany({
+    const allothersurau = await ctx.prisma.surau.findMany({
       where: {
         is_approved: true,
         district: {
@@ -385,9 +385,9 @@ export const surauRouter = createTRPCRouter({
         mall: true,
         images: true,
       },
-      take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
+      take: maxtake - surauindistrict.length - surauinstatebutdistrict.length,
     });
-    const suraulocationbased = [...surauInDistrict, ...surauInStateButDistrict,...allOtherSurau];
+    const suraulocationbased = [...surauindistrict, ...surauinstatebutdistrict,...allothersurau];
 
     return suraulocationbased;
   }),
