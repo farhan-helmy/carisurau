@@ -311,10 +311,70 @@ export const surauRouter = createTRPCRouter({
       take: 1,
     });
   }),
-  getLatestAddedSurau: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.surau.findMany({
+  getLatestAddedSurau: publicProcedure
+  .input(z.object({ district: z.string().optional().optional(), state: z.string().optional() }))
+  .query(async ({ ctx, input }) => {
+    const maxtake=8; //max number of displayed surau
+
+    const surauindistrict = await ctx.prisma.surau.findMany({ 
+      where: {
+        is_approved: false,
+        district: {
+          name: input.district,
+        },
+        state: { 
+          name: input.state 
+        },
+      },
+      // orderBy: {
+      //   created_at: "desc",
+      // },
+      include: {
+        state: true,
+        district: true,
+        mall: true,
+        images: true,
+      },
+      take: maxtake,
+    });
+
+    const surauinstatebutdistrict = await ctx.prisma.surau.findMany({ 
       where: {
         is_approved: true,
+        district: {
+          name:{
+            not : input.district,
+          }, 
+        },
+        state: { 
+            name: input.state 
+        },
+      },
+      // orderBy: {
+      //   created_at: "desc",
+      // },
+      include: {
+        state: true,
+        district: true,
+        mall: true,
+        images: true,
+      },
+      take: maxtake,
+    });
+
+    const allothersurau = await ctx.prisma.surau.findMany({
+      where: {
+        is_approved: true,
+        district: {
+          name: {
+            not: input.district,
+          }, 
+        },  
+        state: { 
+          name: { 
+            not: input.state
+          }, 
+        }, 
       },
       orderBy: {
         created_at: "desc",
@@ -325,7 +385,10 @@ export const surauRouter = createTRPCRouter({
         mall: true,
         images: true,
       },
-      take: 5,
+      take: maxtake - surauindistrict.length - surauinstatebutdistrict.length,
     });
+    const suraulocationbased = [...surauindistrict, ...surauinstatebutdistrict,...allothersurau];
+
+    return suraulocationbased;
   }),
 });
