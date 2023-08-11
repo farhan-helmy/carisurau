@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { SurauTableColumn } from "./types";
 import { sendApprovalMail } from "../../services/generate-surau-verification";
 import type { Surau } from "../../../../prisma/client";
 
@@ -387,7 +386,7 @@ export const surauRouter = createTRPCRouter({
       },
       take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
     });
-    const suraulocationbased = [...surauInDistrict, ...surauInStateButDistrict,...allOtherSurau];
+    const suraulocationbased = [...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau];
 
     return suraulocationbased;
   }),

@@ -2,21 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
 import SurauList from "../components/SurauList";
 import Image from "next/image";
 import Head from "next/head";
@@ -28,7 +13,7 @@ import Script from "next/script";
 import Header from "../components/shared/Header";
 import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
-import getlocation from "../store/getlocation"
+import getlocation from "../store/getlocation";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
@@ -45,17 +30,18 @@ export default function Index() {
   const userdistrict = getlocation().district;
   const userstate = getlocation().state;
 
-  const getposition = () => {
+  const getLocation = () => {
     navigator.geolocation.getCurrentPosition(
       (position: GeolocationPosition) => {
         const geoApiURL = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`;
 
-        const res = fetch(geoApiURL)
+        fetch(geoApiURL)
           .then((res) => res.json())
           .then((data) => {
+            console.log(data);
             setLocality(data.locality as string);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => console.error(err));
       }
     );
   };
@@ -70,14 +56,13 @@ export default function Index() {
   };
 
   useEffect(() => {
-    getposition();
+    getLocation();
     const randomImagePath =
       imagePaths[Math.floor(Math.random() * imagePaths.length)];
     setImagePath(randomImagePath as string);
   }, []);
+
   getlocation();
-
-
 
   return (
     <>
@@ -212,17 +197,12 @@ export default function Index() {
                 Recently added
               </h2>
             </div>
-            <SurauList type="recent" district={userdistrict} state={userstate} />
+            <SurauList
+              type="recent"
+              district={userdistrict}
+              state={userstate}
+            />
           </section>
-
-          {/* <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
-            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-              <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
-                Newly added 
-              </h2>
-            </div>
-            <SurauList type='new' district={userdistrict} state={userstate} />
-          </section> */}
         </main>
       </div>
     </>
