@@ -3,16 +3,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { StarIcon } from "@heroicons/react/20/solid";
-import Image from "next/image";
-import SurauOverview from "./SurauOverview";
-import { useState, useEffect } from "react";
-import { api } from "../utils/api";
-import { useRouter } from "next/router";
-import Modal from "./shared/Modal";
-import ReviewSurauForm from "./ReviewSurauForm";
-import Head from "next/head";
-import Header from "./shared/Header";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import NotFound404 from "../pages/404";
+import { api } from "../utils/api";
+import ReviewSurauForm from "./ReviewSurauForm";
+import SurauOverview from "./SurauOverview";
+import Header from "./shared/Header";
+import Modal from "./shared/Modal";
 import SignIn from "./shared/SignIn";
 
 function classNames(...classes: string[]) {
@@ -39,13 +40,13 @@ const SurauReview = () => {
 
   const router = useRouter();
   const uniqueName = router.query["id"];
-  
+
   const surau = api.surau.getSurau.useQuery({
-    unique_name: uniqueName ? uniqueName as string : "",
+    unique_name: uniqueName ? (uniqueName as string) : "",
   });
 
   const rating = api.rate.getRating.useQuery({
-    surau_id: surau.isFetched ? surau.data?.id as string : "",
+    surau_id: surau.isFetched ? (surau.data?.id as string) : "",
   });
 
   const refetchRating = () => {
@@ -61,7 +62,8 @@ const SurauReview = () => {
   };
 
   if (!rating?.data) {
-    return <div>Loading...</div>; // or handle the case in a different way
+    // return <div>Loading...</div>; // or handle the case in a different way
+    return <NotFound404 />;
   }
 
   return (
