@@ -2,8 +2,8 @@ import {useState, useEffect} from "react";
 
   const getlocation = () => {    
     const [location, setLocation] = useState({
-      district:"unknown",
-      state: "unknown", 
+      district: "",
+      state: "", 
     });
 
     const onSuccess = (location: GeolocationPosition) => {
@@ -26,7 +26,7 @@ import {useState, useEffect} from "react";
 
     useEffect(() => {
       if (!("geolocation" in navigator)) {
-        console.log("errer")
+        console.error("Something went wrong")
       }
       navigator.geolocation.getCurrentPosition(onSuccess, onError);
 
