@@ -13,7 +13,7 @@ import Script from "next/script";
 import Header from "../components/shared/Header";
 import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
-import getlocation from "../store/getlocation";
+import { getLocation } from "../utils/location";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
@@ -24,27 +24,10 @@ const imagePaths = [
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
   const [openSignInModal, setOpenSignInModal] = useState(false);
-  const [locality, setLocality] = useState("");
+  const [userDistrict, setUserDistrict] = useState("");
+  const [userState, setUserState] = useState("");
   const [imagePath, setImagePath] = useState("");
   const { data: session } = useSession();
-  const userdistrict = getlocation().district;
-  const userstate = getlocation().state;
-
-  const getLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      (position: GeolocationPosition) => {
-        const geoApiURL = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&localityLanguage=en`;
-
-        fetch(geoApiURL)
-          .then((res) => res.json())
-          .then((data) => {
-            console.log(data);
-            setLocality(data.locality as string);
-          })
-          .catch((err) => console.error(err));
-      }
-    );
-  };
 
   const handleSetOpenSurauForm = () => {
     if (!session) {
@@ -56,13 +39,19 @@ export default function Index() {
   };
 
   useEffect(() => {
-    getLocation();
+    getLocation()
+      .then((location) => {
+        setUserDistrict(location.district);
+        setUserState(location.state as string);
+      })
+      .catch(() => {
+        alert("something went wrong");
+      });
+
     const randomImagePath =
       imagePaths[Math.floor(Math.random() * imagePaths.length)];
     setImagePath(randomImagePath as string);
   }, []);
-
-  getlocation();
 
   return (
     <>
@@ -199,8 +188,8 @@ export default function Index() {
             </div>
             <SurauList
               type="recent"
-              district={userdistrict}
-              state={userstate}
+              userDistrict={userDistrict}
+              userState={userState}
             />
           </section>
         </main>
