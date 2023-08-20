@@ -5,7 +5,6 @@ import type { FC } from "react";
 import { capitalizeFirstLetter } from "../utils";
 import { useEffect, useState } from "react";
 import ImageModal from "./shared/ImageModal";
-import { getScrapedGmapSurau } from "../utils/gmap_scrapping/google_maps_scraper"
 
 type Surau = {
   id: string;
@@ -43,9 +42,10 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
           onClick={() => void router.push("/")}
         >
           Go back
-        </button><button
+        </button>
+        <button
           className="text-left text-indigo-500 underline"
-          onClick={()=> console.log(getScrapedGmapSurau("surau annamira"))}
+          onClick={() => console.log(getScrapedGmapSurau("surau annamira"))}
           // onClick={()=> console.log("test")}
         >
           Go back test
@@ -77,9 +77,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   priority
                   placeholder="blur"
                   blurDataURL="/assets/background/carisuraudefault.png"
-                  onClick={() =>
-                    handleImageClick(imageHighlighted)
-                  }
+                  onClick={() => handleImageClick(imageHighlighted)}
                 />
               ) : null}
             </div>
