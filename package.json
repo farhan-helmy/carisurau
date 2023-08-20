@@ -22,7 +22,8 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
-    "drizzle-seed": ""
+    "drizzle-seed": "",
+    "scrape:local": "node src/utils/gmap_scraping/google_maps_scraper.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts",
@@ -50,6 +51,7 @@
     "next-auth": "^4.19.0",
     "next-s3-upload": "^0.3.0",
     "nodemailer": "^6.9.3",
+    "playwright-core": "^1.30.0",
     "preview-email": "^3.0.19",
     "prisma-kysely": "^1.5.0",
     "react": "18.2.0",

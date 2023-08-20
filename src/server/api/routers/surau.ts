@@ -140,7 +140,8 @@ export const surauRouter = createTRPCRouter({
       if (input.filterType === "All") {
         return await ctx.prisma.surau.findMany({
           where: {
-            is_approved: true,
+            // is_approved: true,
+            is_approved: false,
           },
           include: {
             state: true,
@@ -281,7 +282,8 @@ export const surauRouter = createTRPCRouter({
           unique_name: {
             contains: input.name,
           },
-          is_approved: true,
+          // is_approved: true,
+          is_approved: false,
         },
         include: {
           state: true,
@@ -339,7 +341,8 @@ export const surauRouter = createTRPCRouter({
 
     const surauInStateButDistrict = await ctx.prisma.surau.findMany({ 
       where: {
-        is_approved: true,
+        // is_approved: true,
+        is_approved: false,
         district: {
           name:{
             not : input.district,
@@ -363,7 +366,8 @@ export const surauRouter = createTRPCRouter({
 
     const allOtherSurau = await ctx.prisma.surau.findMany({
       where: {
-        is_approved: true,
+        // is_approved: true,
+        is_approved: false,
         district: {
           name: {
             not: input.district,

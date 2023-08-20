@@ -12,6 +12,7 @@ import NotFound404 from "../pages/404";
 import { api } from "../utils/api";
 import ReviewSurauForm from "./ReviewSurauForm";
 import SurauOverview from "./SurauOverview";
+import ScrappedGmapSurauOverview from "./ScrappedGmapSurauOverview";
 import Header from "./shared/Header";
 import Modal from "./shared/Modal";
 import SignIn from "./shared/SignIn";
@@ -339,6 +340,35 @@ const SurauReview = () => {
             </div>
           </div>
         </div>
+
+        <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+          <div className="lg:col-span-4">
+            {surau.data ? (
+              <ScrappedGmapSurauOverview surau={surau.data} />
+            ) : (
+              <div>Loading...</div>
+            )}
+
+            <div className="mt-4">
+              <h3 className="text-lg font-medium text-gray-900">
+                Share your thoughts
+              </h3>
+              <p className="mt-1 text-sm text-gray-600">
+                If you’ve been / went to this surau, write a review and post
+                some pictures.
+              </p>
+              <button
+                onClick={() => handleWriteReview()}
+                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+              >
+                Write a review
+              </button>
+            </div>
+
+            
+          </div>
+        </div>
+
       </section>
     </>
   );
