@@ -22,8 +22,7 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "test:coverage": "vitest run --coverage",
-    "drizzle-seed": "",
-    "scrape:local": "node src/utils/gmap_scraping/google_maps_scraper.js"
+    "test-scrape": "tsx tests/scrape.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts",
