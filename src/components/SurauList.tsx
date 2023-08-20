@@ -2,6 +2,7 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
+import Badge from "./shared/Badge";
 
 const SurauList = ({
   type,
@@ -118,9 +119,17 @@ const SurauList = ({
                   )}
                 </div>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
-                <p className="mt-1 truncate text-start text-lg font-medium text-gray-900">
-                  {surau.name}
-                </p>
+                <div className="mt-1 flex justify-between">
+                  <p className="truncate text-start text-lg font-medium text-gray-900">
+                    {surau.name}
+                  </p>
+                </div>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {surau?.is_solat_jumaat && <Badge text="Solat Jumaat" />}
+                  {surau?.is_qiblat_certified && (
+                    <Badge text="Qiblat Certified" />
+                  )}
+                </div>
               </a>
             ))
           )}

@@ -14,6 +14,7 @@ import StateSelect from "../components/shared/StateSelect";
 import useSurauStore from "../store/surau";
 import { truncateName } from "../utils";
 import { api } from "../utils/api";
+import Badge from "../components/shared/Badge";
 
 const surauUnorderedListVariants = {
   open: {
@@ -122,6 +123,12 @@ const SurauList = () => {
                   <p className="text-xs font-light">
                     {surau.district.name}, {surau.state.name}
                   </p>
+                  <div className="mt-2 flex flex-wrap gap-1">
+                    {surau?.is_solat_jumaat && <Badge text="Solat Jumaat" />}
+                    {surau?.is_qiblat_certified && (
+                      <Badge text="Qiblat Certified" />
+                    )}
+                  </div>
                 </div>
                 <div className="max-h-12 overflow-hidden rounded-xl bg-gray-200 object-fill">
                   {surau.images[0]?.file_path ? (

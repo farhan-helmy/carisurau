@@ -15,6 +15,7 @@ import SurauOverview from "./SurauOverview";
 import Header from "./shared/Header";
 import Modal from "./shared/Modal";
 import SignIn from "./shared/SignIn";
+import Badge from "./shared/Badge";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -165,10 +166,9 @@ const SurauReview = () => {
 
             <div className="mt-2 flex flex-row space-x-2">
               {surau.data?.is_solat_jumaat && (
-                <h3 className="font-base inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm text-green-800">
-                  Solat Jumaat
-                </h3>
+                <Badge text="Solat Jumaat" />
               )}
+              {surau.data?.is_qiblat_certified && <Badge text="Qiblat Certified" />}
             </div>
             <div className="mt-2">
               <h3 className="text-lg font-medium text-gray-900">Direction</h3>
