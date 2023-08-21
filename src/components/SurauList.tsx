@@ -125,9 +125,9 @@ const SurauList = ({
                   </p>
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
-                  {surau?.is_solat_jumaat && <Badge text="Solat Jumaat" />}
+                  {surau?.is_solat_jumaat && <Badge color="green" text="Solat Jumaat" />}
                   {surau?.is_qiblat_certified && (
-                    <Badge text="Qiblat Certified" />
+                    <Badge color="purple" text="Qiblat Certified" />
                   )}
                 </div>
               </a>

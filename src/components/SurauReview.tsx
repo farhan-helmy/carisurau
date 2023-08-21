@@ -166,9 +166,9 @@ const SurauReview = () => {
 
             <div className="mt-2 flex flex-row space-x-2">
               {surau.data?.is_solat_jumaat && (
-                <Badge text="Solat Jumaat" />
+                <Badge color="green" text="Solat Jumaat" />
               )}
-              {surau.data?.is_qiblat_certified && <Badge text="Qiblat Certified" />}
+              {surau.data?.is_qiblat_certified && <Badge color="purple" text="Qiblat Certified" />}
             </div>
             <div className="mt-2">
               <h3 className="text-lg font-medium text-gray-900">Direction</h3>
