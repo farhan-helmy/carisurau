@@ -78,9 +78,9 @@ const SurauList = ({
             <div>Error: {latestAddedSurau.error.message}</div>
           ) : (
             latestAddedSurau.data?.map((surau) => (
-              <a key={surau.id} href="#" className="group">
+              <a key={surau.id} href="#" className="flex flex-col group">
                 <div
-                  className="max-h-72 overflow-hidden rounded-xl bg-gray-200 object-fill"
+                  className="h-full overflow-hidden rounded-xl bg-gray-200 object-fill"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
                   {surau.images.some((image) => image.is_thumbnail) ? (

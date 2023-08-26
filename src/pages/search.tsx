@@ -73,7 +73,21 @@ const Filter = () => {
           ) : null}
 
           <div className="flex items-end justify-end gap-4">
-            <button onClick={redirectToHomePage} className="text-xs underline">
+            <button onClick={redirectToHomePage} className="text-xs underline flex gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="h-4 w-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                />
+              </svg>
               Go back
             </button>
           </div>
@@ -124,7 +138,9 @@ const SurauList = () => {
                     {surau.district.name}, {surau.state.name}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {surau?.is_solat_jumaat && <Badge color="green" text="Solat Jumaat" />}
+                    {surau?.is_solat_jumaat ? (
+                      <Badge color="green" text="Solat Jumaat" />
+                    ) : null}
                     {surau?.is_qiblat_certified && (
                       <Badge color="purple" text="Qiblat Certified" />
                     )}

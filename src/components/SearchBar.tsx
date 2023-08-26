@@ -67,11 +67,34 @@ const SearchBar = () => {
   return (
     <>
       <div onClick={() => redirectToSearchPage()} className="w-full">
-        <div>
-          <input
+        <div className="relative">
+          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-5">
+            <svg
+              className="h-4 w-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          {/* <input
             type="text"
             placeholder="Search for a Surau"
             className="mt-8 w-full rounded-md border border-transparent bg-white py-3 px-2  text-base font-medium text-gray-900 hover:bg-gray-100"
+            onChange={(e) => setSurauInput(e.target.value)}
+          /> */}
+          <input
+            type="search"
+            className="mt-8 block w-full rounded-full border border-transparent bg-white hover:bg-gray-100 p-3 pl-12 text-base focus:border-gray-500"
+            placeholder="Search for a Surau"
             onChange={(e) => setSurauInput(e.target.value)}
           />
         </div>

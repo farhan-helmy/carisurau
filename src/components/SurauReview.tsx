@@ -156,7 +156,7 @@ const SurauReview = () => {
           <Header />
         </div>
 
-        <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+        <div className="py-18 mx-auto max-w-2xl px-4 sm:pb-24 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
           <div className="lg:col-span-4">
             {surau.data ? (
               <SurauOverview surau={surau.data} />
