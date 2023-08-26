@@ -138,9 +138,9 @@ const SurauList = () => {
                     {surau.district.name}, {surau.state.name}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {surau?.is_solat_jumaat && (
+                    {surau?.is_solat_jumaat ? (
                       <Badge color="green" text="Solat Jumaat" />
-                    )}
+                    ) : null}
                     {surau?.is_qiblat_certified && (
                       <Badge color="purple" text="Qiblat Certified" />
                     )}
