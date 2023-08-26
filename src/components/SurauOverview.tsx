@@ -38,9 +38,23 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
     <>
       <div className="mb-4 flex flex-col">
         <button
-          className="text-left text-indigo-500 underline"
+          className="text-left text-indigo-500 hover:underline flex items-center gap-2 pb-2"
           onClick={() => void router.push("/")}
         >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-4 w-4"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+            />
+          </svg>
           Go back
         </button>
         <div className="mb-2 text-left text-2xl">
@@ -70,9 +84,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   priority
                   placeholder="blur"
                   blurDataURL="/assets/background/carisuraudefault.png"
-                  onClick={() =>
-                    handleImageClick(imageHighlighted)
-                  }
+                  onClick={() => handleImageClick(imageHighlighted)}
                 />
               ) : null}
             </div>

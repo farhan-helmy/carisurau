@@ -3,19 +3,21 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { StarIcon } from "@heroicons/react/20/solid";
-import Image from "next/image";
-import SurauOverview from "./SurauOverview";
-import { useState, useEffect } from "react";
-import { api } from "../utils/api";
-import { useRouter } from "next/router";
-import Modal from "./shared/Modal";
-import ReviewSurauForm from "./ReviewSurauForm";
-import Head from "next/head";
-import Header from "./shared/Header";
 import { useSession } from "next-auth/react";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import NotFound404 from "../pages/404";
+import { api } from "../utils/api";
+import ReviewSurauForm from "./ReviewSurauForm";
+import SurauOverview from "./SurauOverview";
+import Header from "./shared/Header";
+import Modal from "./shared/Modal";
 import SignIn from "./shared/SignIn";
 import SkeletonLoader from "./shared/SkeletonLoader";
 import SkeletonRectangle from "./shared/SkeletonRectangle";
+import Badge from "./shared/Badge";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -41,13 +43,13 @@ const SurauReview = () => {
 
   const router = useRouter();
   const uniqueName = router.query["id"];
-  
+
   const surau = api.surau.getSurau.useQuery({
-    unique_name: uniqueName ? uniqueName as string : "",
+    unique_name: uniqueName ? (uniqueName as string) : "",
   });
 
   const rating = api.rate.getRating.useQuery({
-    surau_id: surau.isFetched ? surau.data?.id as string : "",
+    surau_id: surau.isFetched ? (surau.data?.id as string) : "",
   });
 
   const refetchRating = () => {
@@ -63,35 +65,37 @@ const SurauReview = () => {
   };
 
   if (!rating?.data) {
-    return (
-      <section className="bg-white">
-        <div className="relative bg-gray-900">
-          <Header />
-        </div>
-        <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
-          <SkeletonLoader className="gap-2 overflow-hidden lg:col-span-4">
-            <SkeletonRectangle height={24} />
-            <SkeletonRectangle height={32} marginTop={4} marginBottom={8} />
-            <SkeletonRectangle height={288} marginBottom={8} />
-            <SkeletonRectangle
-              flexDirection="row"
-              lines={1}
-              width="w-[144px]"
-              height={96}
-              gap={8}
-            />
-            <SkeletonRectangle height={28} marginTop={32} />
-            <SkeletonRectangle height={40} marginTop={4} />
-            <SkeletonRectangle height={28} marginTop={16} />
-            <SkeletonRectangle height={40} marginTop={4} />
-            <SkeletonRectangle height={28} marginTop={24} />
-            <SkeletonRectangle height={32} marginTop={16} />
-            <SkeletonRectangle height={20} marginTop={12} marginBottom={24} />
-            <SkeletonRectangle height={20} lines={5} gap={12} />
-          </SkeletonLoader>
-        </div>
-      </section>
-    );
+    // return (
+    //   <section className="bg-white">
+    //     <div className="relative bg-gray-900">
+    //       <Header />
+    //     </div>
+    //     <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+    //       <SkeletonLoader className="gap-2 overflow-hidden lg:col-span-4">
+    //         <SkeletonRectangle height={24} />
+    //         <SkeletonRectangle height={32} marginTop={4} marginBottom={8} />
+    //         <SkeletonRectangle height={288} marginBottom={8} />
+    //         <SkeletonRectangle
+    //           flexDirection="row"
+    //           lines={1}
+    //           width="w-[144px]"
+    //           height={96}
+    //           gap={8}
+    //         />
+    //         <SkeletonRectangle height={28} marginTop={32} />
+    //         <SkeletonRectangle height={40} marginTop={4} />
+    //         <SkeletonRectangle height={28} marginTop={16} />
+    //         <SkeletonRectangle height={40} marginTop={4} />
+    //         <SkeletonRectangle height={28} marginTop={24} />
+    //         <SkeletonRectangle height={32} marginTop={16} />
+    //         <SkeletonRectangle height={20} marginTop={12} marginBottom={24} />
+    //         <SkeletonRectangle height={20} lines={5} gap={12} />
+    //       </SkeletonLoader>
+    //     </div>
+    //   </section>
+    // );
+    // return <div>Loading...</div>; // or handle the case in a different way
+    return <NotFound404 />;
   }
 
   return (
@@ -183,7 +187,7 @@ const SurauReview = () => {
           <Header />
         </div>
 
-        <div className="py-18 mx-auto max-w-2xl px-4 sm:py-24 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+        <div className="py-18 mx-auto max-w-2xl px-4 sm:pb-24 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
           <div className="lg:col-span-4">
             {surau.data ? (
               <SurauOverview surau={surau.data} />
@@ -193,10 +197,9 @@ const SurauReview = () => {
 
             <div className="mt-2 flex flex-row space-x-2">
               {surau.data?.is_solat_jumaat && (
-                <h3 className="font-base inline-flex items-center rounded-full bg-green-100 px-3 py-1.5 text-sm text-green-800">
-                  Solat Jumaat
-                </h3>
+                <Badge color="green" text="Solat Jumaat" />
               )}
+              {surau.data?.is_qiblat_certified && <Badge color="purple" text="Qiblat Certified" />}
             </div>
             <div className="mt-2">
               <h3 className="text-lg font-medium text-gray-900">Direction</h3>

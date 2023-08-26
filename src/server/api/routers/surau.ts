@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { SurauTableColumn } from "./types";
 import { sendApprovalMail } from "../../services/generate-surau-verification";
 import type { Surau } from "../../../../prisma/client";
 
@@ -173,6 +172,7 @@ export const surauRouter = createTRPCRouter({
       if (input.filterType === "state") {
         return await ctx.prisma.surau.findMany({
           where: {
+            is_approved: true,
             state: {
               id: input.state,
             }
@@ -187,6 +187,42 @@ export const surauRouter = createTRPCRouter({
         });
       }
 
+      if (input.filterType === "Recently Added") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+          },
+          orderBy: {
+            created_at: "desc",
+          },
+          include: {
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+          },
+        });
+      }
+
+      if (input.filterType === "Most Reviewed") {
+        return await ctx.prisma.surau.findMany({
+          where: {
+            is_approved: true,
+          },
+          orderBy: {
+            ratings: {
+              _count: "desc"
+            }
+          },
+          include: {
+            ratings: true,
+            state: true,
+            district: true,
+            mall: true,
+            images: true,
+          },
+        });
+      }
       return undefined;
 
     }),
@@ -274,10 +310,70 @@ export const surauRouter = createTRPCRouter({
       take: 1,
     });
   }),
-  getLatestAddedSurau: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.surau.findMany({
+  getLatestAddedSurau: publicProcedure
+  .input(z.object({ district: z.string().optional().optional(), state: z.string().optional() }))
+  .query(async ({ ctx, input }) => {
+    const maxtake=8; //max number of displayed surau
+
+    const surauInDistrict = await ctx.prisma.surau.findMany({ 
+      where: {
+        is_approved: false,
+        district: {
+          name: input.district,
+        },
+        state: { 
+          name: input.state 
+        },
+      },
+      // orderBy: {
+      //   created_at: "desc",
+      // },
+      include: {
+        state: true,
+        district: true,
+        mall: true,
+        images: true,
+      },
+      take: maxtake,
+    });
+
+    const surauInStateButDistrict = await ctx.prisma.surau.findMany({ 
       where: {
         is_approved: true,
+        district: {
+          name:{
+            not : input.district,
+          }, 
+        },
+        state: { 
+            name: input.state 
+        },
+      },
+      // orderBy: {
+      //   created_at: "desc",
+      // },
+      include: {
+        state: true,
+        district: true,
+        mall: true,
+        images: true,
+      },
+      take: maxtake,
+    });
+
+    const allOtherSurau = await ctx.prisma.surau.findMany({
+      where: {
+        is_approved: true,
+        district: {
+          name: {
+            not: input.district,
+          }, 
+        },  
+        state: { 
+          name: { 
+            not: input.state
+          }, 
+        }, 
       },
       orderBy: {
         created_at: "desc",
@@ -288,7 +384,10 @@ export const surauRouter = createTRPCRouter({
         mall: true,
         images: true,
       },
-      take: 5,
+      take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
     });
+    const suraulocationbased = [...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau];
+
+    return suraulocationbased;
   }),
 });

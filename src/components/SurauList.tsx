@@ -2,9 +2,21 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
+import Badge from "./shared/Badge";
 
-const SurauList = ({ type }: { type: "new" | "recent" }) => {
-  const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery();
+const SurauList = ({
+  type,
+  userDistrict,
+  userState,
+}: {
+  type: "new" | "recent";
+  userDistrict: string;
+  userState: string;
+}) => {
+  const latestAddedSurau = api.surau.getLatestAddedSurau.useQuery({
+    district: userDistrict,
+    state: userState,
+  });
 
   const router = useRouter();
 
@@ -66,9 +78,9 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
             <div>Error: {latestAddedSurau.error.message}</div>
           ) : (
             latestAddedSurau.data?.map((surau) => (
-              <a key={surau.id} href="#" className="group">
+              <a key={surau.id} href="#" className="flex flex-col group">
                 <div
-                  className="max-h-72 overflow-hidden rounded-xl bg-gray-200 object-fill"
+                  className="h-full overflow-hidden rounded-xl bg-gray-200 object-fill"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
                   {surau.images.some((image) => image.is_thumbnail) ? (
@@ -107,9 +119,17 @@ const SurauList = ({ type }: { type: "new" | "recent" }) => {
                   )}
                 </div>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
-                <p className="mt-1 truncate text-start text-lg font-medium text-gray-900">
-                  {surau.name}
-                </p>
+                <div className="mt-1 flex justify-between">
+                  <p className="truncate text-start text-lg font-medium text-gray-900">
+                    {surau.name}
+                  </p>
+                </div>
+                <div className="mt-1 flex flex-wrap gap-1">
+                  {surau?.is_solat_jumaat && <Badge color="green" text="Solat Jumaat" />}
+                  {surau?.is_qiblat_certified && (
+                    <Badge color="purple" text="Qiblat Certified" />
+                  )}
+                </div>
               </a>
             ))
           )}

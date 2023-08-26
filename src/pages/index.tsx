@@ -2,21 +2,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
 import SurauList from "../components/SurauList";
 import Image from "next/image";
 import Head from "next/head";
@@ -28,6 +13,7 @@ import Script from "next/script";
 import Header from "../components/shared/Header";
 import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
+import { getLocation } from "../utils/location";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
@@ -38,6 +24,8 @@ const imagePaths = [
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
   const [openSignInModal, setOpenSignInModal] = useState(false);
+  const [userDistrict, setUserDistrict] = useState("");
+  const [userState, setUserState] = useState("");
   const [imagePath, setImagePath] = useState("");
   const { data: session } = useSession();
 
@@ -51,6 +39,15 @@ export default function Index() {
   };
 
   useEffect(() => {
+    getLocation()
+      .then((location) => {
+        setUserDistrict(location.district);
+        setUserState(location.state as string);
+      })
+      .catch(() => {
+        alert("something went wrong");
+      });
+
     const randomImagePath =
       imagePaths[Math.floor(Math.random() * imagePaths.length)];
     setImagePath(randomImagePath as string);
@@ -100,10 +97,9 @@ export default function Index() {
         <meta property="og:site_name" content="Carisurau"></meta>
         <meta property="fb:app_id" content="571114311611632" />
         <title>Carisurau | Cari surau berdekatan anda dengan mudah</title>
-        
       </Head>
 
-      <div className="bg-white">        
+      <div className="bg-white">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"
@@ -129,14 +125,14 @@ export default function Index() {
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
             {imagePath !== "" ? (
               <Image
-              src={imagePath}
-              alt="random background image"
-              className="h-full w-full object-cover object-center"
-              width={1920}
-              height={1080}
-              priority
-            />
-            ) : null}   
+                src={imagePath}
+                alt="random background image"
+                className="h-full w-full object-cover object-center"
+                width={1920}
+                height={1080}
+                priority
+              />
+            ) : null}
           </div>
           <div
             aria-hidden="true"
@@ -154,12 +150,12 @@ export default function Index() {
               Discover Your Perfect Prayer Haven with Ease!
             </p>
             {/* Search bar component */}
-            
+
             <SearchBar />
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
               <span
-                className="cursor-pointer font-bold underline hover:underline"
+                className="cursor-pointer font-bold hover:underline"
                 onClick={() => handleSetOpenSurauForm()}
               >
                 Add here
@@ -190,17 +186,12 @@ export default function Index() {
                 Recently added
               </h2>
             </div>
-            <SurauList type="recent" />
+            <SurauList
+              type="recent"
+              userDistrict={userDistrict}
+              userState={userState}
+            />
           </section>
-
-          {/* <section aria-labelledby="category-heading" className="pt-12 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8">
-            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-              <h2 id="category-heading" className="text-2xl font-bold tracking-tight text-gray-900">
-                Newly added
-              </h2>
-            </div>
-            <SurauList type='new' />
-          </section> */}
         </main>
       </div>
     </>

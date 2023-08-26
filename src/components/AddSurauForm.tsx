@@ -64,6 +64,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [thumbnailChecked, setThumbnailChecked] = useState(false);
   const [thumbnailError, setThumbnailError] = useState("");
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
+  const [uploadCompleted, setUploadCompleted] = useState(false);
+  const [uploadAlert, setUploadAlert] = useState(false);
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
@@ -165,6 +167,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const thumbnailCount = filePath.filter((file) => file.is_thumbnail).length;
 
+    if (!uploadCompleted) {
+      setUploadAlert(true);
+    }
+
     const qiblat = {
       latitude: latitude,
       longitude: longitude,
@@ -237,7 +243,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       <AlertModal
         open={alertModalOpen}
         setOpen={setAlertModalOpen}
+        error={false}
         message="Surau submitted, please wait for admin approval"
+      />
+      <AlertModal
+        open={uploadAlert}
+        setOpen={setUploadAlert}
+        error={true}
+        message="Please press upload button first to upload the files"
       />
       <div className="overflow-auto">
         <div className="md:grid md:grid-cols-2 md:gap-6">
@@ -468,7 +481,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
-                  <CustomUpload uploadedFileList={setTempImageList} />
+                  <CustomUpload uploadedFileList={setTempImageList} setUploadCompleted={setUploadCompleted} />
 
                   {/* This custom uploader return uploaded file on success */}
                 </div>

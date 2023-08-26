@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { useCallback, useState } from "react";
-import { FileWithPath, useDropzone } from "react-dropzone";
+import type { FileWithPath } from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 import { useUploadThing } from "../../utils/uploadthing";
 import { classNames, generateClientDropzoneAccept } from "uploadthing/client";
 import { TrashIcon } from "@heroicons/react/24/outline";
@@ -19,6 +20,7 @@ type UploadedFileProps = {
       | UploadThingFilePath[]
       | ((prev: UploadThingFilePath[]) => UploadThingFilePath[])
   ) => void;
+  setUploadCompleted: (value: boolean) => void;
 };
 
 interface Config {
@@ -82,7 +84,10 @@ const generatePermittedFileTypes = (config?: Config) => {
   return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
-function CustomUpload({ uploadedFileList }: UploadedFileProps) {
+function CustomUpload({
+  uploadedFileList,
+  setUploadCompleted,
+}: UploadedFileProps) {
   const [files, setFiles] = useState<File[]>([]);
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     setFiles(acceptedFiles);
@@ -98,6 +103,7 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
         setFiles([]);
         setProgress(0);
         uploadedFileList(res || []);
+        setUploadCompleted(true);
       },
       onUploadError: (e) => {
         toast.error(`Error occurred while uploading. ${e.message}`);
@@ -181,28 +187,28 @@ function CustomUpload({ uploadedFileList }: UploadedFileProps) {
       </div>
       {files.length > 0 && !isUploading && (
         <>
-        <div className="italic text-xs text-center mt-2">
-          Please press upload button first to upload the files
-        </div>
-        <div className="mt-2">
-          <ul className="mb-2 rounded-lg border pt-2">
-            {files.map((file: FileWithPath) => (
-              <li
-                id="imagePreviewDiv"
-                key={file.path}
-                className="m-1 flex items-start justify-between rounded-md p-2"
-              >
-                <div className="ml-2 max-w-[13rem] justify-center overflow-hidden text-xs sm:max-w-none sm:text-sm">
-                  <p className="overflow-hidden text-ellipsis">{file.name}</p>
-                  <p className="text-slate-500">{sizeConverter(file.size)}</p>
-                </div>
-                <button onClick={() => removeFile(file)} className="sm:pr-4">
-                  <TrashIcon className="h-5 w-5 text-red-500" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="mt-2 text-center text-xs italic">
+            Please press upload button first to upload the files
+          </div>
+          <div className="mt-2">
+            <ul className="mb-2 rounded-lg border pt-2">
+              {files.map((file: FileWithPath) => (
+                <li
+                  id="imagePreviewDiv"
+                  key={file.path}
+                  className="m-1 flex items-start justify-between rounded-md p-2"
+                >
+                  <div className="ml-2 max-w-[13rem] justify-center overflow-hidden text-xs sm:max-w-none sm:text-sm">
+                    <p className="overflow-hidden text-ellipsis">{file.name}</p>
+                    <p className="text-slate-500">{sizeConverter(file.size)}</p>
+                  </div>
+                  <button onClick={() => removeFile(file)} className="sm:pr-4">
+                    <TrashIcon className="h-5 w-5 text-red-500" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </div>
