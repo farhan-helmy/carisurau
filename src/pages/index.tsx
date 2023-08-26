@@ -155,7 +155,7 @@ export default function Index() {
             <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
               Can`t find your Surau?{" "}
               <span
-                className="cursor-pointer font-bold underline hover:underline"
+                className="cursor-pointer font-bold hover:underline"
                 onClick={() => handleSetOpenSurauForm()}
               >
                 Add here
