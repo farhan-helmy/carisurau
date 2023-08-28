@@ -4,15 +4,13 @@
 import { useCallback, useState } from "react";
 import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
-import { useUploadThing } from "../../utils/uploadthing";
-import { classNames, generateClientDropzoneAccept } from "uploadthing/client";
+import { classNames } from "uploadthing/client";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import "@uploadthing/react/styles.css";
-import { toast } from "react-toastify";
 import CustomToast from "./CustomToast";
 import ProgressCircle from "./ProgressCircle";
 import type { UploadThingFilePath } from "../AddSurauForm";
-import { capitalizeFirstLetter } from "../../utils";
+import { api } from "../../utils/api";
+import { s3UploadHandler } from "../../pages/api/s3-upload";
 
 type UploadedFileProps = {
   uploadedFileList: (
@@ -23,65 +21,12 @@ type UploadedFileProps = {
   setUploadCompleted: (value: boolean) => void;
 };
 
-interface Config {
-  [key: string]: {
-    maxFileSize: string;
-    maxFileCount?: number;
-  };
-}
-
-const formatString = (config?: Config): string => {
-  if (!config) return "";
-
-  const allowedTypes = Object.keys(config) as (keyof Config)[];
-
-  const formattedTypes = allowedTypes.map((f) => {
-    if (typeof f === "string" && f.includes("/")) {
-      return `${f.split("/")[1]?.toUpperCase()} file`;
-    }
-    return f === "blob" ? "file" : f;
-  });
-
-  if (formattedTypes.length > 1) {
-    const lastType = formattedTypes.pop();
-    return `${formattedTypes.join("s, ")} and ${lastType}s`;
-  }
-
-  const key = allowedTypes[0];
-  const formattedKey = formattedTypes[0];
-
-  const { maxFileSize, maxFileCount } = config[key as keyof Config] ?? {
-    maxFileSize: undefined,
-    maxFileCount: undefined,
-  };
-
-  if (maxFileCount && maxFileCount > 1) {
-    return `${formattedKey}s up to ${maxFileSize}, max ${maxFileCount}`;
-  } else {
-    return `${formattedKey} (${maxFileSize})`;
-  }
-};
-
-const allowedContentTextLabelGenerator = (config?: Config): string => {
-  return capitalizeFirstLetter(formatString(config));
-};
-
 const sizeConverter = (bytes: number) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
   if (bytes === 0) return "0 Byte";
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i] || "Bytes"}`;
-};
-
-const generatePermittedFileTypes = (config?: Config) => {
-  const fileTypes = config ? Object.keys(config) : [];
-
-  const maxFileCount = config
-    ? Object.values(config).map((v) => v.maxFileCount)
-    : [];
-
-  return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
 function CustomUpload({
@@ -94,33 +39,83 @@ function CustomUpload({
   }, []);
 
   const [progress, setProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
-    "imageUploader",
-    {
-      onClientUploadComplete: (res) => {
-        toast.success("Upload complete!");
-        setFiles([]);
-        setProgress(0);
-        uploadedFileList(res || []);
-        setUploadCompleted(true);
-      },
-      onUploadError: (e) => {
-        toast.error(`Error occurred while uploading. ${e.message}`);
-        setProgress(0);
-      },
-      onUploadProgress: (progress: number) => {
-        setProgress(progress);
-      },
-    }
-  );
+  const uploadImage = api.uploader.uploadFile.useMutation();
 
-  const { fileTypes } = generatePermittedFileTypes(permittedFileInfo?.config);
+  // const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
+  //   "imageUploader",
+  //   {
+  //     onClientUploadComplete: (res) => {
+  //       toast.success("Upload complete!");
+  //       setFiles([]);
+  //       setProgress(0);
+  //       uploadedFileList(res || []);
+  //       setUploadCompleted(true);
+  //     },
+  //     onUploadError: (e) => {
+  //       toast.error(`Error occurred while uploading. ${e.message}`);
+  //       setProgress(0);
+  //     },
+  //     onUploadProgress: (progress: number) => {
+  //       setProgress(progress);
+  //     },
+  //   }
+  // );
+
+  const handleUploadImage = (files: File[]) => {
+    const res = s3UploadHandler(files);
+    console.log(res);
+    // const sendUploadFile = [];
+
+    // for (const file of files) {
+    //   sendUploadFile.push({
+    //     file: file,
+    //     filteredName: file.name.replace(/[^a-zA-Z0-9.]/g, "_"),
+    //   });
+    // }
+
+    // uploadImage
+    //   .mutateAsync(sendUploadFile)
+    //   .then((res) => {
+    //     console.log(res);
+    //     uploadedFileList(res);
+    //     setUploadCompleted(true);
+    //   })
+    //   .catch((e) => {
+    //     console.log(e);
+    //   });
+    // setProgress(0);
+    // const fileList = [];
+    // try {
+    //   for (const file of files) {
+    //     const filteredFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+    //     const command = new PutObjectCommand({
+    //       Bucket: "carisuraustagingbucket",
+    //       Key: filteredFileName,
+    //       Body: file,
+    //     });
+    //     const res = await client.send(command);
+    //     console.log(res);
+    //     fileList.push({
+    //       fileUrl: `${env.S3_URL}/${filteredFileName}`,
+    //       fileKey: filteredFileName,
+    //     });
+    //     setFiles([]);
+    //     setProgress(0);
+    //     setUploadCompleted(true);
+    //     console.log(`Uploaded ${filteredFileName} to S3.`);
+    //   }
+    //   uploadedFileList(fileList);
+    // } catch (error) {
+    //   console.error("Error uploading images to S3:", error);
+    // }
+  };
 
   const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
     useDropzone({
       onDrop,
-      accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
+      accept: { "image/*": [] },
     });
 
   const removeFile = (file: FileWithPath) => {
@@ -150,7 +145,7 @@ function CustomUpload({
           </div>
           <div className="h-[1.25rem]">
             <p className="text-xs leading-5 text-gray-600">
-              {allowedContentTextLabelGenerator(permittedFileInfo?.config)}
+              Images up to 4MB, max 10 files
             </p>
           </div>
           {files.length > 0 && (
@@ -163,7 +158,7 @@ function CustomUpload({
                     e.stopPropagation();
                     if (!files) return;
 
-                    void startUpload(files);
+                    void handleUploadImage(files);
                   }}
                 >
                   <span className="px-3 py-2 text-white">

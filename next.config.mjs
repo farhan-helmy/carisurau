@@ -32,6 +32,7 @@ const config = {
       "dcm2976bhgfsz.cloudfront.net",
       "ratemysurau.s3.ap-southeast-1.amazonaws.com",
       "carisurau-staging.s3.ap-southeast-1.amazonaws.com",
+      "carisuraustagingbucket.s3.ap-southeast-1.amazonaws.com",
       "lh3.googleusercontent.com",
       "uploadthing.com"
     ],

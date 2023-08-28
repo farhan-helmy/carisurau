@@ -11,7 +11,6 @@ import Image from "next/image";
 import { api } from "../utils/api";
 import AlertModal from "./shared/AlertModal";
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
-import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
@@ -481,7 +480,10 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   <div className="mb-2 text-center text-xs font-light italic">
                     Upload image here
                   </div>
-                  <CustomUpload uploadedFileList={setTempImageList} setUploadCompleted={setUploadCompleted} />
+                  <CustomUpload
+                    uploadedFileList={setTempImageList}
+                    setUploadCompleted={setUploadCompleted}
+                  />
 
                   {/* This custom uploader return uploaded file on success */}
                 </div>
@@ -498,8 +500,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           <div
                             id="imagePreviewDiv"
                             key={index}
-                            className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${thumbnailIndex === index ? "border-indigo-500" : "border-gray-300"}`}
-                            onClick={() => markThumbnail(imagePreview.id, index)}
+                            className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${
+                              thumbnailIndex === index
+                                ? "border-indigo-500"
+                                : "border-gray-300"
+                            }`}
+                            onClick={() =>
+                              markThumbnail(imagePreview.id, index)
+                            }
                           >
                             <div className="flex items-center">
                               <Image

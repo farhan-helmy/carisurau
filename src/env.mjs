@@ -24,6 +24,10 @@ const server = z.object({
   // DISCORD_CLIENT_SECRET: z.string(), 
   GOOGLE_CLIENT_ID: z.string(),
   GOOGLE_CLIENT_SECRET: z.string(),
+  S3_UPLOAD_KEY: z.string(),
+  S3_UPLOAD_SECRET: z.string(),
+  S3_URL: z.string(),
+  S3_REGION: z.string(),
 });
 
 /**
@@ -57,6 +61,10 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  S3_UPLOAD_KEY: process.env.S3_UPLOAD_KEY,
+  S3_UPLOAD_SECRET: process.env.S3_UPLOAD_SECRET,
+  S3_URL: process.env.S3_URL,
+  S3_REGION: process.env.S3_REGION,
 };
 
 // Don't touch the part below

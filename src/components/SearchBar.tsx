@@ -78,9 +78,9 @@ const SearchBar = () => {
             >
               <path
                 stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
                 d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
               />
             </svg>
@@ -93,7 +93,7 @@ const SearchBar = () => {
           /> */}
           <input
             type="search"
-            className="mt-8 block w-full rounded-full border border-transparent bg-white hover:bg-gray-100 p-3 pl-12 text-base focus:border-gray-500"
+            className="mt-8 block w-full rounded-full border border-transparent bg-white p-3 pl-12 text-base hover:bg-gray-100 focus:border-gray-500"
             placeholder="Search for a Surau"
             onChange={(e) => setSurauInput(e.target.value)}
           />
