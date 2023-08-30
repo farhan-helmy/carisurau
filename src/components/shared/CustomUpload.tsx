@@ -8,16 +8,12 @@ import { classNames } from "uploadthing/client";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import CustomToast from "./CustomToast";
 import ProgressCircle from "./ProgressCircle";
-import type { UploadThingFilePath } from "../AddSurauForm";
-import { api } from "../../utils/api";
-import { s3UploadHandler } from "../../pages/api/s3-upload";
+import type { FileUrl } from "../AddSurauForm";
+import { env } from "../../env.mjs";
+
 
 type UploadedFileProps = {
-  uploadedFileList: (
-    value:
-      | UploadThingFilePath[]
-      | ((prev: UploadThingFilePath[]) => UploadThingFilePath[])
-  ) => void;
+  uploadedFileList: (value: FileUrl) => void;
   setUploadCompleted: (value: boolean) => void;
 };
 
@@ -41,82 +37,49 @@ function CustomUpload({
   const [progress, setProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadImage = api.uploader.uploadFile.useMutation();
-
-  // const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
-  //   "imageUploader",
-  //   {
-  //     onClientUploadComplete: (res) => {
-  //       toast.success("Upload complete!");
-  //       setFiles([]);
-  //       setProgress(0);
-  //       uploadedFileList(res || []);
-  //       setUploadCompleted(true);
-  //     },
-  //     onUploadError: (e) => {
-  //       toast.error(`Error occurred while uploading. ${e.message}`);
-  //       setProgress(0);
-  //     },
-  //     onUploadProgress: (progress: number) => {
-  //       setProgress(progress);
-  //     },
-  //   }
-  // );
-
   const handleUploadImage = (files: File[]) => {
-    const res = s3UploadHandler(files);
-    console.log(res);
-    // const sendUploadFile = [];
+    setIsUploading(true);
+    setProgress(0);
+    if (files) {
+      const form = new FormData();
+      files.forEach((file) => {
+        // Modify the filename here, for example, adding a prefix "modified_"
+        const modifiedFileName = new Date().toISOString() + "_" + file.name;
 
-    // for (const file of files) {
-    //   sendUploadFile.push({
-    //     file: file,
-    //     filteredName: file.name.replace(/[^a-zA-Z0-9.]/g, "_"),
-    //   });
-    // }
+        // Create a new File object with the modified name
+        const modifiedFile = new File([file], modifiedFileName, {
+          type: file.type,
+        });
 
-    // uploadImage
-    //   .mutateAsync(sendUploadFile)
-    //   .then((res) => {
-    //     console.log(res);
-    //     uploadedFileList(res);
-    //     setUploadCompleted(true);
-    //   })
-    //   .catch((e) => {
-    //     console.log(e);
-    //   });
-    // setProgress(0);
-    // const fileList = [];
-    // try {
-    //   for (const file of files) {
-    //     const filteredFileName = file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-    //     const command = new PutObjectCommand({
-    //       Bucket: "carisuraustagingbucket",
-    //       Key: filteredFileName,
-    //       Body: file,
-    //     });
-    //     const res = await client.send(command);
-    //     console.log(res);
-    //     fileList.push({
-    //       fileUrl: `${env.S3_URL}/${filteredFileName}`,
-    //       fileKey: filteredFileName,
-    //     });
-    //     setFiles([]);
-    //     setProgress(0);
-    //     setUploadCompleted(true);
-    //     console.log(`Uploaded ${filteredFileName} to S3.`);
-    //   }
-    //   uploadedFileList(fileList);
-    // } catch (error) {
-    //   console.error("Error uploading images to S3:", error);
-    // }
+        // Append the modified file to the FormData
+        form.append("image", modifiedFile);
+      });
+
+      const options = {
+        method: "POST",
+        headers: {
+          S3_UPLOAD_USERNAME: env.NEXT_PUBLIC_S3_UPLOAD_USERNAME,
+          S3_UPLOAD_PASSWORD: env.NEXT_PUBLIC_S3_UPLOAD_PASSWORD,
+        },
+        body: form,
+      };
+
+      fetch("/api/image_upload", options)
+        .then((response) => response.json())
+        .then((response) => {
+          uploadedFileList(response);
+          setIsUploading(false);
+          setProgress(1)
+        })
+        .then(() => setUploadCompleted(true))
+        .catch((err) => console.error(err));
+    }
   };
 
-  const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
-    useDropzone({
-      onDrop,
-      accept: { "image/*": [] },
-    });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+  });
 
   const removeFile = (file: FileWithPath) => {
     setFiles(files.filter((f) => f !== file));
