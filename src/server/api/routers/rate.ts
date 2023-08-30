@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { Rating } from "@prisma/client"
 
 export const rateRouter = createTRPCRouter({
   addRating: publicProcedure
