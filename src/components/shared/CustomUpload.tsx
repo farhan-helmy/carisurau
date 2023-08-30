@@ -4,66 +4,17 @@
 import { useCallback, useState } from "react";
 import type { FileWithPath } from "react-dropzone";
 import { useDropzone } from "react-dropzone";
-import { useUploadThing } from "../../utils/uploadthing";
-import { classNames, generateClientDropzoneAccept } from "uploadthing/client";
+import { classNames } from "uploadthing/client";
 import { TrashIcon } from "@heroicons/react/24/outline";
-import "@uploadthing/react/styles.css";
-import { toast } from "react-toastify";
 import CustomToast from "./CustomToast";
 import ProgressCircle from "./ProgressCircle";
-import type { UploadThingFilePath } from "../AddSurauForm";
-import { capitalizeFirstLetter } from "../../utils";
+import type { FileUrl } from "../AddSurauForm";
+import { env } from "../../env.mjs";
+
 
 type UploadedFileProps = {
-  uploadedFileList: (
-    value:
-      | UploadThingFilePath[]
-      | ((prev: UploadThingFilePath[]) => UploadThingFilePath[])
-  ) => void;
+  uploadedFileList: (value: FileUrl) => void;
   setUploadCompleted: (value: boolean) => void;
-};
-
-interface Config {
-  [key: string]: {
-    maxFileSize: string;
-    maxFileCount?: number;
-  };
-}
-
-const formatString = (config?: Config): string => {
-  if (!config) return "";
-
-  const allowedTypes = Object.keys(config) as (keyof Config)[];
-
-  const formattedTypes = allowedTypes.map((f) => {
-    if (typeof f === "string" && f.includes("/")) {
-      return `${f.split("/")[1]?.toUpperCase()} file`;
-    }
-    return f === "blob" ? "file" : f;
-  });
-
-  if (formattedTypes.length > 1) {
-    const lastType = formattedTypes.pop();
-    return `${formattedTypes.join("s, ")} and ${lastType}s`;
-  }
-
-  const key = allowedTypes[0];
-  const formattedKey = formattedTypes[0];
-
-  const { maxFileSize, maxFileCount } = config[key as keyof Config] ?? {
-    maxFileSize: undefined,
-    maxFileCount: undefined,
-  };
-
-  if (maxFileCount && maxFileCount > 1) {
-    return `${formattedKey}s up to ${maxFileSize}, max ${maxFileCount}`;
-  } else {
-    return `${formattedKey} (${maxFileSize})`;
-  }
-};
-
-const allowedContentTextLabelGenerator = (config?: Config): string => {
-  return capitalizeFirstLetter(formatString(config));
 };
 
 const sizeConverter = (bytes: number) => {
@@ -72,16 +23,6 @@ const sizeConverter = (bytes: number) => {
   if (bytes === 0) return "0 Byte";
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${Math.round(bytes / Math.pow(1024, i))} ${sizes[i] || "Bytes"}`;
-};
-
-const generatePermittedFileTypes = (config?: Config) => {
-  const fileTypes = config ? Object.keys(config) : [];
-
-  const maxFileCount = config
-    ? Object.values(config).map((v) => v.maxFileCount)
-    : [];
-
-  return { fileTypes, multiple: maxFileCount.some((v) => v && v > 1) };
 };
 
 function CustomUpload({
@@ -94,34 +35,51 @@ function CustomUpload({
   }, []);
 
   const [progress, setProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const { startUpload, isUploading, permittedFileInfo } = useUploadThing(
-    "imageUploader",
-    {
-      onClientUploadComplete: (res) => {
-        toast.success("Upload complete!");
-        setFiles([]);
-        setProgress(0);
-        uploadedFileList(res || []);
-        setUploadCompleted(true);
-      },
-      onUploadError: (e) => {
-        toast.error(`Error occurred while uploading. ${e.message}`);
-        setProgress(0);
-      },
-      onUploadProgress: (progress: number) => {
-        setProgress(progress);
-      },
+  const handleUploadImage = (files: File[]) => {
+    setIsUploading(true);
+    setProgress(0);
+    if (files) {
+      const form = new FormData();
+      files.forEach((file) => {
+        // Modify the filename here, for example, adding a prefix "modified_"
+        const modifiedFileName = new Date().toISOString() + "_" + file.name;
+
+        // Create a new File object with the modified name
+        const modifiedFile = new File([file], modifiedFileName, {
+          type: file.type,
+        });
+
+        // Append the modified file to the FormData
+        form.append("image", modifiedFile);
+      });
+
+      const options = {
+        method: "POST",
+        headers: {
+          S3_UPLOAD_USERNAME: env.NEXT_PUBLIC_S3_UPLOAD_USERNAME,
+          S3_UPLOAD_PASSWORD: env.NEXT_PUBLIC_S3_UPLOAD_PASSWORD,
+        },
+        body: form,
+      };
+
+      fetch("/api/image_upload", options)
+        .then((response) => response.json())
+        .then((response) => {
+          uploadedFileList(response);
+          setIsUploading(false);
+          setProgress(1)
+        })
+        .then(() => setUploadCompleted(true))
+        .catch((err) => console.error(err));
     }
-  );
+  };
 
-  const { fileTypes } = generatePermittedFileTypes(permittedFileInfo?.config);
-
-  const { getRootProps, getInputProps, acceptedFiles, isDragActive } =
-    useDropzone({
-      onDrop,
-      accept: fileTypes ? generateClientDropzoneAccept(fileTypes) : undefined,
-    });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [] },
+  });
 
   const removeFile = (file: FileWithPath) => {
     setFiles(files.filter((f) => f !== file));
@@ -150,7 +108,7 @@ function CustomUpload({
           </div>
           <div className="h-[1.25rem]">
             <p className="text-xs leading-5 text-gray-600">
-              {allowedContentTextLabelGenerator(permittedFileInfo?.config)}
+              Images up to 4MB, max 10 files
             </p>
           </div>
           {files.length > 0 && (
@@ -163,7 +121,7 @@ function CustomUpload({
                     e.stopPropagation();
                     if (!files) return;
 
-                    void startUpload(files);
+                    void handleUploadImage(files);
                   }}
                 >
                   <span className="px-3 py-2 text-white">
