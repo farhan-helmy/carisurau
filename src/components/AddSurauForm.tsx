@@ -72,8 +72,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const addSurau = api.surau.addSurau.useMutation();
 
-  const deleteSurau = api.uploader.deleteFile.useMutation();
-
   useEffect(() => {
     if (!tempImageList?.fileUrls) return;
 
@@ -135,8 +133,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setChoosenDistrict(e.id);
   };
 
-  const handleDeleteImage = async (id: string) => {
-    await deleteSurau.mutateAsync(id);
+  const handleDeleteImage = (id: string) => {
 
     setFilePath((prev) => {
       const updatedFilePath = prev.filter((file) => file.file_path !== id);
