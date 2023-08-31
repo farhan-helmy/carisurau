@@ -68,7 +68,7 @@ const SurauList = ({
 
   return (
     <div className="bg-white ">
-      <div className="mx-auto max-w-2xl py-2 px-4 shadow-lg sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
+      <div className="mx-auto max-w-2xl py-2 px-4 shadow-lg sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8 md:border md:border-gray-100">
         <h2 className="sr-only">Surau</h2>
 
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 p-2 sm:grid-cols-2 md:p-0 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-6">
