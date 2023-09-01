@@ -3,6 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { sendApprovalMail } from "../../services/generate-surau-verification";
 import type { Surau } from "../../../../prisma/client";
+import {sortByHavingImage} from "../../../utils/sorter/sortByHavingImage";
 
 export const surauRouter = createTRPCRouter({
   addSurau: publicProcedure
@@ -325,9 +326,11 @@ export const surauRouter = createTRPCRouter({
           name: input.state 
         },
       },
-      // orderBy: {
-      //   created_at: "desc",
-      // },
+      orderBy: {
+        images: {
+          _count: 'desc',
+        },
+      },
       include: {
         state: true,
         district: true,
@@ -349,9 +352,11 @@ export const surauRouter = createTRPCRouter({
             name: input.state 
         },
       },
-      // orderBy: {
-      //   created_at: "desc",
-      // },
+      orderBy: {
+        images: {
+          _count: 'desc',
+        },
+      },
       include: {
         state: true,
         district: true,
@@ -376,7 +381,9 @@ export const surauRouter = createTRPCRouter({
         }, 
       },
       orderBy: {
-        created_at: "desc",
+        images: {
+          _count: 'desc',
+        },
       },
       include: {
         state: true,
@@ -386,7 +393,9 @@ export const surauRouter = createTRPCRouter({
       },
       take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
     });
-    const suraulocationbased = [...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau];
+    const suraulocationbased = [
+      ...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau
+    ].sort(sortByHavingImage);
 
     return suraulocationbased;
   }),
