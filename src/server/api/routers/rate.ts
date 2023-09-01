@@ -71,7 +71,13 @@ export const rateRouter = createTRPCRouter({
           surau_id: input.surau_id,
         },
         include: {
-          user: true,
+          user: {
+            select: {
+              name: true,
+              id: true,
+              image: true,
+            }
+          },
         },
       });
       const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);
