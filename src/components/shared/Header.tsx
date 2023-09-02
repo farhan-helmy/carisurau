@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useSession, signIn } from "next-auth/react";
 import AvatarMenu from "./AvatarMenu";
+import ThemeSwitcher from "../ThemeSwitcher";
 
 const Header = () => {
   const { data: session, status } = useSession();
@@ -27,7 +28,8 @@ const Header = () => {
                     carisurau
                   </Link>
 
-                  <div className="flex flex-1 items-center justify-end">
+                  <div className="flex flex-1 items-center justify-end space-x-5">
+                    <ThemeSwitcher />
                     <div className="flex items-center lg:ml-8">
                       {/* Help */}
                       {status == "authenticated" ? (

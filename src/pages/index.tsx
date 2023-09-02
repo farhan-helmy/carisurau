@@ -99,7 +99,7 @@ export default function Index() {
         <title>Carisurau | Cari surau berdekatan anda dengan mudah</title>
       </Head>
 
-      <div className="bg-white">
+      <div className="bg-background">
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-ZDMV4PB3GF"
           strategy="afterInteractive"
@@ -120,7 +120,7 @@ export default function Index() {
         ></Script>
 
         {/* Hero section */}
-        <div className="relative bg-gray-900">
+        <div className="relative bg-background">
           {/* Decorative image and overlay */}
           <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
             {imagePath !== "" ? (
@@ -181,7 +181,7 @@ export default function Index() {
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <h2
                 id="category-heading"
-                className="text-2xl font-bold tracking-tight text-gray-900 mb-10"
+                className="text-2xl font-bold tracking-tight text-foreground mb-10"
               >
                 Recently added
               </h2>

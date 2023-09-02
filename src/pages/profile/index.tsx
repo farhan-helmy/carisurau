@@ -43,16 +43,16 @@ const ProfilePage = () => {
         <Header />
       </div>
 
-      <div className="container mx-auto h-screen min-w-max overflow-hidden rounded-lg bg-white p-4 mix-blend-multiply shadow xl:max-w-screen-xl">
+      <div className="container mx-auto h-screen min-w-max overflow-hidden rounded-lg bg-background p-4 shadow dark:border dark:border-gray-700 xl:max-w-screen-xl">
         <h2 className="sr-only" id="profile-overview-title">
           Profile Overview
         </h2>
-        <div className="bg-white p-6">
+        <div className="bg-background p-6">
           <div className="sm:flex sm:items-center sm:justify-between">
             <div className="sm:flex sm:space-x-5">
               <div className="flex-shrink-0">
                 <Image
-                  className="mx-auto h-24 w-24 rounded-full border border-white"
+                  className="mx-auto h-24 w-24 rounded-full border border-border"
                   src={session?.user.image || "/images/avatar.png"}
                   alt="avatar"
                   width={50}
@@ -60,10 +60,10 @@ const ProfilePage = () => {
                 />
               </div>
               <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                <p className="text-sm font-medium text-gray-600">
+                <p className="text-sm font-medium text-muted-foreground">
                   Welcome back,
                 </p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xl font-bold text-foreground">
                   {session?.user.name}
                 </p>
 

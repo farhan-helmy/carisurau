@@ -1,3 +1,53 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+html, body, :root {
+  height: 100%
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 221 39% 11%;
+
+    --primary: 220 13% 91%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    
+    --muted: 216 12% 84%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --input: 0 0% 100%;
+    --input-foreground: 217 19% 27%;
+
+    --accent: 224 71% 4%;
+    --accent-foreground: 210 20% 98%;
+
+    --border: 216 12% 84%;
+  }
+
+  .dark {
+    --background: 221 39% 11%;
+    --foreground: 210 20% 98%;
+
+    --primary: 215 28% 17%;
+    --primary-foreground: 210 20% 98%;
+
+    --muted: 215 14% 34%;
+    --muted-foreground: 218 11% 65%;
+
+    --input: 215 28% 17%;
+    --input-foreground: 220 13% 91%;
+
+    --accent: 210 20% 98%;
+    --accent-foreground: 224 71% 4%;
+
+    --border: 215 14% 34%;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}

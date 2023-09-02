@@ -29,7 +29,7 @@ const SurauList = ({
     const pendingApprovalList = api.surau.getPendingApproval.useQuery();
 
     return (
-      <div className="bg-white">
+      <div className="bg-background">
         <div className="mx-auto max-w-2xl py-16 px-4 sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <h2 className="sr-only">Surau</h2>
 
@@ -37,7 +37,7 @@ const SurauList = ({
             {pendingApprovalList.data?.map((surau) => (
               <a key={surau.id} href={surau.name} className="group">
                 <div
-                  className=" w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-w-1 xl:aspect-h-1"
+                  className=" w-full overflow-hidden rounded-lg bg-primary xl:aspect-w-1 xl:aspect-h-1"
                   onClick={(e) => handleRouterPush(e, surau.name)}
                 >
                   {surau.images[0]?.file_path ? (
@@ -55,7 +55,7 @@ const SurauList = ({
                 <h3 className="mt-4 text-sm text-gray-700">
                   {surau.district.name}
                 </h3>
-                <p className="mt-1 text-lg font-medium text-gray-900">
+                <p className="mt-1 text-lg font-medium text-foreground">
                   {surau.name}
                 </p>
               </a>
@@ -67,8 +67,8 @@ const SurauList = ({
   }
 
   return (
-    <div className="bg-white ">
-      <div className="mx-auto max-w-2xl py-2 px-4 shadow-lg sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8 md:border md:border-gray-100">
+    <div className="bg-background">
+      <div className="mx-auto max-w-2xl py-2 px-4 shadow-lg sm:py-4 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Surau</h2>
 
         <div className="grid grid-cols-1 gap-y-10 gap-x-6 p-2 sm:grid-cols-2 md:p-0 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-6">
@@ -78,9 +78,9 @@ const SurauList = ({
             <div>Error: {latestAddedSurau.error.message}</div>
           ) : (
             latestAddedSurau.data?.map((surau) => (
-              <a key={surau.id} href="#" className="flex flex-col group">
+              <a key={surau.id} href="#" className="group flex flex-col">
                 <div
-                  className="h-full overflow-hidden rounded-xl bg-gray-200 object-fill"
+                  className="h-full overflow-hidden rounded-xl bg-primary object-fill"
                   onClick={(e) => handleRouterPush(e, surau.unique_name)}
                 >
                   {surau.images.some((image) => image.is_thumbnail) ? (
@@ -120,12 +120,14 @@ const SurauList = ({
                 </div>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
                 <div className="mt-1 flex justify-between">
-                  <p className="truncate text-start text-lg font-medium text-gray-900">
+                  <p className="truncate text-start text-lg font-medium text-foreground">
                     {surau.name}
                   </p>
                 </div>
                 <div className="mt-1 flex flex-wrap gap-1">
-                  {surau?.is_solat_jumaat && <Badge color="green" text="Solat Jumaat" />}
+                  {surau?.is_solat_jumaat && (
+                    <Badge color="green" text="Solat Jumaat" />
+                  )}
                   {surau?.is_qiblat_certified && (
                     <Badge color="purple" text="Qiblat Certified" />
                   )}

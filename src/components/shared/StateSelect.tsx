@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { api } from "../../utils/api";
 import LoadingSpinner from "./LoadingSpinner";
+import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles} from '../../styles/selectStyles';
+import clsx from "clsx";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -17,9 +19,9 @@ const StateSelect: React.FC<StateSelectProps> = ({
   handleNegeriChange,
   label,
 }) => {
-
   const { data, isLoading } = api.surau.getState.useQuery();
   if (isLoading) return <LoadingSpinner />;
+
   return (
     <>
       <div className="grid grid-cols-3 gap-6">
@@ -27,7 +29,7 @@ const StateSelect: React.FC<StateSelectProps> = ({
           {label ? (
             <label
               htmlFor="surau-name"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-input-foreground"
             >
               State
             </label>
@@ -40,6 +42,27 @@ const StateSelect: React.FC<StateSelectProps> = ({
               onChange={(e) => handleNegeriChange(e)}
               required
               placeholder="State"
+              unstyled
+              classNames={{
+                control: ({ isFocused }) =>
+                  clsx(
+                    isFocused ? controlStyles.focus : controlStyles.nonFocus,
+                    controlStyles.base
+                  ),
+                placeholder: () => placeholderStyles,
+                input: () => inputStyles,
+                singleValue: () => singleValueStyles,
+                indicatorSeparator: () => indicatorSeparatorStyles,
+                dropdownIndicator: () => dropdownIndicatorStyles,
+                menu: () => menuStyles,
+                option: ({ isFocused, isSelected }) =>
+                  clsx(
+                    isFocused && optionStyles.focus,
+                    isSelected && optionStyles.selected,
+                    optionStyles.base
+                  ),
+                noOptionsMessage: () => noOptionsStyles,
+              }}
             />
           </div>
         </div>

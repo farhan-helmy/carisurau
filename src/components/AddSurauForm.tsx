@@ -16,6 +16,8 @@ import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import CustomUpload from "./shared/CustomUpload";
+import clsx from "clsx";
+import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles, clearIndicatorStyles} from '../styles/selectStyles';
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -253,22 +255,22 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
         <div className="md:grid md:grid-cols-2 md:gap-6">
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
+              <h3 className="text-lg font-medium leading-6 text-foreground">
                 Add surau
               </h3>
-              <p className="mt-1 text-xs italic text-gray-600">
+              <p className="mt-1 text-xs italic text-muted-foreground">
                 Help us to add surau if it is not in the list.
               </p>
             </div>
           </div>
           <div className="mt-4 md:col-span-2 md:mt-0">
             <div className="shadow sm:overflow-hidden sm:rounded-md">
-              <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+              <div className="space-y-6 bg-background px-4 py-5 sm:p-6">
                 <div className="grid grid-cols-3 gap-6">
                   <div className="col-span-3 md:col-span-2">
                     <label
                       htmlFor="surau-name"
-                      className="block text-sm font-medium text-gray-700"
+                      className="block text-sm font-medium text-input-foreground"
                     >
                       Surau Name
                     </label>
@@ -277,7 +279,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                         type="text"
                         name="surau-name"
                         id="surau-name"
-                        className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                        className="block w-full flex-1 rounded-md border-border bg-input text-input-foreground focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder=""
                         onChange={(e) => {
                           transformSurauName(e.target.value);
@@ -312,7 +314,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             id="check-surau-mall"
                             name="check-surau-mall"
                             type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-600"
                             onChange={(e) => {
                               setFindMallChecked(e.target.checked);
                             }}
@@ -328,7 +330,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     {findMallChecked ? (
                       <div className="grid grid-cols-3 gap-6">
                         <div className="col-span-3 md:col-span-2">
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-input-foreground">
                             Mall
                           </label>
                           <Select
@@ -338,6 +340,31 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             getOptionLabel={(option: any) => option.name}
                             getOptionValue={(option: any) => option.id}
                             placeholder="Mall"
+                            unstyled
+                            classNames={{
+                              control: ({ isFocused }) =>
+                                clsx(
+                                  isFocused
+                                    ? controlStyles.focus
+                                    : controlStyles.nonFocus,
+                                  controlStyles.base
+                                ),
+                              placeholder: () => placeholderStyles,
+                              input: () => inputStyles,
+                              singleValue: () => singleValueStyles,
+                              indicatorSeparator: () =>
+                                indicatorSeparatorStyles,
+                              dropdownIndicator: () => dropdownIndicatorStyles,
+                              menu: () => menuStyles,
+                              option: ({ isFocused, isSelected }) =>
+                                clsx(
+                                  isFocused && optionStyles.focus,
+                                  isSelected && optionStyles.selected,
+                                  optionStyles.base
+                                ),
+                              noOptionsMessage: () => noOptionsStyles,
+                              clearIndicator: () => clearIndicatorStyles,
+                            }}
                           />
                         </div>
                       </div>
@@ -349,7 +376,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             id="check-surau-qiblat"
                             name="check-surau-qiblat"
                             type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-600"
                             onChange={(e) =>
                               setIsQiblatCertified(e.target.checked)
                             }
@@ -365,7 +392,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     {isQiblatCertified ? (
                       <div className="grid grid-cols-3 gap-2 md:gap-6">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-input-foreground">
                             Latitude
                           </label>
                           <div className="mt-1 rounded-md shadow-sm">
@@ -373,7 +400,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                               type="number"
                               name="latitude"
                               id="latitude"
-                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              className="block w-full flex-1 rounded-md border-border bg-input text-input-foreground focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               placeholder="0.000"
                               onChange={(e) => {
                                 setLatitude(parseFloat(e.target.value));
@@ -382,7 +409,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           </div>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-input-foreground">
                             Longitude
                           </label>
                           <div className="mt-1 rounded-md shadow-sm">
@@ -390,7 +417,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                               type="number"
                               name="longitude"
                               id="longitude"
-                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              className="block w-full flex-1 rounded-md border-border bg-input text-input-foreground focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               placeholder="0.000"
                               onChange={(e) => {
                                 setLongitude(parseFloat(e.target.value));
@@ -399,7 +426,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                           </div>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700">
+                          <label className="block text-sm font-medium text-input-foreground">
                             Qiblat Degree
                           </label>
                           <div className="mt-1 rounded-md shadow-sm">
@@ -407,7 +434,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                               type="text"
                               name="qiblat-degree"
                               id="longitude"
-                              className="block w-full flex-1 rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              className="block w-full flex-1 rounded-md border-border bg-input text-input-foreground focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               placeholder="0.000"
                               onChange={(e) => {
                                 setQiblatDegree(parseFloat(e.target.value));
@@ -425,7 +452,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             id="check-surau-qiblat"
                             name="check-surau-qiblat"
                             type="checkbox"
-                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                            className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-600"
                             onChange={(e) => setIsSolatJumaat(e.target.checked)}
                           />
                         </div>
@@ -448,7 +475,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                 <div>
                   <label
                     htmlFor="about"
-                    className="block text-sm font-medium text-gray-700"
+                    className="block text-sm font-medium text-input-foreground"
                   >
                     Direction / guide
                   </label>
@@ -457,7 +484,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       id="about"
                       name="about"
                       rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      className="mt-1 block w-full rounded-md border-border bg-input text-input-foreground shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       defaultValue={""}
                       onChange={(e) => {
                         setBriefDirection(e.target.value);
@@ -509,7 +536,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                             className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${
                               thumbnailIndex === index
                                 ? "border-indigo-500"
-                                : "border-gray-300"
+                                : "border-border"
                             }`}
                             onClick={() =>
                               markThumbnail(imagePreview.id, index)
@@ -553,7 +580,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   </p>
                 ) : null}
               </div>
-              <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
+              <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right dark:bg-gray-800 sm:px-6">
                 <button
                   onClick={(e) => handleSubmit(e)}
                   className=" justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -561,7 +588,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   Submit
                 </button>
                 <div
-                  className="mb-2 cursor-pointer font-light underline hover:text-indigo-500"
+                  className="mb-2 cursor-pointer font-light text-input-foreground underline hover:text-indigo-500"
                   onClick={() => setOpen(false)}
                 >
                   Close
