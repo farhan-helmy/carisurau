@@ -60,8 +60,8 @@ const Filter = () => {
     surauStore.setDistrict(e.id);
   };
   return (
-    <div className="bg-white p-4">
-      <div className="w-full rounded-md border border-b shadow-md">
+    <div className="bg-background p-4">
+      <div className="w-full rounded-md border border-b border-muted shadow-md">
         <div className="items-center space-y-2 px-4 py-5 sm:flex sm:space-x-2 sm:space-y-0 sm:p-6">
           <StateSelect handleNegeriChange={handleNegeriChange} label={false} />
           {surauStore.state ? (
@@ -73,7 +73,10 @@ const Filter = () => {
           ) : null}
 
           <div className="flex items-end justify-end gap-4">
-            <button onClick={redirectToHomePage} className="text-xs underline flex gap-2">
+            <button
+              onClick={redirectToHomePage}
+              className="flex gap-2 text-xs underline"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -128,7 +131,10 @@ const SurauList = () => {
           key={surau.id}
         >
           <Link href={`/${surau.unique_name}`}>
-            <div className="w-full border border-b text-center" key={surau.id}>
+            <div
+              className="w-full border border-b border-muted text-center"
+              key={surau.id}
+            >
               <div className="flex justify-between p-2">
                 <div className="flex flex-col items-start justify-start">
                   <span className="font-semibold">
@@ -141,12 +147,12 @@ const SurauList = () => {
                     {surau?.is_solat_jumaat ? (
                       <Badge color="green" text="Solat Jumaat" />
                     ) : null}
-                    {surau?.is_qiblat_certified && (
+                    {surau?.is_qiblat_certified ? (
                       <Badge color="purple" text="Qiblat Certified" />
-                    )}
+                    ) : null}
                   </div>
                 </div>
-                <div className="max-h-12 overflow-hidden rounded-xl bg-gray-200 object-fill">
+                <div className="max-h-12 overflow-hidden rounded-xl bg-primary object-fill">
                   {surau.images[0]?.file_path ? (
                     <div className="flex h-12 items-center justify-center">
                       <Image

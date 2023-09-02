@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import { api } from "../../utils/api";
 import LoadingSpinner from "./LoadingSpinner";
 import { useEffect } from "react";
+import clsx from "clsx";
+import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles} from '../../styles/selectStyles';
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -26,8 +28,8 @@ const DistrictSelect: React.FC<DistrictSelectProps> = ({
 
   useEffect(() => {
     void refetch();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [choosenState])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [choosenState]);
 
   if (isLoading) return <LoadingSpinner />;
   return (
@@ -35,7 +37,7 @@ const DistrictSelect: React.FC<DistrictSelectProps> = ({
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-3 md:col-span-2">
           {label ? (
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-input-foreground">
               District
             </label>
           ) : null}
@@ -48,6 +50,27 @@ const DistrictSelect: React.FC<DistrictSelectProps> = ({
               onChange={(e) => handleDaerahChange(e)}
               required
               placeholder="District"
+              unstyled
+              classNames={{
+                control: ({ isFocused }) =>
+                  clsx(
+                    isFocused ? controlStyles.focus : controlStyles.nonFocus,
+                    controlStyles.base
+                  ),
+                placeholder: () => placeholderStyles,
+                input: () => inputStyles,
+                singleValue: () => singleValueStyles,
+                indicatorSeparator: () => indicatorSeparatorStyles,
+                dropdownIndicator: () => dropdownIndicatorStyles,
+                menu: () => menuStyles,
+                option: ({ isFocused, isSelected }) =>
+                  clsx(
+                    isFocused && optionStyles.focus,
+                    isSelected && optionStyles.selected,
+                    optionStyles.base
+                  ),
+                noOptionsMessage: () => noOptionsStyles,
+              }}
             />
           </div>
         </div>

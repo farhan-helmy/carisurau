@@ -138,7 +138,7 @@ function CustomUpload({
         )}
       >
         <div className="text-center" {...getRootProps()}>
-          <div className="flex text-sm leading-6 text-gray-600">
+          <div className="flex text-sm leading-6 text-muted-foreground">
             <label
               htmlFor="file-upload"
               className="relative cursor-pointer font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
@@ -149,7 +149,7 @@ function CustomUpload({
             <p className="pl-1">{`or drag and drop`}</p>
           </div>
           <div className="h-[1.25rem]">
-            <p className="text-xs leading-5 text-gray-600">
+            <p className="text-xs leading-5 text-muted-foreground">
               {allowedContentTextLabelGenerator(permittedFileInfo?.config)}
             </p>
           </div>
@@ -191,7 +191,7 @@ function CustomUpload({
             Please press upload button first to upload the files
           </div>
           <div className="mt-2">
-            <ul className="mb-2 rounded-lg border pt-2">
+            <ul className="mb-2 rounded-lg border border-border pt-2">
               {files.map((file: FileWithPath) => (
                 <li
                   id="imagePreviewDiv"
@@ -199,7 +199,7 @@ function CustomUpload({
                   className="m-1 flex items-start justify-between rounded-md p-2"
                 >
                   <div className="ml-2 max-w-[13rem] justify-center overflow-hidden text-xs sm:max-w-none sm:text-sm">
-                    <p className="overflow-hidden text-ellipsis">{file.name}</p>
+                    <p className="overflow-hidden text-ellipsis text-input-foreground">{file.name}</p>
                     <p className="text-slate-500">{sizeConverter(file.size)}</p>
                   </div>
                   <button onClick={() => removeFile(file)} className="sm:pr-4">

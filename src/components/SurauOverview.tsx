@@ -69,7 +69,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               height={300}
               priority
             />
-            <div className="italic text-gray-500">No image</div>
+            <div className="italic text-muted-foreground">No image</div>
           </div>
         ) : (
           <>

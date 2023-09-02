@@ -131,7 +131,7 @@ const SurauReview = () => {
         message="Please sign in to review"
         callbackUrl={`/surau/${surau.data?.unique_name as string}`}
       />
-      <section className="bg-white">
+      <section className="bg-background">
         {/* Hero section */}
         <div className="relative bg-gray-900">
           {/* Decorative image and overlay */}
@@ -156,7 +156,7 @@ const SurauReview = () => {
           <Header />
         </div>
 
-        <div className="py-18 mx-auto max-w-2xl px-4 sm:pb-24 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
+        <div className="py-18 mx-auto max-w-2xl px-4 pt-10 sm:px-6 sm:pb-24 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8">
           <div className="lg:col-span-4">
             {surau.data ? (
               <SurauOverview surau={surau.data} />
@@ -165,34 +165,36 @@ const SurauReview = () => {
             )}
 
             <div className="mt-2 flex flex-row space-x-2">
-              {surau.data?.is_solat_jumaat && (
+              {surau.data?.is_solat_jumaat ? (
                 <Badge color="green" text="Solat Jumaat" />
-              )}
-              {surau.data?.is_qiblat_certified && <Badge color="purple" text="Qiblat Certified" />}
+              ) : null}
+              {surau.data?.is_qiblat_certified ? (
+                <Badge color="purple" text="Qiblat Certified" />
+              ) : null}
             </div>
             <div className="mt-2">
-              <h3 className="text-lg font-medium text-gray-900">Direction</h3>
-              <p className="mt-1 text-sm text-gray-600">
+              <h3 className="text-lg font-medium text-foreground">Direction</h3>
+              <p className="mt-1 text-sm text-muted-foreground">
                 {surau.data?.brief_direction as string}
               </p>
             </div>
             <div className="mt-4">
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-lg font-medium text-foreground">
                 Share your thoughts
               </h3>
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-muted-foreground">
                 If you’ve been / went to this surau, write a review and post
                 some pictures.
               </p>
               <button
                 onClick={() => handleWriteReview()}
-                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white py-2 px-8 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-accent bg-accent py-2 px-8 text-sm font-medium text-accent-foreground hover:bg-accent/80 sm:w-auto lg:w-full"
               >
                 Write a review
               </button>
             </div>
 
-            <h2 className="mt-4 text-2xl font-bold tracking-tight text-gray-900">
+            <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground">
               Reviews
             </h2>
 
@@ -216,7 +218,7 @@ const SurauReview = () => {
                   {rating.data.averageRatingRounded} out of 5 stars
                 </p>
               </div>
-              <p className="ml-2 text-sm text-gray-900">
+              <p className="ml-2 text-sm text-foreground">
                 Based on {rating.data?.ratings.length} reviews
               </p>
             </div>
@@ -228,7 +230,7 @@ const SurauReview = () => {
                 {rating.data?.formattedCounts.map((count) => (
                   <div key={count.rating} className="flex items-center text-sm">
                     <dt className="flex flex-1 items-center">
-                      <p className="w-3 font-medium text-gray-900">
+                      <p className="w-3 font-medium text-foreground">
                         {count.rating}
                         <span className="sr-only"> star reviews</span>
                       </p>
@@ -260,7 +262,7 @@ const SurauReview = () => {
                         </div>
                       </div>
                     </dt>
-                    <dd className="ml-3 w-10 text-right text-sm tabular-nums text-gray-900">
+                    <dd className="ml-3 w-10 text-right text-sm tabular-nums text-primary-foreground">
                       {count.count > 0 ? (
                         <>
                           {Math.round(
@@ -280,7 +282,7 @@ const SurauReview = () => {
             <h3 className="sr-only">Recent reviews</h3>
 
             <div className="flow-root">
-              <div className="max-h-screen divide-y divide-gray-200 overflow-auto">
+              <div className="max-h-screen divide-y divide-muted overflow-auto">
                 {rating.data.ratings.map((review) => (
                   <div key={review.id} className="py-8">
                     <div className="flex items-center">
@@ -294,7 +296,7 @@ const SurauReview = () => {
                         height={12}
                       />
                       <div className="ml-4">
-                        <h4 className="text-sm font-bold text-gray-900">
+                        <h4 className="text-sm font-bold text-primary-foreground">
                           {review.user?.name}
                         </h4>
                         <div className="mt-1 flex items-center">
@@ -318,7 +320,7 @@ const SurauReview = () => {
                     </div>
 
                     <div
-                      className="mt-4 space-y-6 text-base italic text-gray-600"
+                      className="text--600 mt-4 space-y-6 text-base italic"
                       dangerouslySetInnerHTML={{
                         __html: review.review as string,
                       }}

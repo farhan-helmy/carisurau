@@ -96,10 +96,10 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
       <div className="md:grid md:grid-cols-2 md:gap-6">
         <div className="md:col-span-1">
           <div className="px-4 sm:px-0">
-            <h3 className="text-lg font-medium leading-6 text-gray-900">
+            <h3 className="text-lg font-medium leading-6 text-primary-foreground">
               Review
             </h3>
-            <p className="mt-1 text-xs italic text-gray-600">
+            <p className="mt-1 text-xs italic text-muted-foreground">
               Review this {surauName} surau inshaAllah
             </p>
           </div>
@@ -110,11 +110,11 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
               {renderStars()}
             </div>
             {ratingError ? (
-              <p className="text-xs text-red-500 text-center">
+              <p className="text-center text-xs text-red-500">
                 Please select a rating
               </p>
-            ): null}
-            <div className="space-y-6 bg-white px-4 py-5 sm:p-6">
+            ) : null}
+            <div className="space-y-6 bg-background px-4 py-5 sm:p-6">
               <div>
                 <label
                   htmlFor="about"
@@ -125,7 +125,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                     id="about"
                     name="about"
                     rows={3}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border-border bg-input text-input-foreground shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     defaultValue={""}
                     onChange={(e) => {
                       setReview(e.target.value);
@@ -143,7 +143,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                     id="check-image-upload"
                     name="check-image-upload"
                     type="checkbox"
-                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    className="h-4 w-4 rounded border-border text-indigo-600 focus:ring-indigo-600"
                     onChange={(e) => {
                       setCheckImageUpload(e.target.checked);
                     }}
@@ -157,19 +157,19 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
               </div>
               {!imagePreviews && checkImageUpload ? (
                 <UploadButton
-                endpoint="imageUploader"
-                onClientUploadComplete={(res) => {
-                  // Do something with the response
-                  alert("Upload Completed");
-                  if (res) {
-                    void handleUploadThing(res);
-                  }
-                }}
-                onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
-                }}
-              />
+                  endpoint="imageUploader"
+                  onClientUploadComplete={(res) => {
+                    // Do something with the response
+                    alert("Upload Completed");
+                    if (res) {
+                      void handleUploadThing(res);
+                    }
+                  }}
+                  onUploadError={(error: Error) => {
+                    // Do something with the error.
+                    alert(`ERROR! ${error.message}`);
+                  }}
+                />
               ) : null}
               <div className="flex flex-row gap-2">
                 <div className="grid grid-cols-2 gap-2 space-y-2">
@@ -189,7 +189,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right sm:px-6">
+            <div className="flex flex-row items-end justify-end gap-2 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-right sm:px-6">
               <button
                 className="justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 onClick={(e) => handleSubmit(e)}
@@ -197,7 +197,7 @@ const ReviewSurauForm: FC<ReviewSurauFormProps> = ({
                 Submit Review
               </button>
               <div
-                className="mb-2 font-light underline hover:text-indigo-500 cursor-pointer"
+                className="mb-2 cursor-pointer font-light underline hover:text-indigo-500"
                 onClick={() => setOpen(false)}
               >
                 Close

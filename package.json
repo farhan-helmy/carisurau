@@ -49,6 +49,7 @@
     "next": "13.1.6",
     "next-auth": "^4.19.0",
     "next-s3-upload": "^0.3.0",
+    "next-themes": "^0.2.1",
     "nodemailer": "^6.9.3",
     "preview-email": "^3.0.19",
     "prisma-kysely": "^1.5.0",
