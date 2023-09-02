@@ -11,7 +11,6 @@ import Image from "next/image";
 import { api } from "../utils/api";
 import AlertModal from "./shared/AlertModal";
 // You need to import our styles for the button to look right. Best to import in the root /_app.tsx but this is fine
-import "@uploadthing/react/styles.css";
 import StateSelect from "./shared/StateSelect";
 import { generateCombination } from "../utils";
 import DistrictSelect from "./shared/DistrictSelect";
@@ -33,9 +32,8 @@ export type FilePath = {
   is_thumbnail: boolean;
 };
 
-export type UploadThingFilePath = {
-  fileUrl: string;
-  fileKey: string;
+export type FileUrl = {
+  fileUrls: string[];
 };
 
 export type ImagePreviews = {
@@ -62,7 +60,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [longitude, setLongitude] = useState(0);
   const [qiblatDegree, setQiblatDegree] = useState(0);
   const [qiblatInfoError, setQiblatInfoError] = useState("");
-  const [tempImageList, setTempImageList] = useState<UploadThingFilePath[]>([]);
+  const [tempImageList, setTempImageList] = useState<FileUrl>();
   const [thumbnailChecked, setThumbnailChecked] = useState(false);
   const [thumbnailError, setThumbnailError] = useState("");
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
@@ -76,15 +74,15 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
   const addSurau = api.surau.addSurau.useMutation();
 
-  const deleteSurau = api.uploader.deleteFile.useMutation();
-
   useEffect(() => {
-    if (tempImageList.length > 0) {
+    if (!tempImageList?.fileUrls) return;
+
+    if (tempImageList?.fileUrls.length > 0) {
       setFilePath((prev) => {
         const updatedFilePath = [...prev];
-        tempImageList.forEach((image) => {
+        tempImageList?.fileUrls.forEach((image) => {
           updatedFilePath.push({
-            file_path: image.fileUrl,
+            file_path: image,
             is_thumbnail: false,
           });
         });
@@ -93,8 +91,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
       setImagePreviews((prev) => {
         const updatedImagePreviews = [...prev];
-        tempImageList.forEach((image) => {
-          updatedImagePreviews.push({ id: image.fileKey, url: image.fileUrl });
+        tempImageList?.fileUrls.forEach((image) => {
+          updatedImagePreviews.push({ id: image, url: image });
         });
         return updatedImagePreviews;
       });
@@ -137,8 +135,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
     setChoosenDistrict(e.id);
   };
 
-  const handleDeleteImage = async (id: string) => {
-    await deleteSurau.mutateAsync(id);
+  const handleDeleteImage = (id: string) => {
 
     setFilePath((prev) => {
       const updatedFilePath = prev.filter((file) => file.file_path !== id);
@@ -505,15 +502,23 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                   ) : null}
                 </div>
                 <div>
-                  <div className="mb-2 text-center text-xs font-light italic">
-                    Upload image here
-                  </div>
-                  <CustomUpload
-                    uploadedFileList={setTempImageList}
-                    setUploadCompleted={setUploadCompleted}
-                  />
-
-                  {/* This custom uploader return uploaded file on success */}
+                  {uploadCompleted ? (
+                    <p className="text-xs italic text-green-500 text-center">
+                      Upload completed
+                    </p>
+                  ) : (
+                    <>
+                      <div className="mb-2 text-center text-xs font-light italic">
+                        Upload image here
+                      </div>
+                      <CustomUpload
+                        uploadedFileList={setTempImageList}
+                        setUploadCompleted={setUploadCompleted}
+                      />
+                      {/* This custom uploader return uploaded file on success */}
+                    </>
+                  )}
+                  
                 </div>
 
                 <div className="">

@@ -34,6 +34,8 @@ const server = z.object({
 const client = z.object({
   // NEXT_PUBLIC_CLIENTVAR: z.string().min(1),
   // NEXT_PUBLIC_CLOUDFRONT_URL: z.string().url(),
+  NEXT_PUBLIC_S3_UPLOAD_USERNAME: z.string().min(1),
+  NEXT_PUBLIC_S3_UPLOAD_PASSWORD: z.string().min(1),
 });
 
 /**
@@ -57,6 +59,8 @@ const processEnv = {
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+  NEXT_PUBLIC_S3_UPLOAD_USERNAME: process.env.NEXT_PUBLIC_S3_UPLOAD_USERNAME,
+  NEXT_PUBLIC_S3_UPLOAD_PASSWORD: process.env.NEXT_PUBLIC_S3_UPLOAD_PASSWORD,
 };
 
 // Don't touch the part below

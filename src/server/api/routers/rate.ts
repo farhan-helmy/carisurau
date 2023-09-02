@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { Rating } from "@prisma/client"
 
 export const rateRouter = createTRPCRouter({
   addRating: publicProcedure
@@ -72,7 +71,13 @@ export const rateRouter = createTRPCRouter({
           surau_id: input.surau_id,
         },
         include: {
-          user: true,
+          user: {
+            select: {
+              name: true,
+              id: true,
+              image: true,
+            }
+          },
         },
       });
       const totalRating = ratings.reduce((acc, curr) => acc + curr.rating, 0);

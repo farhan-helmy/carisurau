@@ -176,12 +176,12 @@ export default function Index() {
           {/* Category section */}
           <section
             aria-labelledby="category-heading"
-            className="pt-4 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8"
+            className="pt-4 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8 md:mb-10"
           >
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
               <h2
                 id="category-heading"
-                className="text-2xl font-bold tracking-tight text-foreground"
+                className="text-2xl font-bold tracking-tight text-foreground mb-10"
               >
                 Recently added
               </h2>
