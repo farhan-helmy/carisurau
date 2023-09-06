@@ -399,4 +399,34 @@ export const surauRouter = createTRPCRouter({
 
     return suraulocationbased;
   }),
+  addPhotos: publicProcedure
+    .input(
+      z.object({
+        unique_name: z.string(),
+        image: z.array(
+          z.object({
+            file_path: z.string(),
+            is_thumbnail: z.boolean().optional(),
+          })
+        ),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.prisma.surau.update({
+        where: {
+          unique_name: input.unique_name,
+        },
+        data: {
+          images: {
+            createMany: {
+              data: input.image.map((image) => ({
+                file_path: image.file_path,
+                is_thumbnail: !!image.is_thumbnail,
+              })),
+            },
+          },
+        },
+      });
+    }
+    ),
 });

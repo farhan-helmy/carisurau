@@ -1,10 +1,17 @@
+"use client";
 import type { SurauPhoto } from "@prisma/client";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import type { FC } from "react";
 import { capitalizeFirstLetter } from "../utils";
 import { useEffect, useState } from "react";
 import ImageModal from "./shared/ImageModal";
+import Modal from "./shared/Modal";
+import Link from "next/link";
+import CustomUpload from "./shared/CustomUpload";
+import { api } from "../utils/api";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
 type Surau = {
   id: string;
@@ -16,12 +23,16 @@ type SurauOverviewProps = {
   surau?: Surau | null;
 };
 
+type FileUrl = {
+  fileUrls: string[];
+};
+
 const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
-  const router = useRouter();
   const [imageHighlighted, setImageHighlighted] = useState<
     SurauPhoto | null | undefined
   >(null);
   const [showCarousel, setShowCarousel] = useState<boolean>(false);
+  const [openAddMorePhotos, setOpenAddMorePhotos] = useState<boolean>(false);
 
   useEffect(() => {
     if (surau?.images.length) {
@@ -37,9 +48,13 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
   return (
     <>
       <div className="mb-4 flex flex-col">
-        <button
+        <AddMorePhotos
+          openAddMorePhotos={openAddMorePhotos}
+          setOpenAddMorePhotos={setOpenAddMorePhotos}
+        />
+        <Link
           className="flex items-center gap-2 pb-2 text-left text-indigo-500 hover:underline"
-          onClick={() => void router.push("/")}
+          href="/"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -56,9 +71,11 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
             />
           </svg>
           Go back
-        </button>
-        <div className="mb-2 text-left text-2xl">
-          {capitalizeFirstLetter(surau?.name as string)}
+        </Link>
+        <div className="mb-2 flex justify-between text-left text-xl">
+          <div className="truncate text-ellipsis">
+            {capitalizeFirstLetter(surau?.name as string)}
+          </div>
         </div>
         {surau?.images.length === 0 ? (
           <div className="flex flex-col items-center justify-center">
@@ -70,6 +87,12 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
               priority
             />
             <div className="italic text-muted-foreground">No image</div>
+            <button
+                className="mt-2 rounded-md bg-indigo-500 px-2 py-1 text-xs text-white hover:bg-indigo-600"
+                onClick={() => setOpenAddMorePhotos(true)}
+              >
+                Add image
+              </button>
           </div>
         ) : (
           <>
@@ -113,10 +136,134 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                 />
               ))}
             </div>
+            <div>
+              <button
+                className="mt-2 rounded-md bg-indigo-500 px-2 py-1 text-xs text-white hover:bg-indigo-600"
+                onClick={() => setOpenAddMorePhotos(true)}
+              >
+                Add more photos
+              </button>
+            </div>
           </>
         )}
       </div>
     </>
+  );
+};
+
+type AddMorePhotosProps = {
+  openAddMorePhotos: boolean;
+  setOpenAddMorePhotos: (open: boolean) => void;
+};
+
+export type FilePath = {
+  file_path: string;
+  is_thumbnail: boolean;
+};
+
+const AddMorePhotos = ({
+  openAddMorePhotos,
+  setOpenAddMorePhotos,
+}: AddMorePhotosProps) => {
+  const [imageList, setImageList] = useState<FileUrl>();
+  const [filePath, setFilePath] = useState<FilePath[]>([]);
+  const [uploadCompleted, setUploadCompleted] = useState<boolean>(false);
+
+  const router = useRouter();
+  const uniqueName = router.query["id"];
+
+  const addPhotos = api.surau.addPhotos.useMutation();
+
+  useEffect(() => {
+    setFilePath((prev) => {
+      const updatedFilePath = [...prev];
+      imageList?.fileUrls.forEach((image) => {
+        updatedFilePath.push({
+          file_path: image,
+          is_thumbnail: false,
+        });
+      });
+      return updatedFilePath;
+    });
+
+    if (uploadCompleted) {
+      toast.success("Upload completed");
+    }
+  }, [imageList, uploadCompleted]);
+
+  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!filePath) return;
+
+    if (!uploadCompleted) {
+      toast.warning("Please press upload files first!");
+      return;
+    }
+
+    addPhotos
+      .mutateAsync({
+        unique_name: uniqueName as string,
+        image: filePath,
+      })
+      .then(() => {
+        toast.success("Photos added successfully");
+        setOpenAddMorePhotos(false);
+      })
+      .catch((err) => {
+        toast.error("Something went wrong");
+        console.error(err);
+      });
+  };
+
+  return (
+    <Modal open={openAddMorePhotos} setOpen={setOpenAddMorePhotos}>
+      <div className="md:grid md:grid-cols-2 md:gap-6">
+        <div className="md:col-span-1">
+          <div className="px-4 sm:px-0">
+            <h3 className="text-lg font-medium leading-6 text-primary-foreground">
+              Upload more photos
+            </h3>
+            <p className="mt-1 text-xs italic text-muted-foreground">
+              Help to give a better view of this surau, upload more photos
+            </p>
+          </div>
+        </div>
+        <div className="mt-4 md:col-span-2 md:mt-0">
+          <div className="shadow sm:overflow-hidden sm:rounded-md">
+            {uploadCompleted ? (
+              <div className="flex flex-col items-center justify-center">
+                <div className="text-center font-bold">Upload completed!</div>
+                <CheckCircleIcon className="h-6 w-6 text-center text-green-500" />
+                <div className="text-xs font-light italic">
+                  Please press submit button
+                </div>
+              </div>
+            ) : (
+              <CustomUpload
+                uploadedFileList={setImageList}
+                setUploadCompleted={setUploadCompleted}
+              />
+            )}
+
+            <div className="mt-4 flex flex-row items-end justify-end gap-2 bg-gray-50 px-4 py-3 text-right dark:bg-gray-800 sm:px-6">
+              <button
+                className="justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={(e) => handleSubmit(e)}
+              >
+                Submit
+              </button>
+              <div
+                className="mb-2 cursor-pointer font-light underline hover:text-indigo-500"
+                onClick={() => setOpenAddMorePhotos(false)}
+              >
+                Close
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Modal>
   );
 };
 
