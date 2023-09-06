@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { api } from "../utils/api";
 import Badge from "./shared/Badge";
+import Link from "next/link";
 
 const SurauList = ({
   type,
@@ -18,13 +19,6 @@ const SurauList = ({
     state: userState,
   });
 
-  const router = useRouter();
-
-  const handleRouterPush = (e: React.FormEvent, surauName: string) => {
-    e.preventDefault();
-    void router.push(`/${surauName}`);
-  };
-
   if (type === "new") {
     const pendingApprovalList = api.surau.getPendingApproval.useQuery();
 
@@ -35,10 +29,10 @@ const SurauList = ({
 
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
             {pendingApprovalList.data?.map((surau) => (
-              <a key={surau.id} href={surau.name} className="group">
-                <div
+              <div key={surau.id} href={surau.name} className="group">
+                <Link
                   className=" w-full overflow-hidden rounded-lg bg-primary xl:aspect-w-1 xl:aspect-h-1"
-                  onClick={(e) => handleRouterPush(e, surau.name)}
+                  href={`/${surau.unique_name}`}
                 >
                   {surau.images[0]?.file_path ? (
                     <Image
@@ -51,14 +45,14 @@ const SurauList = ({
                   ) : (
                     <></>
                   )}
-                </div>
+                </Link>
                 <h3 className="mt-4 text-sm text-gray-700">
                   {surau.district.name}
                 </h3>
                 <p className="mt-1 text-lg font-medium text-foreground">
                   {surau.name}
                 </p>
-              </a>
+              </div>
             ))}
           </div>
         </div>
@@ -78,10 +72,10 @@ const SurauList = ({
             <div>Error: {latestAddedSurau.error.message}</div>
           ) : (
             latestAddedSurau.data?.map((surau) => (
-              <a key={surau.id} href="#" className="group flex flex-col">
-                <div
+              <div key={surau.id} href="#" className="group flex flex-col">
+                <Link
                   className="h-full overflow-hidden rounded-xl bg-primary object-fill"
-                  onClick={(e) => handleRouterPush(e, surau.unique_name)}
+                  href={`/${surau.unique_name}`}
                 >
                   {surau.images.some((image) => image.is_thumbnail) ? (
                     // Display the image marked as thumbnail
@@ -117,7 +111,7 @@ const SurauList = ({
                       className="h-full w-full object-cover group-hover:opacity-75"
                     />
                   )}
-                </div>
+                </Link>
                 {/* <h3 className="mt-4 text-sm text-gray-700">{surau.location}</h3> */}
                 <div className="mt-1 flex justify-between">
                   <p className="truncate text-start text-lg font-medium text-foreground">
@@ -132,7 +126,7 @@ const SurauList = ({
                     <Badge color="purple" text="Qiblat Certified" />
                   )}
                 </div>
-              </a>
+              </div>
             ))
           )}
         </div>
