@@ -173,6 +173,9 @@ const AddMorePhotos = ({
   const uniqueName = router.query["id"];
 
   const addPhotos = api.surau.addPhotos.useMutation();
+  const {refetch} = api.surau.getSurau.useQuery({
+    unique_name: uniqueName ? (uniqueName as string) : "",
+  });
 
   useEffect(() => {
     setFilePath((prev) => {
@@ -208,6 +211,7 @@ const AddMorePhotos = ({
       })
       .then(() => {
         toast.success("Photos added successfully");
+        void refetch();
         setOpenAddMorePhotos(false);
       })
       .catch((err) => {
