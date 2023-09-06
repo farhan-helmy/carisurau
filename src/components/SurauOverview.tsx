@@ -188,11 +188,7 @@ const AddMorePhotos = ({
       });
       return updatedFilePath;
     });
-
-    if (uploadCompleted) {
-      toast.success("Upload completed");
-    }
-  }, [imageList, uploadCompleted]);
+  }, [imageList]);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
