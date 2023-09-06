@@ -29,7 +29,7 @@ const SurauList = ({
 
           <div className="grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-x-8">
             {pendingApprovalList.data?.map((surau) => (
-              <div key={surau.id} href={surau.name} className="group">
+              <div key={surau.id} className="group">
                 <Link
                   className=" w-full overflow-hidden rounded-lg bg-primary xl:aspect-w-1 xl:aspect-h-1"
                   href={`/${surau.unique_name}`}
@@ -72,7 +72,7 @@ const SurauList = ({
             <div>Error: {latestAddedSurau.error.message}</div>
           ) : (
             latestAddedSurau.data?.map((surau) => (
-              <div key={surau.id} href="#" className="group flex flex-col">
+              <div key={surau.id} className="group flex flex-col">
                 <Link
                   className="h-full overflow-hidden rounded-xl bg-primary object-fill"
                   href={`/${surau.unique_name}`}
