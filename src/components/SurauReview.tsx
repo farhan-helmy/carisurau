@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-"use client"
 import { StarIcon } from "@heroicons/react/20/solid";
 import { useSession } from "next-auth/react";
 import Head from "next/head";

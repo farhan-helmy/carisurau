@@ -1,4 +1,3 @@
-"use client";
 import type { SurauPhoto } from "@prisma/client";
 import Image from "next/image";
 import type { FC } from "react";
@@ -88,11 +87,11 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
             />
             <div className="italic text-muted-foreground">No image</div>
             <button
-                className="mt-2 rounded-md bg-indigo-500 px-2 py-1 text-xs text-white hover:bg-indigo-600"
-                onClick={() => setOpenAddMorePhotos(true)}
-              >
-                Add image
-              </button>
+              className="mt-2 rounded-md bg-indigo-500 px-2 py-1 text-xs text-white hover:bg-indigo-600"
+              onClick={() => setOpenAddMorePhotos(true)}
+            >
+              Add image
+            </button>
           </div>
         ) : (
           <>
@@ -173,7 +172,7 @@ const AddMorePhotos = ({
   const uniqueName = router.query["id"];
 
   const addPhotos = api.surau.addPhotos.useMutation();
-  const {refetch} = api.surau.getSurau.useQuery({
+  const { refetch } = api.surau.getSurau.useQuery({
     unique_name: uniqueName ? (uniqueName as string) : "",
   });
 
@@ -186,6 +185,7 @@ const AddMorePhotos = ({
           is_thumbnail: false,
         });
       });
+
       return updatedFilePath;
     });
   }, [imageList]);
@@ -196,7 +196,7 @@ const AddMorePhotos = ({
     if (!filePath) return;
 
     if (!uploadCompleted) {
-      console.error("Upload not completed");
+      toast.warning("Please press upload files first!");
       return;
     }
 
@@ -206,11 +206,13 @@ const AddMorePhotos = ({
         image: filePath,
       })
       .then(() => {
+        toast.success("Photos added successfully");
         void refetch();
+        setUploadCompleted(false);
         setOpenAddMorePhotos(false);
       })
       .catch((err) => {
-        console.log(err);
+        toast.error("Something went wrong");
         console.error(err);
       });
   };
