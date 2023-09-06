@@ -161,6 +161,7 @@ const SurauList = () => {
                         className="h-12 w-12 object-cover group-hover:opacity-75"
                         width={25}
                         height={25}
+                        
                       />
                     </div>
                   ) : (
