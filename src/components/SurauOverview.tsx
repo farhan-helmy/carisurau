@@ -200,7 +200,7 @@ const AddMorePhotos = ({
     if (!filePath) return;
 
     if (!uploadCompleted) {
-      toast.warning("Please press upload files first!");
+      console.error("Upload not completed");
       return;
     }
 
@@ -210,12 +210,11 @@ const AddMorePhotos = ({
         image: filePath,
       })
       .then(() => {
-        toast.success("Photos added successfully");
         void refetch();
         setOpenAddMorePhotos(false);
       })
       .catch((err) => {
-        toast.error("Something went wrong");
+        console.log(err);
         console.error(err);
       });
   };

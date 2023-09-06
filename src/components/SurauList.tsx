@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { api } from "../utils/api";
 import Badge from "./shared/Badge";
 import Link from "next/link";
