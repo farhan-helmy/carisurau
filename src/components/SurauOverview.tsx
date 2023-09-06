@@ -38,7 +38,7 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
     <>
       <div className="mb-4 flex flex-col">
         <button
-          className="text-left text-indigo-500 hover:underline flex items-center gap-2 pb-2"
+          className="flex items-center gap-2 pb-2 text-left text-indigo-500 hover:underline"
           onClick={() => void router.push("/")}
         >
           <svg
@@ -103,6 +103,10 @@ const SurauOverview: FC<SurauOverviewProps> = ({ surau }) => {
                   src={image.file_path}
                   key={image.id}
                   alt={image.id}
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "/assets/background/carisuraudefault.png";
+                  }}
                   className="h-24 min-w-[9rem] max-w-[9rem] rounded-md object-cover hover:cursor-pointer group-hover:opacity-75"
                   onClick={() => setImageHighlighted(image)}
                   width={400}
