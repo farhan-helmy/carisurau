@@ -6,7 +6,7 @@ import { clusterCountLayer, clusterLayer, unclusteredPointLayer } from './layers
 import { api } from "../../utils/api";
 import { useEffect, useRef, useState } from 'react';
 
-const MAPBOX_TOKEN = '';
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const ZOOM = 12;
 
 export default function Mapbox() {
