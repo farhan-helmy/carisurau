@@ -227,6 +227,17 @@ export const surauRouter = createTRPCRouter({
       return undefined;
 
     }),
+  getCoordinates: publicProcedure.query(async ({ ctx }) => {
+    return ctx.prisma.surau.findMany({
+      where: {
+        is_approved: true,
+        is_qiblat_certified: true,
+      },
+      include: {
+        qiblat: true,
+      },
+    });
+  }),
   getState: publicProcedure.query(async ({ ctx }) => {
     return ctx.prisma.state.findMany({
       include: {
