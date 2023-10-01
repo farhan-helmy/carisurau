@@ -1,13 +1,25 @@
+import { api } from "../../utils/api";
+import { capitalizeFirstLetter } from "../../utils";
+import Link from "next/link";
 import Image from "next/image";
 import 'mapbox-gl/dist/mapbox-gl.css';
+import Badge from "../../components/shared/Badge";
 import Map, { MapRef, Popup, Source, Layer, FullscreenControl, NavigationControl, GeolocateControl, GeoJSONSource } from 'react-map-gl';
 import type { FeatureCollection } from 'geojson';
 import { clusterCountLayer, clusterLayer, unclusteredPointLayer } from './layers';
-import { api } from "../../utils/api";
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const ZOOM = 12;
+type popupInfoType = { 
+  name: string;
+  unique_name: string;
+  is_qiblat_certified: boolean;
+  is_solat_jumaat: boolean;
+  file_path: string;
+  longitude: number;
+  latitude: number
+};
 
 export default function Mapbox() {
   const { data, isLoading } = api.surau.getCoordinates.useQuery();
@@ -15,7 +27,7 @@ export default function Mapbox() {
   const geojson : FeatureCollection = {
     type: 'FeatureCollection',
     features: [
-      {type: 'Feature', geometry: {type: 'Point', coordinates: [100.9758, 4.2205]},properties:{ name:'surau lorem ipsum'}},
+      // {type: 'Feature', geometry: {type: 'Point', coordinates: [101.648000, 2.932444]},properties:{ name:'Masjid Raja Haji Fi Sabilillah', unique_name:'lorem-ipsum', is_qiblat_certified:false, is_solat_jumaat:true, file_path:'/assets/background/carisurau1.jpeg'  }},
     ],
   };
   
@@ -26,22 +38,22 @@ export default function Mapbox() {
       geometry: {
         type: 'Point', 
         coordinates: [
-          surau.qiblat[0]?.longitude, 
-          surau.qiblat[0]?.latitude
+          surau.qiblat[0]?.longitude as number, 
+          surau.qiblat[0]?.latitude as number
         ]
       },
       properties:{
-        name:surau.name
+        name:surau.name,
+        unique_name:surau.unique_name,
+        is_qiblat_certified:surau.is_qiblat_certified,
+        is_solat_jumaat:surau.is_solat_jumaat,
+        image:surau.images[0]?.file_path,
       }
     })    
   })
   
   const mapRef = useRef<MapRef>(null);
-  const [popupInfo, setPopupInfo] = useState<{ name: string; longitude: number; latitude: number } | null>(null);
-  useEffect(() => {
-    console.log("popupInfo changed:", popupInfo);
-  }, [popupInfo]);
-  
+  const [popupInfo, setPopupInfo] = useState<popupInfoType | null>(null);
   const [viewState, setViewState] = useState({
     longitude: 101.6958,
     latitude: 3.1466,
@@ -62,7 +74,7 @@ export default function Mapbox() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -42%)',
-            height: '75%',
+            height: '65%',
             width: '80%',
             boxShadow: 'rgb(38, 57, 77) 0px 20px 30px -10px',
             border: '1px solid #333',
@@ -91,7 +103,7 @@ export default function Mapbox() {
           });
         }else if(event.features && feature && (feature.layer.id === 'unclustered-point')){
           event.originalEvent.stopPropagation();
-          if (!popupInfo) {
+          if (!popupInfo && feature.properties) {
             
             if(mapRef.current?.getZoom() < ZOOM){
               mapRef.current?.flyTo({
@@ -102,6 +114,10 @@ export default function Mapbox() {
             }
             setPopupInfo({
               name: feature.properties.name,
+              unique_name: feature.properties.unique_name,
+              is_qiblat_certified: feature.properties.is_qiblat_certified,
+              is_solat_jumaat: feature.properties.is_solat_jumaat,
+              file_path: feature.properties.file_path,
               latitude: feature.geometry.coordinates[1],
               longitude: feature.geometry.coordinates[0],
             });
@@ -119,21 +135,39 @@ export default function Mapbox() {
       {popupInfo && (
           <Popup
             anchor="top-right"
+            maxWidth="300px"
             longitude={Number(popupInfo.longitude)}
             latitude={Number(popupInfo.latitude)}
             onClose={() => setPopupInfo(null)}
           >
-            <p>{`${popupInfo.name}`}</p>
-            <div>              
-            { popupInfo.image ? (<img width="auto" height='20' src={popupInfo.image} />) : (<Image
+            <div className="flex justify-between">
+              <Link
+                className=""
+                href={`/${popupInfo.unique_name}`}
+              >
+                <p className="text-base lg:text-lg">{capitalizeFirstLetter(popupInfo?.name as string)}</p>
+              </Link>
+            </div>
+            
+            <div className="flex justify-center items-center">              
+            { popupInfo.file_path ? (<img width="150" height='20' src={popupInfo.file_path} />) : (
+            <Image
               src="/assets/background/carisuraudefault.png"
               alt="logoratemysurau"
               width={150}
               height={20}
               priority
-            />) }
+            />
+            ) }
             </div>
-            
+            <div className="mt-2 flex flex-row justify-center space-x-2">
+              {popupInfo.is_solat_jumaat ? (
+                <Badge color="green" text="Solat Jumaat" />
+              ) : null}
+              {popupInfo.is_qiblat_certified ? (
+                <Badge color="purple" text="Qiblat Certified" />
+              ) : null}
+            </div>
           </Popup>
       )}
       <Source

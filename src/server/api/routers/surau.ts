@@ -232,9 +232,15 @@ export const surauRouter = createTRPCRouter({
       where: {
         is_approved: true,
         is_qiblat_certified: true,
+        images: {
+          every : {
+            is_thumbnail: false
+          }
+        }
       },
       include: {
         qiblat: true,
+        images: true,
       },
     });
   }),
