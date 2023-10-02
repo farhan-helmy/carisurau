@@ -42,7 +42,7 @@ jobs:
         uses: aws-actions/aws-secretsmanager-get-secrets@v1
         with:
           secret-ids: |
-            carisuraustaging
+            carisurauprod
       - name: Cache modules
         uses: actions/cache@v3
         id: yarn-cache

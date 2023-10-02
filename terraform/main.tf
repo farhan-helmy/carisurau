@@ -6,12 +6,27 @@ terraform {
     }
   }
 
+  backend "s3" {
+    bucket  = "carisuraustagingtfbackend"
+    key     = "terraform.tfstate" 
+    region  = "ap-southeast-1" 
+    profile = "mfarhanz"
+    encrypt = true
+  }
+
   required_version = ">= 1.2.0"
 }
 
 provider "aws" {
-  region     = "ap-southeast-1"
-  profile    = "mfarhanz"
+  region  = "ap-southeast-1"
+  profile = "mfarhanz"
+
+  default_tags {
+    tags = {
+      ManagedBy   = "Terraform"
+      Environment = "staging"
+    }
+  }
 }
 
 data "aws_availability_zones" "available" {}
@@ -26,6 +41,26 @@ module "vpc" {
   public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
   enable_dns_hostnames = true
   enable_dns_support   = true
+}
+
+resource "aws_s3_bucket" "carisuraustagingtfbackend" {
+  bucket = "carisuraustagingtfbackend"
+}
+
+resource "aws_s3_bucket_versioning" "versioning_terraform_state" {
+  bucket = aws_s3_bucket.carisuraustagingtfbackend.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_public_access_block" "terraform_state" {
+  bucket = aws_s3_bucket.carisuraustagingtfbackend.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
 }
 
 resource "aws_db_subnet_group" "carisuraustaging" {
