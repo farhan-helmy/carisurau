@@ -354,10 +354,7 @@ const SurauReview = () => {
                     </div>
 
                     <div
-                      className="text--600 mt-4 space-y-6 text-base italic"
-                      dangerouslySetInnerHTML={{
-                        __html: review.review as string,
-                      }}
+                      className="text--600 mt-4 space-y-6 text-base italic whitespace-pre-wrap"
                     />
                     <div className="space-x-2">
                       {/* {review.images.map((image) => (
