@@ -36,6 +36,7 @@ const client = z.object({
   // NEXT_PUBLIC_CLOUDFRONT_URL: z.string().url(),
   NEXT_PUBLIC_S3_UPLOAD_USERNAME: z.string().min(1),
   NEXT_PUBLIC_S3_UPLOAD_PASSWORD: z.string().min(1),
+  NEXT_PUBLIC_MAPBOX_TOKEN: z.string().min(1),
 });
 
 /**
@@ -61,6 +62,7 @@ const processEnv = {
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   NEXT_PUBLIC_S3_UPLOAD_USERNAME: process.env.NEXT_PUBLIC_S3_UPLOAD_USERNAME,
   NEXT_PUBLIC_S3_UPLOAD_PASSWORD: process.env.NEXT_PUBLIC_S3_UPLOAD_PASSWORD,
+  NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN
 };
 
 // Don't touch the part below
