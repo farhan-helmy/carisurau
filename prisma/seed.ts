@@ -15,7 +15,7 @@ const clearDb = async () => {
 }
 
 const seedState = async () => {
-    const res = await fetch("https://jianliew.me/malaysia-api/state/v1/all.json")
+    const res = await fetch("https://jian.sh/malaysia-api/state/v1/all.json")
     const states: StateRes[] = await res.json()
 
     for (const state of states) {
@@ -32,7 +32,7 @@ const seedDistrict = async () => {
     const states = await prisma.state.findMany()
     for (const state of states) {
         if (state.name === "Labuan") return
-        const res = await fetch(`https://jianliew.me/malaysia-api/state/v1/${state.name.toLowerCase().replace(" ", "_")}.json`)
+        const res = await fetch(`https://jian.sh/malaysia-api/state/v1/${state.name.toLowerCase().replace(" ", "_")}.json`)
         const district: DistrictRes = await res.json()
         for (const districtName of district.administrative_districts) {
             await prisma.district.create({
