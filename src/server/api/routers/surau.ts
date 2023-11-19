@@ -1,9 +1,7 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { sendApprovalMail } from "../../services/generate-surau-verification";
-import type { Surau } from "../../../../prisma/client";
-import {sortByHavingImage} from "../../../utils/sorter/sortByHavingImage";
+import { sortByHavingImage } from "../../../utils/sorter/sortByHavingImage";
 
 export const surauRouter = createTRPCRouter({
   addSurau: publicProcedure
@@ -12,8 +10,8 @@ export const surauRouter = createTRPCRouter({
         name: z.string(),
         unique_name: z.string(),
         brief_direction: z.string(),
-        state_id: z.string(),
-        district_id: z.string(),
+        negeri: z.string(),
+        daerah: z.string(),
         mall_id: z.string().optional(),
         image: z.array(
           z.object({
@@ -31,7 +29,7 @@ export const surauRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      let surau: Surau;
+      let surau;
 
       const data = {
         name: input.name,
@@ -39,6 +37,8 @@ export const surauRouter = createTRPCRouter({
         unique_name: input.unique_name,
         is_qiblat_certified: input.is_qiblat_certified,
         is_solat_jumaat: input.is_solat_jumaat,
+        negeri: input.negeri,
+        daerah: input.daerah,
         images: {
           createMany: {
             data: input.image.map((image) => ({
@@ -52,16 +52,6 @@ export const surauRouter = createTRPCRouter({
             id: ctx.session?.user.id,
           },
         },
-        state: {
-          connect: {
-            id: input.state_id,
-          },
-        },
-        district: {
-          connect: {
-            id: input.district_id,
-          },
-        },
         qiblat: {
           create: {
             latitude: input.qiblat.latitude,
@@ -72,51 +62,51 @@ export const surauRouter = createTRPCRouter({
       };
 
       if (input.mall_id) {
-        surau = await ctx.prisma.surau.create({
-          data: {
-            name: input.name,
-            brief_direction: input.brief_direction,
-            unique_name: input.unique_name,
-            is_qiblat_certified: input.is_qiblat_certified,
-            is_solat_jumaat: input.is_solat_jumaat,
-            images: {
-              createMany: {
-                data: input.image.map((image) => ({
-                  file_path: image.file_path,
-                  is_thumbnail: !!image.is_thumbnail,
-                })),
+        try {
+          surau = await ctx.prisma.surau.create({
+            data: {
+              name: input.name,
+              brief_direction: input.brief_direction,
+              unique_name: input.unique_name,
+              is_qiblat_certified: input.is_qiblat_certified,
+              is_solat_jumaat: input.is_solat_jumaat,
+              negeri: input.negeri,
+              daerah: input.daerah,
+              images: {
+                createMany: {
+                  data: input.image.map((image) => ({
+                    file_path: image.file_path,
+                    is_thumbnail: !!image.is_thumbnail,
+                  })),
+                },
+              },
+              user: {
+                connect: {
+                  id: ctx.session?.user.id,
+                },
+              },
+              mall: {
+                connect: {
+                  id: input.mall_id,
+                },
               },
             },
-            user: {
-              connect: {
-                id: ctx.session?.user.id,
-              },
-            },
-            state: {
-              connect: {
-                id: input.state_id,
-              },
-            },
-            district: {
-              connect: {
-                id: input.district_id,
-              },
-            },
-            mall: {
-              connect: {
-                id: input.mall_id,
-              },
-            },
-          },
-        });
+          });
+        } catch (err) {
+          console.error(err)
+        }
+
       } else {
-        surau = await ctx.prisma.surau.create({
-          data: data,
-        });
+        try {
+          surau = await ctx.prisma.surau.create({
+            data: data,
+          });
+        } catch (err) {
+          console.error(err)
+        }
+
       }
-
-      await sendApprovalMail(surau.id);
-
+      // await sendApprovalMail(surau.id);
       return surau;
     }),
   getSurau: publicProcedure
@@ -312,93 +302,93 @@ export const surauRouter = createTRPCRouter({
     });
   }),
   getLatestAddedSurau: publicProcedure
-  .input(z.object({ district: z.string().optional().optional(), state: z.string().optional() }))
-  .query(async ({ ctx, input }) => {
-    const maxtake=8; //max number of displayed surau
+    .input(z.object({ district: z.string().optional().optional(), state: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const maxtake = 8; //max number of displayed surau
 
-    const surauInDistrict = await ctx.prisma.surau.findMany({ 
-      where: {
-        is_approved: false,
-        district: {
-          name: input.district,
+      const surauInDistrict = await ctx.prisma.surau.findMany({
+        where: {
+          is_approved: false,
+          district: {
+            name: input.district,
+          },
+          state: {
+            name: input.state
+          },
         },
-        state: { 
-          name: input.state 
+        orderBy: {
+          images: {
+            _count: 'desc',
+          },
         },
-      },
-      orderBy: {
-        images: {
-          _count: 'desc',
+        include: {
+          state: true,
+          district: true,
+          mall: true,
+          images: true,
         },
-      },
-      include: {
-        state: true,
-        district: true,
-        mall: true,
-        images: true,
-      },
-      take: maxtake,
-    });
+        take: maxtake,
+      });
 
-    const surauInStateButDistrict = await ctx.prisma.surau.findMany({ 
-      where: {
-        is_approved: true,
-        district: {
-          name:{
-            not : input.district,
-          }, 
+      const surauInStateButDistrict = await ctx.prisma.surau.findMany({
+        where: {
+          is_approved: true,
+          district: {
+            name: {
+              not: input.district,
+            },
+          },
+          state: {
+            name: input.state
+          },
         },
-        state: { 
-            name: input.state 
+        orderBy: {
+          images: {
+            _count: 'desc',
+          },
         },
-      },
-      orderBy: {
-        images: {
-          _count: 'desc',
+        include: {
+          state: true,
+          district: true,
+          mall: true,
+          images: true,
         },
-      },
-      include: {
-        state: true,
-        district: true,
-        mall: true,
-        images: true,
-      },
-      take: maxtake,
-    });
+        take: maxtake,
+      });
 
-    const allOtherSurau = await ctx.prisma.surau.findMany({
-      where: {
-        is_approved: true,
-        district: {
-          name: {
-            not: input.district,
-          }, 
-        },  
-        state: { 
-          name: { 
-            not: input.state
-          }, 
-        }, 
-      },
-      orderBy: {
-        images: {
-          _count: 'desc',
+      const allOtherSurau = await ctx.prisma.surau.findMany({
+        where: {
+          is_approved: true,
+          district: {
+            name: {
+              not: input.district,
+            },
+          },
+          state: {
+            name: {
+              not: input.state
+            },
+          },
         },
-      },
-      include: {
-        state: true,
-        district: true,
-        mall: true,
-        images: true,
-      },
-      take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
-    });
-    const suraulocationbased = [
-      ...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau
-    ].sort(sortByHavingImage);
+        orderBy: {
+          images: {
+            _count: 'desc',
+          },
+        },
+        include: {
+          state: true,
+          district: true,
+          mall: true,
+          images: true,
+        },
+        take: maxtake - surauInDistrict.length - surauInStateButDistrict.length,
+      });
+      const suraulocationbased = [
+        ...surauInDistrict, ...surauInStateButDistrict, ...allOtherSurau
+      ].sort(sortByHavingImage);
 
-    return suraulocationbased;
-  }),
+      return suraulocationbased;
+    }),
   addPhotos: publicProcedure
     .input(
       z.object({

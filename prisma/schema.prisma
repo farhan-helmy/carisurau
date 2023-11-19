@@ -30,12 +30,14 @@ model Surau {
     is_approved_at      DateTime?
     created_at          DateTime     @default(now())
     updated_at          DateTime     @updatedAt
+    negeri              String
+    daerah              String
     images              SurauPhoto[]
     ratings             Rating[]
-    state_id            String
-    state               State        @relation(fields: [state_id], references: [id], onDelete: Cascade)
-    district_id         String
-    district            District     @relation(fields: [district_id], references: [id], onDelete: Cascade)
+    state_id            String?      
+    state               State?       @relation(fields: [state_id], references: [id], onDelete: Cascade)
+    district_id         String?      
+    district            District?    @relation(fields: [district_id], references: [id], onDelete: Cascade)
     mall_id             String?
     mall                Mall?        @relation(fields: [mall_id], references: [id], onDelete: Cascade)
     is_qiblat_certified Boolean      @default(false)
