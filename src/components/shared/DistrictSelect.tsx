@@ -1,55 +1,58 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import dynamic from "next/dynamic";
-import { api } from "../../utils/api";
-import LoadingSpinner from "./LoadingSpinner";
-import { useEffect } from "react";
+"use client"
 import clsx from "clsx";
-import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles} from '../../styles/selectStyles';
-
-const Select = dynamic(() => import("react-select"), {
-  ssr: true,
-});
+import { controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles } from '../../styles/selectStyles';
+import Select from "react-select";
+import { useEffect, useState } from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 type DistrictSelectProps = {
   handleDaerahChange: (e: any) => void;
-  choosenState: string;
+
   label: boolean;
+  cities: {
+    id: string;
+    name: string;
+  }[];
+
 };
 
 const DistrictSelect: React.FC<DistrictSelectProps> = ({
   handleDaerahChange,
-  choosenState,
   label,
+  cities
 }) => {
-  const { data, isLoading, refetch } = api.surau.getDistrict.useQuery({
-    id: choosenState,
-  });
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    void refetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [choosenState]);
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, [cities])
 
-  if (isLoading) return <LoadingSpinner />;
+  if (loading) return <LoadingSpinner />;
+
   return (
     <div>
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-3 md:col-span-2">
           {label ? (
             <label className="block text-sm font-medium text-input-foreground">
-              District
+              City
             </label>
           ) : null}
 
           <div className="relative z-10 mt-1 block w-full rounded-md shadow-sm">
             <Select
-              options={data}
+              options={cities}
               getOptionLabel={(option: any) => option.name}
               getOptionValue={(option: any) => option.id}
               onChange={(e) => handleDaerahChange(e)}
               required
-              placeholder="District"
+              placeholder="City"
               unstyled
               classNames={{
                 control: ({ isFocused }) =>

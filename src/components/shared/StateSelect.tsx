@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import dynamic from "next/dynamic";
-import { api } from "../../utils/api";
-import LoadingSpinner from "./LoadingSpinner";
-import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles} from '../../styles/selectStyles';
+import { controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles } from '../../styles/selectStyles';
 import clsx from "clsx";
+import { getStates } from "malaysia-postcodes";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -19,9 +18,13 @@ const StateSelect: React.FC<StateSelectProps> = ({
   handleNegeriChange,
   label,
 }) => {
-  const { data, isLoading } = api.surau.getState.useQuery();
-  if (isLoading) return <LoadingSpinner />;
 
+  const states = getStates().map((state) => {
+    return {
+      id: state,
+      name: state,
+    };
+  });
   return (
     <>
       <div className="grid grid-cols-3 gap-6">
@@ -36,7 +39,7 @@ const StateSelect: React.FC<StateSelectProps> = ({
           ) : null}
           <div className="relative z-20 mt-1 w-full rounded-md shadow-sm">
             <Select
-              options={data}
+              options={states}
               getOptionLabel={(option: any) => option.name}
               getOptionValue={(option: any) => option.id}
               onChange={(e) => handleNegeriChange(e)}

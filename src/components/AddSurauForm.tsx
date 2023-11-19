@@ -17,7 +17,8 @@ import DistrictSelect from "./shared/DistrictSelect";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import CustomUpload from "./shared/CustomUpload";
 import clsx from "clsx";
-import {controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles, clearIndicatorStyles} from '../styles/selectStyles';
+import { controlStyles, optionStyles, placeholderStyles, inputStyles, singleValueStyles, indicatorSeparatorStyles, dropdownIndicatorStyles, menuStyles, noOptionsStyles, clearIndicatorStyles } from '../styles/selectStyles';
+import { getCities } from "malaysia-postcodes";
 
 const Select = dynamic(() => import("react-select"), {
   ssr: true,
@@ -66,6 +67,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const [thumbnailIndex, setThumbnailIndex] = useState(0);
   const [uploadCompleted, setUploadCompleted] = useState(false);
   const [uploadAlert, setUploadAlert] = useState(false);
+  const [cities, setCities] = useState<{ id: string; name: string }[]>([]);
 
   const mall = api.surau.getMallOnDistrict.useQuery({
     district_id: choosenDistrict,
@@ -127,6 +129,13 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   };
 
   const handleNegeriChange = (e: any) => {
+    const citiesData = getCities(e.id).map((city) => {
+      return {
+        id: city,
+        name: city,
+      };
+    });
+    setCities(citiesData);
     setChoosenState(e.id);
     setFindMallChecked(false);
   };
@@ -166,10 +175,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     const thumbnailCount = filePath.filter((file) => file.is_thumbnail).length;
 
-    if (!uploadCompleted) {
-      setUploadAlert(true);
-    }
-
     const qiblat = {
       latitude: latitude,
       longitude: longitude,
@@ -208,13 +213,15 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
       }
     }
 
+    console.log(surauName)
+
     addSurau
       .mutateAsync({
         name: surauName,
         brief_direction: briefDirection,
         unique_name: generatedSurauName,
-        state_id: choosenState,
-        district_id: choosenDistrict,
+        negeri: choosenState,
+        daerah: choosenDistrict,
         mall_id: mallData,
         image: filePath,
         is_qiblat_certified: isQiblatCertified,
@@ -300,8 +307,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                 {choosenState ? (
                   <DistrictSelect
                     handleDaerahChange={handleDaerahChange}
-                    choosenState={choosenState}
                     label={true}
+                    cities={cities}
                   />
                 ) : null}
 
@@ -518,7 +525,7 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                       {/* This custom uploader return uploaded file on success */}
                     </>
                   )}
-                  
+
                 </div>
 
                 <div className="">
@@ -530,47 +537,46 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
                     ) : null}
                     {imagePreviews
                       ? imagePreviews.map((imagePreview, index) => (
-                          <div
-                            id="imagePreviewDiv"
-                            key={index}
-                            className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${
-                              thumbnailIndex === index
-                                ? "border-indigo-500"
-                                : "border-border"
+                        <div
+                          id="imagePreviewDiv"
+                          key={index}
+                          className={`my-1 inline-flex items-center justify-between overflow-hidden rounded-md border p-2 ${thumbnailIndex === index
+                            ? "border-indigo-500"
+                            : "border-border"
                             }`}
-                            onClick={() =>
-                              markThumbnail(imagePreview.id, index)
-                            }
-                          >
-                            <div className="flex items-center">
-                              <Image
-                                src={imagePreview.url}
-                                alt="image preview"
-                                className="h-20 min-w-[5rem] max-w-[5rem] rounded-sm object-cover"
-                                quality={100}
-                                width={100}
-                                height={100}
-                              />
-                              <div className="ml-2 max-w-[8rem] justify-center overflow-hidden text-xs sm:text-sm">
-                                <p className="overflow-hidden text-ellipsis">
-                                  {imagePreview.id
-                                    .split("_")
-                                    .slice(1)
-                                    .join("_")}
-                                </p>
-                                <p className="text-slate-500">2.4mb</p>
-                              </div>
+                          onClick={() =>
+                            markThumbnail(imagePreview.id, index)
+                          }
+                        >
+                          <div className="flex items-center">
+                            <Image
+                              src={imagePreview.url}
+                              alt="image preview"
+                              className="h-20 min-w-[5rem] max-w-[5rem] rounded-sm object-cover"
+                              quality={100}
+                              width={100}
+                              height={100}
+                            />
+                            <div className="ml-2 max-w-[8rem] justify-center overflow-hidden text-xs sm:text-sm">
+                              <p className="overflow-hidden text-ellipsis">
+                                {imagePreview.id
+                                  .split("_")
+                                  .slice(1)
+                                  .join("_")}
+                              </p>
+                              <p className="text-slate-500">2.4mb</p>
                             </div>
-
-                            <button
-                              // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                              onClick={() => handleDeleteImage(imagePreview.id)}
-                              className="pr-2 sm:pr-4"
-                            >
-                              <TrashIcon className="h-5 w-5 text-red-500" />
-                            </button>
                           </div>
-                        ))
+
+                          <button
+                            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                            onClick={() => handleDeleteImage(imagePreview.id)}
+                            className="pr-2 sm:pr-4"
+                          >
+                            <TrashIcon className="h-5 w-5 text-red-500" />
+                          </button>
+                        </div>
+                      ))
                       : null}
                   </div>
                 </div>
