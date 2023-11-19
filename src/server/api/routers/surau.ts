@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { sendApprovalMail } from "../../services/generate-surau-verification";
 import { sortByHavingImage } from "../../../utils/sorter/sortByHavingImage";
 
 export const surauRouter = createTRPCRouter({
@@ -31,7 +30,7 @@ export const surauRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       let surau;
-      console.log(input.name)
+
       const data = {
         name: input.name,
         brief_direction: input.brief_direction,
@@ -63,43 +62,51 @@ export const surauRouter = createTRPCRouter({
       };
 
       if (input.mall_id) {
-        surau = await ctx.prisma.surau.create({
-          data: {
-            name: input.name,
-            brief_direction: input.brief_direction,
-            unique_name: input.unique_name,
-            is_qiblat_certified: input.is_qiblat_certified,
-            is_solat_jumaat: input.is_solat_jumaat,
-            negeri: input.negeri,
-            daerah: input.daerah,
-            images: {
-              createMany: {
-                data: input.image.map((image) => ({
-                  file_path: image.file_path,
-                  is_thumbnail: !!image.is_thumbnail,
-                })),
+        try {
+          surau = await ctx.prisma.surau.create({
+            data: {
+              name: input.name,
+              brief_direction: input.brief_direction,
+              unique_name: input.unique_name,
+              is_qiblat_certified: input.is_qiblat_certified,
+              is_solat_jumaat: input.is_solat_jumaat,
+              negeri: input.negeri,
+              daerah: input.daerah,
+              images: {
+                createMany: {
+                  data: input.image.map((image) => ({
+                    file_path: image.file_path,
+                    is_thumbnail: !!image.is_thumbnail,
+                  })),
+                },
+              },
+              user: {
+                connect: {
+                  id: ctx.session?.user.id,
+                },
+              },
+              mall: {
+                connect: {
+                  id: input.mall_id,
+                },
               },
             },
-            user: {
-              connect: {
-                id: ctx.session?.user.id,
-              },
-            },
-            mall: {
-              connect: {
-                id: input.mall_id,
-              },
-            },
-          },
-        });
+          });
+        } catch (err) {
+          console.error(err)
+        }
+
       } else {
-        surau = await ctx.prisma.surau.create({
-          data: data,
-        });
+        try {
+          surau = await ctx.prisma.surau.create({
+            data: data,
+          });
+        } catch (err) {
+          console.error(err)
+        }
+
       }
-
-      await sendApprovalMail(surau.id);
-
+      // await sendApprovalMail(surau.id);
       return surau;
     }),
   getSurau: publicProcedure
