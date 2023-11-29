@@ -217,24 +217,6 @@ export const surauRouter = createTRPCRouter({
       return undefined;
 
     }),
-  getState: publicProcedure.query(async ({ ctx }) => {
-    return ctx.prisma.state.findMany({
-      include: {
-        districts: true,
-      },
-    });
-  }),
-  getDistrict: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ ctx, input }) => {
-      return ctx.prisma.district.findMany({
-        where: {
-          state: {
-            id: input.id,
-          },
-        },
-      });
-    }),
   getMallOnDistrict: publicProcedure
     .input(z.object({ district_id: z.string(), state_id: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -308,13 +290,8 @@ export const surauRouter = createTRPCRouter({
 
       const surauInDistrict = await ctx.prisma.surau.findMany({
         where: {
-          is_approved: false,
-          district: {
-            name: input.district,
-          },
-          state: {
-            name: input.state
-          },
+          is_approved: true,
+         
         },
         orderBy: {
           images: {
@@ -322,8 +299,6 @@ export const surauRouter = createTRPCRouter({
           },
         },
         include: {
-          state: true,
-          district: true,
           mall: true,
           images: true,
         },

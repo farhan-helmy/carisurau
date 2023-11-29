@@ -9,8 +9,6 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import CustomToast from "./CustomToast";
 import ProgressCircle from "./ProgressCircle";
 import type { FileUrl } from "../AddSurauForm";
-import { env } from "../../env.mjs";
-
 
 type UploadedFileProps = {
   uploadedFileList: (value: FileUrl) => void;
@@ -56,17 +54,18 @@ function CustomUpload({
       });
 
       const options = {
-        method: "POST",
         headers: {
-          S3_UPLOAD_USERNAME: env.NEXT_PUBLIC_S3_UPLOAD_USERNAME,
-          S3_UPLOAD_PASSWORD: env.NEXT_PUBLIC_S3_UPLOAD_PASSWORD,
+          UPLOADJE_APP_ID: 'd691a2a61ff2',
+          UPLOADJE_APP_SECRET: 'upload_je_944e1db01157aef74495b3ddb8302efdb0869d3a46dfa57d'
         },
+        method: "POST",
         body: form,
       };
 
-      fetch("/api/image_upload", options)
+      fetch("http://localhost:3001/v1/image", options)
         .then((response) => response.json())
         .then((response) => {
+          console.log(response)
           uploadedFileList(response);
           setIsUploading(false);
           setProgress(1)
@@ -128,8 +127,7 @@ function CustomUpload({
                     {isUploading ? (
                       <Spinner />
                     ) : (
-                      `Upload ${files.length} file${
-                        files.length === 1 ? "" : "s"
+                      `Upload ${files.length} file${files.length === 1 ? "" : "s"
                       }`
                     )}
                   </span>
