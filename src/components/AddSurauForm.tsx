@@ -34,7 +34,9 @@ export type FilePath = {
 };
 
 export type FileUrl = {
-  fileUrls: string[];
+  imageData: [{
+    url: string;
+  }]
 };
 
 export type ImagePreviews = {
@@ -77,14 +79,14 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
   const addSurau = api.surau.addSurau.useMutation();
 
   useEffect(() => {
-    if (!tempImageList?.fileUrls) return;
+    if (!tempImageList?.imageData) return;
 
-    if (tempImageList?.fileUrls.length > 0) {
+    if (tempImageList?.imageData.length > 0) {
       setFilePath((prev) => {
         const updatedFilePath = [...prev];
-        tempImageList?.fileUrls.forEach((image) => {
+        tempImageList?.imageData.forEach((data) => {
           updatedFilePath.push({
-            file_path: image,
+            file_path: data.url,
             is_thumbnail: false,
           });
         });
@@ -93,8 +95,8 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
 
       setImagePreviews((prev) => {
         const updatedImagePreviews = [...prev];
-        tempImageList?.fileUrls.forEach((image) => {
-          updatedImagePreviews.push({ id: image, url: image });
+        tempImageList?.imageData.forEach((image) => {
+          updatedImagePreviews.push({ id: image.url, url: image.url });
         });
         return updatedImagePreviews;
       });
@@ -212,8 +214,6 @@ const AddSurauForm: FC<AddSurauFormProps> = ({ setOpen }) => {
         return;
       }
     }
-
-    console.log(surauName)
 
     addSurau
       .mutateAsync({

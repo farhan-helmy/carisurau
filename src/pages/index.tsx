@@ -3,23 +3,53 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import SurauList from "../components/SurauList";
-import Image from "next/image";
 import Head from "next/head";
 import Modal from "../components/shared/Modal";
 import { useEffect, useState } from "react";
 import AddSurauForm from "../components/AddSurauForm";
-import SearchBar from "../components/SearchBar";
 import Script from "next/script";
-import Header from "../components/shared/Header";
 import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
 import { getLocation } from "../utils/location";
+import MasjidIcon from '../../public/assets/navlogo/masjid.svg';
+import Image from "next/image";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
   "/assets/background/carisurau1.jpeg",
   "/assets/background/carisurau2.jpeg",
 ];
+
+
+interface BottomNavProps {
+  handleSetOpenSurauForm: () => void;
+}
+
+const BottomNav = ({ handleSetOpenSurauForm }: BottomNavProps) => {
+  return (
+    <div className="rounded-xl top-0 left-0 w-full h-14 bg-background text-white">
+      <div className="grid h-full max-w-lg grid-cols-3 mx-auto">
+        <div className="flex items-center justify-center">
+          <button type="button">
+            <Image src={MasjidIcon} alt={"masjid"} height={32} width={32} />
+          </button>
+        </div>
+
+        {/* <div className="flex items-center justify-center">
+          <button
+            onClick={handleSetOpenSurauForm}
+          >
+            <PlusCircleIcon className="h-12 w-12" />
+          </button>
+
+        </div> */}
+        <button type="button">
+          <span>Settings</span>
+        </button>
+      </div>
+    </div>
+  )
+}
 
 export default function Index() {
   const [openAddSurauForm, setOpenAddSurauForm] = useState(false);
@@ -119,50 +149,6 @@ export default function Index() {
           async
         ></Script>
 
-        {/* Hero section */}
-        <div className="relative bg-background">
-          {/* Decorative image and overlay */}
-          <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-            {imagePath !== "" ? (
-              <Image
-                src={imagePath}
-                alt="random background image"
-                className="h-full w-full object-cover object-center"
-                width={1920}
-                height={1080}
-                priority
-              />
-            ) : null}
-          </div>
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 bg-gray-900 opacity-50"
-          />
-
-          {/* Navigation */}
-          <Header />
-
-          <div className="relative mx-auto flex max-w-3xl flex-col items-center py-2 px-6 text-center sm:py-64 lg:px-0">
-            <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
-              Carisurau.com
-            </h1>
-            <p className="mt-4 text-xl text-white">
-              Discover Your Perfect Prayer Haven with Ease!
-            </p>
-            {/* Search bar component */}
-
-            <SearchBar />
-            <p className="z-0 mt-2 text-xs font-extralight italic text-white md:text-lg">
-              Can`t find your Surau?{" "}
-              <span
-                className="cursor-pointer font-bold hover:underline"
-                onClick={() => handleSetOpenSurauForm()}
-              >
-                Add here
-              </span>
-            </p>
-          </div>
-        </div>
         <Modal open={openAddSurauForm} setOpen={setOpenAddSurauForm}>
           <AddSurauForm setOpen={setOpenAddSurauForm} />
         </Modal>
@@ -173,25 +159,20 @@ export default function Index() {
           callbackUrl="/"
         />
         <main>
-          {/* Category section */}
+          <BottomNav
+            handleSetOpenSurauForm={handleSetOpenSurauForm}
+          />
           <section
             aria-labelledby="category-heading"
-            className="pt-4 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8 md:mb-10"
+            className="pt-2 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8 md:mb-10"
           >
-            <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
-              <h2
-                id="category-heading"
-                className="text-2xl font-bold tracking-tight text-foreground mb-10"
-              >
-                Recently added
-              </h2>
-            </div>
             <SurauList
               type="recent"
               userDistrict={userDistrict}
               userState={userState}
             />
           </section>
+
         </main>
       </div>
     </>

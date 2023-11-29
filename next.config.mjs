@@ -12,14 +12,6 @@ const config = {
   reactStrictMode: true,
   swcMinify: true,
   output: "standalone",
-  async rewrites() {
-    return [
-      {
-        source: "/api/image_upload",
-        destination: "https://a143f4w2r9.execute-api.ap-southeast-1.amazonaws.com/carisurau-prod/image-upload",
-      },
-    ];
-  },
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
    * must comment the below `i18n` config out.
@@ -44,12 +36,14 @@ const config = {
       "carisurau-prod.s3.ap-southeast-1.amazonaws.com",
       "carisuraustagingbucket.s3.ap-southeast-1.amazonaws.com",
       "lh3.googleusercontent.com",
-      "uploadthing.com"
+      "uploadthing.com",
+      "stagingfs.uploadje.com"
     ],
     dangerouslyAllowSVG: true,
   },
   experimental: {
     esmExternals: false,
+    appDir: true
   }
 };
 export default withSentryConfig(config, {
