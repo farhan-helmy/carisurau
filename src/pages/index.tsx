@@ -11,8 +11,21 @@ import Script from "next/script";
 import { useSession } from "next-auth/react";
 import SignIn from "../components/shared/SignIn";
 import { getLocation } from "../utils/location";
-import MasjidIcon from '../../public/assets/navlogo/masjid.svg';
+import CsLogo from '../../public/assets/logo/cslogo.png';
 import Image from "next/image";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "../components/ui/sheet";
+import { RowsIcon, MoonIcon, SunIcon, PersonIcon } from "@radix-ui/react-icons";
+import { Button } from "../components/ui/button";
+import { useTheme } from "next-themes"
+import MasjidLogo from '../../public/assets/navlogo/masjid.svg';
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu"
+import { Toaster } from "../components/ui/toaster";
 
 const imagePaths = [
   "/assets/background/carisurau.jpeg",
@@ -20,33 +33,83 @@ const imagePaths = [
   "/assets/background/carisurau2.jpeg",
 ];
 
-
-interface BottomNavProps {
-  handleSetOpenSurauForm: () => void;
+const Nav = () => {
+  return (
+    <div className="flex flex-col gap-4 font-light">
+      <div className="flex flex-row gap-2">
+        <PersonIcon className="w-6 h-6" />
+        Profile
+      </div>
+      <div>
+        Surau
+      </div>
+      <div className="flex flex-row gap-2">
+        <Image src={MasjidLogo} alt="carisurau" width={24} height={24} className="outline-white" />
+        Masjid
+      </div>
+      <div>
+        Search
+      </div>
+    </div>
+  )
 }
 
-const BottomNav = ({ handleSetOpenSurauForm }: BottomNavProps) => {
+
+const ModeToggler = () => {
+  const { setTheme } = useTheme()
+
   return (
-    <div className="rounded-xl top-0 left-0 w-full h-14 bg-background text-white">
-      <div className="grid h-full max-w-lg grid-cols-3 mx-auto">
-        <div className="flex items-center justify-center">
-          <button type="button">
-            <Image src={MasjidIcon} alt={"masjid"} height={32} width={32} />
-          </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          System
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+const TopNav = () => {
+  return (
+    <div>
+      <Sheet className="flex justify-between items-center">
+        <div className="grid grid-cols-3">
+          <SheetTrigger asChild>
+            <div className="flex items-left justify-left p-4">
+              <RowsIcon className="w-6 h-6" />
+            </div>
+          </SheetTrigger>
+          <div className="flex items-center justify-center">
+            <Image src={CsLogo} alt="carisurau" width={24} height={24} />
+          </div>
+          <div className="flex items-center justify-center ml-12 mt-2">
+            <ModeToggler />
+          </div>
         </div>
 
-        {/* <div className="flex items-center justify-center">
-          <button
-            onClick={handleSetOpenSurauForm}
-          >
-            <PlusCircleIcon className="h-12 w-12" />
-          </button>
+        <SheetContent side={'left'}>
+          <SheetHeader>
+            <SheetTitle className='font-light'>Carisurau</SheetTitle>
 
-        </div> */}
-        <button type="button">
-          <span>Settings</span>
-        </button>
-      </div>
+          </SheetHeader>
+          <div className="p-4 mt-4">
+            <Nav />
+          </div>
+
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }
@@ -158,10 +221,9 @@ export default function Index() {
           message="Sign in to add Surau"
           callbackUrl="/"
         />
+        <TopNav />
         <main>
-          <BottomNav
-            handleSetOpenSurauForm={handleSetOpenSurauForm}
-          />
+          <Toaster />
           <section
             aria-labelledby="category-heading"
             className="pt-2 sm:pt-12 xl:mx-auto xl:max-w-7xl xl:px-8 md:mb-10"
